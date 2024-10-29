@@ -89,7 +89,7 @@
     {
       "group": "Changelog",
       "pages": [
-        "overview"
+        "changelog/overview"
       ]
     }
   ],
