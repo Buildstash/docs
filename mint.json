@@ -31,6 +31,10 @@
       "url": "api-reference"
     },
     {
+      "name": "Integrations",
+      "url": "integrations"
+    },
+    {
       "name": "Changelog",
       "url": "changelog"
     }
@@ -76,6 +80,12 @@
       "group": "Changelog",
       "pages": [
         "changelog/overview"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations/index"
       ]
     }
   ],
