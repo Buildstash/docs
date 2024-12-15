@@ -38,14 +38,6 @@
   ],
   "navigation": [
     {
-      "group": "Get Started",
-      "pages": [
-        "introduction",
-        "quickstart",
-        "development"
-      ]
-    },
-    {
       "group": "Changelog",
       "pages": [
         "changelog/overview"
