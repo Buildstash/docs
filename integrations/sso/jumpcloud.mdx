@@ -1,7 +1,7 @@
 ---
 title: 'JumpCloud'
 description: 'Setting up JumpCloud single sign-on for your workspace'
-icon: 'map'
+icon: /brand-jumpcloud.svg
 ---
 
 Folllow these instructions to allow your users to login to your Buildstash workspace using JumpCloud SSO.
@@ -19,18 +19,12 @@ Folllow these instructions to allow your users to login to your Buildstash works
     ![](/SCR-20241222-qafi.png)
 
     Select "Custom Application".
-
-
-
-
   </Step>
 
   <Step title="Configure custom SSO with OIDC">
     Then check "Manage Single Sign-On", and select "Configure SSO with OIDC".
 
     ![](/SCR-20241222-qayf.png)
-
-
   </Step>
 
   <Step title="Setup custom application name and info">
@@ -50,11 +44,7 @@ Folllow these instructions to allow your users to login to your Buildstash works
       https://\{SUBDOMAIN}.buildstash.com/jumpcloud/callback
     </Check>
 
-
-
     You must set "Client Authentication Type" to "Client Secret Post".
-
-
   </Step>
 
   <Step title="Set scopes">
@@ -63,8 +53,6 @@ Folllow these instructions to allow your users to login to your Buildstash works
     ![](/SCR-20241222-qcdw.png)
 
     You can then click "Activate".
-
-
   </Step>
 
   <Step title="Copy client ID and secret">
@@ -87,28 +75,20 @@ Folllow these instructions to allow your users to login to your Buildstash works
     Go to your workspace settings, and under "Enterprise SSO", select "Enable provider".
 
     ![](/SCR-20241222-qebl.png)
-
-
   </Step>
 
   <Step title="Input provider credentials">
     Input the client ID and secret for JumpCloud you copied from a previous step.
 
     ![](/SCR-20241222-qelj.png)
-
-
   </Step>
 
   <Step title="Confirm correctly configured">
     Once details are entered and confirmed you'll see "SSO configured with provider: JumpCloud".
 
-
-
     Select "Manage" to update credentials in future, disable non-SSO login, or remove JumpCloud as a login provider in future.
 
     ![](/SCR-20241222-qerz.png)
-
-
   </Step>
 
   <Step title="Login with SSO">
