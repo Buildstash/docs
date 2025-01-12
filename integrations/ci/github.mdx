@@ -60,30 +60,29 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
 
 A breakdown of all required and optional inputs for the GitHub action.
 
-
-| Input Name | Required? | Description |
-|------------|-----------|-------------|
-| api_key | Yes | Application specific API Key |
-| structure | Yes | Structure type (e.g. file or file+expansion) |
-| primary_file_path | Yes | Path to the primary file to upload |
-| expansion_file_path | No | Path to an expansion file to be paired with primary (optional) |
-| version_component_1_major | Yes | Major version component |
-| version_component_2_minor | Yes | Minor version component |
-| version_component_3_patch | Yes | Patch version component |
-| version_component_extra | No | Extra version component (optional) |
-| version_component_meta | No | Meta version component (optional) |
-| custom_build_number | No | Custom build number (optional) |
-| ci_pipeline | No | CI pipeline name |
-| ci_run_id | No | CI run ID |
-| ci_run_url | No | CI run URL |
-| ci_build_duration | No | CI build duration |
-| vc_host_type | No | Version control host type |
-| vc_host | No | Version control host |
-| vc_repo_name | No | Repository name |
-| vc_repo_url | No | Repository URL |
-| vc_branch | No | Branch name |
-| vc_commit_sha | No | Commit SHA |
-| vc_commit_url | No | Commit URL |
-| platform | Yes | Platform |
-| stream | Yes | Stream |
-| notes | No | Build notes |
+| Input Name                   | Required? | Description                                                                                                                                           |
+| ---------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| api\_key                     | Yes       | Application specific API Key, should be stored and pass in as a secret                                                                                |
+| structure                    | Yes       | Structure type. Either \`file\` (for single file build) or \`file+expansion\` (for a primary build file with a single expansion file, i.e. apk + obb) |
+| primary\_file\_path          | Yes       | Path to the primary file to upload                                                                                                                    |
+| expansion\_file\_path        | No        | Path to an expansion file to be paired with primary (optional)                                                                                        |
+| version\_component\_1\_major | Yes       | Major version component                                                                                                                               |
+| version\_component\_2\_minor | Yes       | Minor version component                                                                                                                               |
+| version\_component\_3\_patch | Yes       | Patch version component                                                                                                                               |
+| version\_component\_extra    | No        | Extra version component (optional). Pre-release label like 'beta' or 'alpha'                                                                          |
+| version\_component\_meta     | No        | Meta version component (optional). Can be used to add additional metadata to your version, such as data (\`2025.01.01\`)                              |
+| custom\_build\_number        | No        | Allows a flexible format custom build number if you have one. (Optional)                                                                              |
+| ci\_pipeline                 | No        | CI pipeline name                                                                                                                                      |
+| ci\_run\_id                  | No        | CI run ID                                                                                                                                             |
+| ci\_run\_url                 | No        | CI run URL                                                                                                                                            |
+| ci\_build\_duration          | No        | CI build duration                                                                                                                                     |
+| vc\_host\_type               | No        | Version control host type                                                                                                                             |
+| vc\_host                     | No        | Version control host                                                                                                                                  |
+| vc\_repo\_name               | No        | Repository name                                                                                                                                       |
+| vc\_repo\_url                | No        | Repository URL                                                                                                                                        |
+| vc\_branch                   | No        | Branch name                                                                                                                                           |
+| vc\_commit\_sha              | No        | Commit SHA                                                                                                                                            |
+| vc\_commit\_url              | No        | Commit URL                                                                                                                                            |
+| platform                     | Yes       | Platform string (generic,windows,macos,android,ios,quest,linux)                                                                                       |
+| stream                       | Yes       | Stream - the exact name of the stream on your app this build will be sent to                                                                          |
+| notes                        | No        | Build notes (optional)                                                                                                                                |
