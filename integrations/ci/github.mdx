@@ -13,8 +13,6 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
     In your application settings, navigate to the "Connections" tab, and select "New Token".
 
     ![](/SCR-20250112-mmio.png)Call the token anything you like - ideally something that helps you remember where it's being used.
-
-
   </Step>
 
   <Step title="Safely store for use">
@@ -23,8 +21,6 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
     ![](/SCR-20250112-mmpk.png)
 
     Note this is the only time the token will be shown, so be careful to record it securely (like in a password manager).
-
-
   </Step>
 </Steps>
 
@@ -41,10 +37,18 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
 
   </Step>
 
+  <Step title="Add API key to your 'Actions secrets' for the repository">
+    Take the Buildstash API key you created in the step above, and store it as a "Actions" secret.
+
+    ![](/SCR-20250112-mvej.png)
+
+    Note, as you'll be using an application-specific Buildstash API key (required to upload builds for particular app) you likely want to store this secret on your GitHub repository level, rather than workspace.
+
+
+  </Step>
+
   <Step title="Tweak input values accordingly">
     Update the action inputs to pass in your project and run specific values.
-
-
 
     See below for more detail on each input.
 
@@ -55,7 +59,9 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
     ![](/SCR-20250112-mudo.png)
 
     Successful GitHub Actions runs will now be sending your builds into Buildstash. Welcome to artifact management actually designed for apps.
-
-
   </Step>
 </Steps>
+
+## Inputs
+
+bla
