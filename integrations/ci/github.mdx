@@ -33,8 +33,6 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
     ![](/SCR-20250112-mnph.png)
 
     You can copy and paste the provided code into your workflow yaml script.
-
-
   </Step>
 
   <Step title="Add API key to your 'Actions secrets' for the repository">
@@ -43,16 +41,12 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
     ![](/SCR-20250112-mvej.png)
 
     Note, as you'll be using an application-specific Buildstash API key (required to upload builds for particular app) you likely want to store this secret on your GitHub repository level, rather than workspace.
-
-
   </Step>
 
   <Step title="Tweak input values accordingly">
     Update the action inputs to pass in your project and run specific values.
 
     See below for more detail on each input.
-
-
   </Step>
 
   <Step title="See your builds appear in Buildstash!">
@@ -64,4 +58,32 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
 
 ## Inputs
 
-bla
+A breakdown of all required and optional inputs for the GitHub action.
+
+
+| Input Name | Required? | Description |
+|------------|-----------|-------------|
+| api_key | Yes | Application specific API Key |
+| structure | Yes | Structure type (e.g. file or file+expansion) |
+| primary_file_path | Yes | Path to the primary file to upload |
+| expansion_file_path | No | Path to an expansion file to be paired with primary (optional) |
+| version_component_1_major | Yes | Major version component |
+| version_component_2_minor | Yes | Minor version component |
+| version_component_3_patch | Yes | Patch version component |
+| version_component_extra | No | Extra version component (optional) |
+| version_component_meta | No | Meta version component (optional) |
+| custom_build_number | No | Custom build number (optional) |
+| ci_pipeline | No | CI pipeline name |
+| ci_run_id | No | CI run ID |
+| ci_run_url | No | CI run URL |
+| ci_build_duration | No | CI build duration |
+| vc_host_type | No | Version control host type |
+| vc_host | No | Version control host |
+| vc_repo_name | No | Repository name |
+| vc_repo_url | No | Repository URL |
+| vc_branch | No | Branch name |
+| vc_commit_sha | No | Commit SHA |
+| vc_commit_url | No | Commit URL |
+| platform | Yes | Platform |
+| stream | Yes | Stream |
+| notes | No | Build notes |
