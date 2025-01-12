@@ -6,21 +6,17 @@ icon: 'github'
 
 If you're using GitHub Actions sending your build artifacts into Buildstash is easy.
 
-## Create your application API key
+## Create your application API token
 
 <Steps>
-  <Step title="Create API key">
-    In your JumpCloud admin portal, navigate to "SSO Applications", and select "Add New Application".
+  <Step title="Create API token">
+    In your application settings, navigate to the "Connections" tab, and select "New Token".
 
-    ![](/SCR-20241222-qafi.png)
-
-    Select "Custom Application".
+    Call the token anything you like - ideally something that helps you remember where it's being used.
   </Step>
 
   <Step title="Safely store for use">
-    Then check "Manage Single Sign-On", and select "Configure SSO with OIDC".
-
-    ![](/SCR-20241222-qayf.png)
+    Your new API token will be shown. Note this is the only time the token will be shown, so be careful to record it securely (like in a password manager).
   </Step>
 </Steps>
 
@@ -29,19 +25,13 @@ If you're using GitHub Actions sending your build artifacts into Buildstash is e
 <Steps>
   <Step title="Install Buildstash action">
     Go to the <a href="https://github.com/marketplace/actions/buildstash" target="_blank">Buildstash action page on the GitHub Marketplace</a>. You can copy and paste the provided code into your workflow yaml script.
-
-    ![](/SCR-20241222-qebl.png)
   </Step>
 
   <Step title="Tweak input values accordingly">
-    Tweak input values accordingly.
-
-    ![](/SCR-20241222-qelj.png)
+    Update the action inputs to pass in your project and run specific values.
   </Step>
 
   <Step title="Watch your builds appear in Buildstash!">
     Watch your builds appear in Buildstash!
-
-    ![](/SCR-20241222-qerz.png)
   </Step>
 </Steps>
