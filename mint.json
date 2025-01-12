@@ -47,6 +47,7 @@
       "group": "Integrations",
       "pages": [
         "integrations/index",
+        "integrations/ci/github",
         "integrations/sso/jumpcloud"
       ]
     }
