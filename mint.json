@@ -16,13 +16,17 @@
     }
   },
   "topbarCtaButton": {
-    "name": "buildstash.com",
-    "url": "https://buildstash.com"
+    "name": "Go to app",
+    "url": "https://app.buildstash.com"
   },
   "topbarLinks": [
       {
-        "name": "Go to App",
-        "url": "https://app.buildstash.com"
+        "name": "Homepage",
+        "url": "https://buildstash.com"
+      },
+      {
+        "name": "Support",
+        "url": "https://buildstash.com/contact"
       }
   ],
   "tabs": [
