@@ -16,9 +16,15 @@
     }
   },
   "topbarCtaButton": {
-    "name": "App",
-    "url": "https://app.buildstash.com"
+    "name": "Homepage",
+    "url": "https://buildstash.com"
   },
+  "topbarLinks": [
+      {
+        "name": "App",
+        "url": "https://app.buildstash.com"
+      }
+  ],
   "tabs": [
     {
       "name": "API Reference",
