@@ -3,40 +3,35 @@ title: "Supported Platforms"
 description: "List of platforms that Buildstash supports with accompanying slugs."
 ---
 
-| Platform   | Slug        |
-| ---------- | ----------- |
-| Generic    | generic     |
-| Wi         | windows     |
-|            | macos       |
-|            | android     |
-|            | ios         |
-|            | quest       |
-|            | switch      |
-|            | ps5         |
-|            | ps4         |
-|            | xbox-series |
-|            | vision-pro  |
-|            | pico        |
-|            | wearos      |
-|            | vive        |
-|            | homepod     |
-|            | apple-tv    |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-|            |             |
-| Magic Leap | magic-leap  |
-| Zephyr     | zephyr      |
-| Roblox     | roblox      |
-|            |             |
+| Platform               | Slug        |
+| ---------------------- | ----------- |
+| Generic                | generic     |
+| Windows                | windows     |
+| macOS                  | macos       |
+| Android                | android     |
+| iOS (iPhone/iPad)      | ios         |
+| Meta Quest             | quest       |
+| Nintendo Switch        | switch      |
+| PlayStation 5          | ps5         |
+| PlayStation 4          | ps4         |
+| Xbox Series X/S        | xbox-series |
+| Apple Vision Pro       | vision-pro  |
+| Pico XR                | pico        |
+| WearOS                 | wearos      |
+| HTC Vive (Mobile)      | vive        |
+| Apple HomePod          | homepod     |
+| Apple TV               | apple-tv    |
+| Apple Watch            | apple-watch |
+| FreeBSD                | freebsd     |
+| OpenBSD                | openbsd     |
+| Linux (Generic)        | linux       |
+| Debian/Ubuntu variants | debian      |
+| Red Hat/Fedora/CentOS  | redhat      |
+| Gentoo Linux           | gentoo      |
+| Arch Linux             | arch        |
+| Playdate               | playdate    |
+| Magic Leap             | magic-leap  |
+| Zephyr                 | zephyr      |
+| Roblox                 | roblox      |
+
+When uploading a build to Buildstash via the API or CI/CD integration, the "platform" field should be set to the accompanying "slug" for the targeted platform.
