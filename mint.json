@@ -31,6 +31,10 @@
   ],
   "redirects": [
     {
+      "source": "/changelog",
+      "destination": "https://support.buildstash.com/changelog"
+    },
+    {
       "source": "/changelog/overview",
       "destination": "https://support.buildstash.com/changelog"
     },
@@ -47,11 +51,15 @@
       "destination": "https://support.buildstash.com/docs/integrations/jumpcloud"
     },
     {
-      "source": "/",
+      "source": "/guide",
       "destination": "https://support.buildstash.com/docs"
     }
   ],
   "tabs": [
+    {
+      "name": "Guide",
+      "url": "guide"
+    },
     {
       "name": "API",
       "url": "api"
@@ -61,6 +69,12 @@
 
   ],
   "navigation": [
+    {
+      "group": "API",
+      "pages": [
+        "api/overview"
+      ]
+    },
     {
       "group": "API",
       "pages": [
