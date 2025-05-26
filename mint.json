@@ -70,9 +70,9 @@
   ],
   "navigation": [
     {
-      "group": "API",
+      "group": "Guide",
       "pages": [
-        "api/overview"
+        "guide"
       ]
     },
     {
