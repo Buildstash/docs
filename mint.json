@@ -29,18 +29,32 @@
         "url": "https://buildstash.com/contact"
       }
   ],
+  "redirects": [
+    {
+      "source": "/*",
+      "destination": "https://support.buildstash.com/docs"
+    },
+    {
+      "source": "/changelog*",
+      "destination": "https://support.buildstash.com/changelog"
+    },
+    {
+      "source": "/integrations",
+      "destination": "https://support.buildstash.com/docs/integrations/overview"
+    },
+    {
+      "source": "/integrations/ci/github",
+      "destination": "https://support.buildstash.com/docs/integrations/github-actions"
+    },
+    {
+      "source": "/integrations/sso/jumpcloud",
+      "destination": "https://support.buildstash.com/docs/integrations/jumpcloud"
+    }
+  ],
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
-    },
-    {
-      "name": "Integrations",
-      "url": "integrations"
-    },
-    {
-      "name": "Changelog",
-      "url": "changelog"
+      "name": "API",
+      "url": "api"
     }
   ],
   "anchors": [
@@ -48,17 +62,9 @@
   ],
   "navigation": [
     {
-      "group": "Changelog",
+      "group": "API",
       "pages": [
-        "changelog/overview"
-      ]
-    },
-    {
-      "group": "Integrations",
-      "pages": [
-        "integrations/index",
-        "integrations/ci/github",
-        "integrations/sso/jumpcloud"
+        "api/overview"
       ]
     }
   ],
