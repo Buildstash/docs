@@ -31,10 +31,6 @@
   ],
   "redirects": [
     {
-      "source": "/*",
-      "destination": "https://support.buildstash.com/docs"
-    },
-    {
       "source": "/changelog*",
       "destination": "https://support.buildstash.com/changelog"
     },
@@ -49,6 +45,10 @@
     {
       "source": "/integrations/sso/jumpcloud",
       "destination": "https://support.buildstash.com/docs/integrations/jumpcloud"
+    },
+    {
+      "source": "/",
+      "destination": "https://support.buildstash.com/docs"
     }
   ],
   "tabs": [
