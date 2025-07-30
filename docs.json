@@ -22,9 +22,9 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "API",
+        "language": "en",
         "groups": [
           {
             "group": "Getting started",
