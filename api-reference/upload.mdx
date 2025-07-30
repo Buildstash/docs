@@ -9,6 +9,8 @@ This guide covers uploading via single or multipart upload flows. Multipart is r
 
 Note, a Buildstash app-level API key is required for uploading builds.
 
+All **/upload** endpoints expect this API token in in the Authorization header as a Bearer token with each request.
+
 #### Request to start
 
 <Steps>
@@ -206,11 +208,22 @@ Note, a Buildstash app-level API key is required for uploading builds.
 
     <CodeGroup>
 
-    ```filename Response
-    // add code here
+    ```bash Response
+    /HTTP/1.1 200 OK
+    Date: Wed, 30 Jul 2025 20:48:28 GMT
+    Content-Type: text/plain;charset=UTF-8
+    Content-Length: 0
+    Connection: keep-alive
+    ETag: "a4d9c87f3e6b41c29fb2e7a8d1035b6e"
+    x-amz-checksum-crc64nvme: H1KdR+1sY8c=
+    x-amz-version-id: 93cf1f4e9e3d4ac2a8a4f929b03bd7a9
+    Server: cloudflare
+    CF-RAY: 9802ce3d5f6a1234-LAX
     ```
 
     </CodeGroup>
+
+    Note the response may vary slightly depending on your S3 provider, for example AWS S3, Cloudflare R2, etc.
   </Step>
 </Steps>
 
