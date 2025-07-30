@@ -12,66 +12,6 @@ openapi: "POST /upload/request/multipart"
 
 This endpoint is used to request a presigned URL for each individual part of a multipart file upload. This is required for files larger than 5GB, and optional for smaller files.
 
-## Request Body
-
-<ParamField body="pending_upload_id" type="string" required>
-  The pending upload ID returned from the initial `/upload/request` call
-</ParamField>
-
-<ParamField body="part_number" type="integer" required>
-  The part number (1-based) for this chunk of the file
-</ParamField>
-
-<ParamField body="content_length" type="integer" required>
-  The size of this part in bytes
-</ParamField>
-
-## Response
-
-<ResponseExample>
-  <ResponseExampleBody>
-```json
-{
-  "part_presigned_url": "https://s3.amazonaws.com/presigned-url-for-part-1"
-}
-```
-  </ResponseExampleBody>
-</ResponseExample>
-
-## Multipart Upload Process
-
-1. **Initial Request**: Call `/upload/request` to get upload information
-2. **For Each Part**: 
-   - Calculate the byte range for this part
-   - Call `/upload/request/multipart` with the part number and size
-   - Upload the part to the returned presigned URL
-   - Save the ETag from the upload response
-3. **Complete Upload**: Call `/upload/verify` with all ETags
-
-## Example Usage
-
-<CodeGroup>
-
-```bash Request Part 1
-curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "pending_upload_id": "upload_123456789",
-    "part_number": 1,
-    "content_length": 104857600
-  }'
-```
-
-```bash Upload Part 1
-curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-1" \
-  -H "Content-Type: application/octet-stream" \
-  -H "Content-Length: 104857600" \
-  --data-binary @part1.bin
-```
-
-</CodeGroup>
-
 ## Part Size Calculation
 
 For a file of size `total_size` with `num_parts` parts:
