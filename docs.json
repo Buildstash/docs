@@ -47,12 +47,14 @@
           {
             "group": "Endpoints",
             "pages": [
-              "group": "Upload",
-              "pages": [
-                "/api-reference/endpoint/upload/request",
-                "/api-reference/endpoint/upload/request-multipart",
-                "/api-reference/endpoint/upload/verify"
-              ]
+              {
+                "group": "Upload",
+                "pages": [
+                  "/api-reference/endpoint/upload/request",
+                  "/api-reference/endpoint/upload/request-multipart",
+                  "/api-reference/endpoint/upload/verify"
+                ]
+              }
             ]
           }
         ]
