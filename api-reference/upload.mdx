@@ -686,15 +686,15 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
 
 #### Expansion upload
 
-You may also optionally
+In addition to your primary build file, you may also optionally upload an expansion file, where this is supported by the target platform on Buildstash. An example of this is uploading an OBB expansion file to accompany a primary APK.
 
 <Steps>
-  <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
-    Use [/upload/request](/api-reference/endpoint/upload/request) endpoint to pass in all key build information, request to begin the upload process, and receive a presigned URL for uploading the build file to.
+  <Step title="Include expansion file details in initial start upload request" icon="chevron-right" stepNumber={1}>
+    When you call [/upload/request](/api-reference/endpoint/upload/request) endpoint above, you'll include the expansion file details there, and receive the presigned URL to upload to, similarly to with the primary file.
+  </Step>
 
-    <Card title="/upload/request" icon="terminal" horizontal href="/api-reference/endpoint/upload/request">
-      
-    </Card>
+  <Step title="Upload expansion file" icon="chevron-right" stepNumber={2}>
+    Upload your expansion file, using the same logic as with the primary file. Remember to not call /upload/verify until both primary and expansion files are uploaded.
   </Step>
 </Steps>
 
