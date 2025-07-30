@@ -41,15 +41,15 @@
           {
             "group": "Guides",
             "pages": [
-              "upload"
+              "/api-reference/upload"
             ]
           },
           {
             "group": "Endpoints",
             "pages": [
-              "upload/request",
-              "upload/request/multipart",
-              "upload/verify"
+              "/api-reference/endpoint/upload/request",
+              "/api-reference/endpoint/upload/request-multipart",
+              "/api-reference/endpoint/upload/verify"
             ]
           }
         ]
