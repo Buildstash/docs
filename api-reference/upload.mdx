@@ -30,13 +30,59 @@ Note, a Buildstash app-level API key is required for uploading builds.
     <CodeGroup>
 
     ```curl Request
-    console.log("Hello World");
+    curl -X PUT "https://example-presigned-url.com" \
+    --upload-file "path/to/your/file.txt" \
+    -H "Content-Type: content-type-from-upload-request" \
+    -H "Content-Length: returned-content-length" \
+    -H "Content-Disposition: returned-content-disposition" \
+    -H "x-amz-acl: private"
+    
     ```
 
     
     ```javascript Request
-    print('Hello World!')
+    // uploadRequest made as in above step
+    const { pending_upload_id, primary_file, expansion_files } = uploadRequest.data;
+    
+    await axios.put(
+      primary_file.presigned_data.url,
+      fs.createReadStream(primaryFilePath),
+      {
+        headers: {
+          'Content-Type': primary_file.presigned_data.headers['Content-Type'],
+          'Content-Length': primary_file.presigned_data.headers['Content-Length'],
+          'Content-Disposition': primary_file.presigned_data.headers['Content-Disposition'],
+          'x-amz-acl': 'private'
+        },
+        maxBodyLength: Infinity
+      }
+    );
     ```
+
+    ```python Request
+    //
+    ```
+    
+    ```php Request
+    //
+    ```
+
+    ```go Request
+    //
+    ```
+
+    ```java Request
+    //
+    ```
+
+    ```csharp Request
+    //
+    ```
+
+    ```ruby Request
+    //
+    ```
+    
 
     </CodeGroup>
 
