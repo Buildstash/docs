@@ -238,7 +238,218 @@ All **/upload** endpoints expect this API token in in the Authorization header a
     </Card>
   </Step>
   <Step title="Upload part" icon="chevron-right">
-    asdf
+    For multipart uploads, once you have the presigned URL for each part, you'll need to upload that part, store returned ETag, and upload the next part, until all are complete. The provided examples demonstrate a relatively simple approach to this. Note more advanced approaches are possible including parallel uploads for efficiency.
+
+    <CodeGroup dropdown expandable>
+
+    ```bash Request
+     # Set vars
+FILE="yourfile.bin"
+SIZE=$(stat -c %s "$FILE")
+CHUNK_SIZE_MB=5
+CHUNK_SIZE=$((CHUNK_SIZE_MB * 1024 * 1024))
+API_KEY="your_api_key"
+PENDING_ID="your_pending_upload_id"
+
+# Upload loop
+for i in $(seq 0 $(( (SIZE + CHUNK_SIZE - 1) / CHUNK_SIZE - 1))); do
+  OFFSET=$((i * CHUNK_SIZE))
+  PART_NUM=$((i + 1))
+  LEN=$((CHUNK_SIZE))
+  [ $((OFFSET + LEN)) -gt $SIZE ] && LEN=$((SIZE - OFFSET))
+
+  echo "Uploading part $PART_NUM"
+
+  PRESIGNED=$(curl -s -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
+    -H "Authorization: Bearer $API_KEY" \
+    -H "Content-Type: application/json" \
+    -d "{\"pending_upload_id\":\"$PENDING_ID\",\"part_number\":$PART_NUM,\"content_length\":$LEN}")
+
+  URL=$(echo $PRESIGNED | jq -r .part_presigned_url)
+
+  dd if="$FILE" bs=1 skip=$OFFSET count=$LEN 2>/dev/null | \
+    curl -X PUT "$URL" -H "Content-Length: $LEN" -H "Content-Type: application/octet-stream" --data-binary @-
+done
+    ```
+
+    
+    ```javascript Request
+    // Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    async function uploadChunkedFile({
+  filePath,
+  filesize,
+  pendingUploadId,
+  chunkedNumberParts,
+  chunkedPartSizeMb,
+  apiKey,
+}) {
+  // Read the file at filePath into a buffer
+  const chunkSize = chunkedPartSizeMb * 1024 * 1024;
+  const parts = [];
+
+  // Loop through each part, get presigned URL, and upload it
+  for (let i = 0; i < chunkedNumberParts; i++) {
+
+    const chunkStart = i * chunkSize;
+    const chunkEnd = Math.min((i + 1) * chunkSize - 1, filesize - 1);
+    let chunkStream = fs.createReadStream(filePath, { start: chunkStart, end: chunkEnd });
+
+    const contentLength = chunkEnd - chunkStart + 1;
+
+    const partNumber = i + 1;
+
+    core.info('Uploading chunked upload, part: ' + partNumber + ' of ' + chunkedNumberParts);
+
+    // Request presigned URL for this part
+    const presignedResp = await axios.post(
+      'https://app.buildstash.com/api/v1/upload/request/multipart',
+      {
+        pending_upload_id: pendingUploadId,
+        part_number: partNumber,
+        content_length: contentLength
+      },
+      {
+        headers: {
+          'Authorization': Bearer ${apiKey},
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    // Get presigned URL for this part from response
+    const presignedUrl = presignedResp.data.part_presigned_url;
+
+    // Upload chunk via presigned URL (on failure retry part once before error)
+    let uploadResponse;
+    let uploadError;
+    // Attach error handler to the stream
+    chunkStream.on('error', (err) => {
+      core.error(File stream error for part ${partNumber}: ${err.message});
+    });
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        uploadResponse = await axios.put(
+          presignedUrl,
+          chunkStream,
+          {
+            headers: {
+              'Content-Type': 'application/octet-stream',
+              'Content-Length': contentLength
+            },
+            maxBodyLength: Infinity
+          }
+        );
+        uploadError = null;
+        break; // Success, exit retry loop
+      } catch (err) {
+        uploadError = err;
+        // Log more error details
+        if (err.response) {
+          core.error(Chunk upload for part ${partNumber} failed (attempt ${attempt}): ${err.message}, status: ${err.response.status}, data: ${JSON.stringify(err.response.data)});
+        } else {
+          core.error(Chunk upload for part ${partNumber} failed (attempt ${attempt}): ${err.message});
+        }
+        if (attempt === 1) {
+          // Re-create the stream for retry
+          chunkStream.destroy();
+        }
+      }
+      // If retrying, re-create the stream
+      if (attempt === 1 && uploadError) {
+        // Wait a short delay before retrying (optional, can be omitted or tuned)
+        await new Promise(res => setTimeout(res, 500));
+        // Re-create the stream for the retry
+        chunkStream = fs.createReadStream(filePath, { start: chunkStart, end: chunkEnd });
+        chunkStream.on('error', (err) => {
+          core.error(File stream error for part ${partNumber} (retry): ${err.message});
+        });
+      }
+    }
+    if (uploadError) {
+      throw uploadError;
+    }
+    // Check for ETag presence
+    if (!uploadResponse.headers.etag) {
+      core.warning(No ETag returned for part ${partNumber}. Response headers: ${JSON.stringify(uploadResponse.headers)});
+    }
+
+    // Add part to parts array
+    parts.push({
+      PartNumber: partNumber,
+      ETag: uploadResponse.headers.etag
+    });
+  }
+
+  // Return parts array
+  return parts;
+}
+    ```
+
+    
+    ```python Request
+    # Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    ```
+
+    
+    ```php Request
+    // Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    ```
+
+    
+    ```go Request
+    // Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    ```
+
+    
+    ```java Request
+    // Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    ```
+
+    
+    ```csharp Request
+    // Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    ```
+
+    
+    ```ruby Request
+    # Pass in values from initial upload request, and get parts etags back to use for verifying upload completion later
+    ```
+
+    </CodeGroup>
+
+    If the upload to S3 was successful, you've receive a response like:
+
+    <CodeGroup>
+
+    ```bash Response
+    /HTTP/1.1 200 OK
+    Date: Wed, 30 Jul 2025 20:48:28 GMT
+    Content-Type: text/plain;charset=UTF-8
+    Content-Length: 0
+    Connection: keep-alive
+    ETag: "a4d9c87f3e6b41c29fb2e7a8d1035b6e"
+    x-amz-checksum-crc64nvme: H1KdR+1sY8c=
+    x-amz-version-id: 93cf1f4e9e3d4ac2a8a4f929b03bd7a9
+    Server: cloudflare
+    CF-RAY: 9802ce3d5f6a1234-LAX
+    ```
+
+    </CodeGroup>
+    
+  </Step>
+</Steps>
+
+#### Expansion upload
+
+You may also optionally
+
+<Steps>
+  <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
+    Use [/upload/request](/api-reference/endpoint/upload/request) endpoint to pass in all key build information, request to begin the upload process, and receive a presigned URL for uploading the build file to.
+
+    <Card title="/upload/request" icon="terminal" horizontal href="/api-reference/endpoint/upload/request">
+      
+    </Card>
   </Step>
 </Steps>
 
