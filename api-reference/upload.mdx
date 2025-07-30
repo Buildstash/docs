@@ -27,7 +27,7 @@ Note, a Buildstash app-level API key is required for uploading builds.
   <Step title="Upload file to presigned URL" icon="chevron-right" stepNumber={2}>
     Upload the file
 
-    <CodeGroup dropdown expandable>
+    <CodeGroup>
 
     ```cURL Request
       # Assuming you've parsed the values from previous `uploadRequest.data` into environment variables
@@ -241,7 +241,7 @@ Note, a Buildstash app-level API key is required for uploading builds.
   </Step>
 </Steps>
 
-### Best Practices
+### Best practices
 
 1. **Retry Logic**: Implement retry logic for failed uploads
 2. **Progress Tracking**: Track upload progress for large files
@@ -249,7 +249,7 @@ Note, a Buildstash app-level API key is required for uploading builds.
 4. **Validation**: Verify file integrity after upload
 5. **Cleanup**: Handle cleanup on upload failure
 
-### Provided Integrations
+### Provided integrations
 
 <Card title="CI Integrations" href="https://support.buildstash.com/docs">
   We provide a number of off-the-shelf integrations for uploading builds to Buildstash via widely used CI platforms - like GitHub Actions and Azure Pipelines.
