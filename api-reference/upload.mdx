@@ -690,7 +690,7 @@ In addition to your primary build file, you may also optionally upload an expans
 
 <Steps>
   <Step title="Include expansion file details in initial start upload request" icon="chevron-right" stepNumber={1}>
-    When you call [/upload/request](/api-reference/endpoint/upload/request) endpoint above, you'll include the expansion file details there, and receive the presigned URL to upload to, similarly to with the primary file.
+    When you call [/upload/request](/api-reference/endpoint/upload/request) endpoint in the first step, you'll include the expansion file details there, and receive the presigned URL to upload to, similarly to with the primary file.
   </Step>
 
   <Step title="Upload expansion file" icon="chevron-right" stepNumber={2}>
@@ -702,9 +702,11 @@ In addition to your primary build file, you may also optionally upload an expans
 
 <Steps>
   <Step title="Verify and complete upload" icon="chevron-right" stepNumber={4}>
-    Use [/upload/verify](/api-reference/endpoint/upload/verify) endpoint to inform Buildstash the upload is complete, validate all parts have successfully uploaded, and complete the upload flow.
+    Once all files are uploaded, use [/upload/verify](/api-reference/endpoint/upload/verify) endpoint to inform Buildstash the upload is complete, validate all parts have successfully uploaded, and complete the upload flow. Once you receive a successful response from the endpoint, the build will be available in the Buildstash interface!
 
     <Card title="/upload/verify" icon="terminal" horizontal href="/upload/verify">
+
+    Note, for some build types where additional server side processing is required (for example iOS and Android builds), the verify endpoint will return the pending_processing boolean as true. In this case there will be a small delay before the build is available for download.
       
     </Card>
   </Step>
