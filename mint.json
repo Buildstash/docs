@@ -70,12 +70,6 @@
   ],
   "navigation": [
     {
-      "group": "Guide",
-      "pages": [
-        "guide"
-      ]
-    },
-    {
       "group": "API",
       "pages": [
         "api/introduction"
