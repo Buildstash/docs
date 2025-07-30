@@ -39,9 +39,17 @@
             ]
           },
           {
-            "group": "Upload",
+            "group": "Guides",
             "pages": [
               "upload"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "upload/request",
+              "upload/request/multipart",
+              "upload/verify"
             ]
           }
         ]
