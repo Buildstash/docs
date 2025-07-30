@@ -36,7 +36,7 @@
     },
     {
       "name": "API",
-      "url": "/api"
+      "url": "/api-reference"
     }
   ],
   "anchors": [
@@ -46,7 +46,7 @@
     {
       "group": "API",
       "pages": [
-        "/api/introduction"
+        "/api-reference/introduction"
       ]
     }
   ],
