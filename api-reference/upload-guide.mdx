@@ -1,0 +1,357 @@
+---
+title: "Upload Guide"
+description: "Complete guide to uploading files to Buildstash"
+---
+
+# Upload Guide
+
+This guide demonstrates how to upload files to Buildstash using both single part and multipart upload methods.
+
+## Prerequisites
+
+- Buildstash API key
+- File to upload
+- HTTP client (curl, axios, etc.)
+
+## Single Part Upload (< 5GB)
+
+For files smaller than 5GB, use the single part upload flow:
+
+### Step 1: Request Upload
+
+```bash
+curl -X POST https://app.buildstash.com/api/v1/upload/request \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "structure": "file",
+    "primary_file": {
+      "filename": "example.zip",
+      "size_bytes": 1048576
+    },
+    "source": "ghactions",
+    "labels": ["production", "stable"],
+    "architectures": ["x86_64"],
+    "platform": "linux",
+    "stream": "main"
+  }'
+```
+
+**Response:**
+```json
+{
+  "pending_upload_id": "upload_123456789",
+  "primary_file": {
+    "chunked_upload": false,
+    "presigned_data": {
+      "url": "https://s3.amazonaws.com/presigned-url",
+      "headers": {
+        "Content-Type": "application/octet-stream",
+        "Content-Length": "1048576",
+        "Content-Disposition": "attachment; filename=\"example.zip\""
+      }
+    }
+  }
+}
+```
+
+### Step 2: Upload File
+
+```bash
+curl -X PUT "https://s3.amazonaws.com/presigned-url" \
+  -H "Content-Type: application/octet-stream" \
+  -H "Content-Length: 1048576" \
+  -H "Content-Disposition: attachment; filename=\"example.zip\"" \
+  --data-binary @example.zip
+```
+
+### Step 3: Verify Upload
+
+```bash
+curl -X POST https://app.buildstash.com/api/v1/upload/verify \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pending_upload_id": "upload_123456789"
+  }'
+```
+
+**Response:**
+```json
+{
+  "build_id": "build_123456789",
+  "pending_processing": true,
+  "build_info_url": "https://app.buildstash.com/builds/build_123456789",
+  "download_url": "https://app.buildstash.com/downloads/build_123456789"
+}
+```
+
+## Multipart Upload (> 5GB)
+
+For files larger than 5GB, use the multipart upload flow:
+
+### Step 1: Request Upload
+
+```bash
+curl -X POST https://app.buildstash.com/api/v1/upload/request \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "structure": "file",
+    "primary_file": {
+      "filename": "large-file.zip",
+      "size_bytes": 6442450944
+    },
+    "source": "ghactions",
+    "labels": ["production", "large"],
+    "architectures": ["x86_64"],
+    "platform": "linux",
+    "stream": "main"
+  }'
+```
+
+**Response:**
+```json
+{
+  "pending_upload_id": "upload_123456789",
+  "primary_file": {
+    "chunked_upload": true,
+    "chunked_number_parts": 3,
+    "chunked_part_size_mb": 100
+  }
+}
+```
+
+### Step 2: Request and Upload Each Part
+
+For each part, request a presigned URL and upload the part:
+
+**Part 1:**
+```bash
+# Request presigned URL for part 1
+curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pending_upload_id": "upload_123456789",
+    "part_number": 1,
+    "content_length": 104857600
+  }'
+
+# Upload part 1
+curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-1" \
+  -H "Content-Type: application/octet-stream" \
+  -H "Content-Length: 104857600" \
+  --data-binary @part1.bin
+```
+
+**Part 2:**
+```bash
+# Request presigned URL for part 2
+curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pending_upload_id": "upload_123456789",
+    "part_number": 2,
+    "content_length": 104857600
+  }'
+
+# Upload part 2
+curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-2" \
+  -H "Content-Type: application/octet-stream" \
+  -H "Content-Length: 104857600" \
+  --data-binary @part2.bin
+```
+
+**Part 3:**
+```bash
+# Request presigned URL for part 3
+curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pending_upload_id": "upload_123456789",
+    "part_number": 3,
+    "content_length": 104857600
+  }'
+
+# Upload part 3
+curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-3" \
+  -H "Content-Type: application/octet-stream" \
+  -H "Content-Length: 104857600" \
+  --data-binary @part3.bin
+```
+
+### Step 3: Verify Upload
+
+```bash
+curl -X POST https://app.buildstash.com/api/v1/upload/verify \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pending_upload_id": "upload_123456789",
+    "multipart_chunks": [
+      {
+        "PartNumber": 1,
+        "ETag": "\"abc123def456\""
+      },
+      {
+        "PartNumber": 2,
+        "ETag": "\"ghi789jkl012\""
+      },
+      {
+        "PartNumber": 3,
+        "ETag": "\"mno345pqr678\""
+      }
+    ]
+  }'
+```
+
+## JavaScript Example
+
+Here's a complete JavaScript example using axios:
+
+```javascript
+const axios = require('axios');
+const fs = require('fs');
+
+async function uploadFile(filePath, apiKey) {
+  const stats = fs.statSync(filePath);
+  const filename = path.basename(filePath);
+  
+  // Step 1: Request upload
+  const uploadRequest = await axios.post(
+    'https://app.buildstash.com/api/v1/upload/request',
+    {
+      structure: 'file',
+      primary_file: {
+        filename: filename,
+        size_bytes: stats.size
+      },
+      source: 'ghactions'
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  const { pending_upload_id, primary_file } = uploadRequest.data;
+
+  if (primary_file.chunked_upload) {
+    // Multipart upload
+    const parts = [];
+    const chunkSize = primary_file.chunked_part_size_mb * 1024 * 1024;
+    
+    for (let i = 0; i < primary_file.chunked_number_parts; i++) {
+      const partNumber = i + 1;
+      const chunkStart = i * chunkSize;
+      const chunkEnd = Math.min((i + 1) * chunkSize - 1, stats.size - 1);
+      const contentLength = chunkEnd - chunkStart + 1;
+
+      // Request presigned URL for this part
+      const presignedResp = await axios.post(
+        'https://app.buildstash.com/api/v1/upload/request/multipart',
+        {
+          pending_upload_id: pending_upload_id,
+          part_number: partNumber,
+          content_length: contentLength
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      // Upload part
+      const uploadResponse = await axios.put(
+        presignedResp.data.part_presigned_url,
+        fs.createReadStream(filePath, { start: chunkStart, end: chunkEnd }),
+        {
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Content-Length': contentLength
+          }
+        }
+      );
+
+      parts.push({
+        PartNumber: partNumber,
+        ETag: uploadResponse.headers.etag
+      });
+    }
+
+    // Verify upload
+    const verifyResponse = await axios.post(
+      'https://app.buildstash.com/api/v1/upload/verify',
+      {
+        pending_upload_id: pending_upload_id,
+        multipart_chunks: parts
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    return verifyResponse.data;
+  } else {
+    // Single part upload
+    await axios.put(
+      primary_file.presigned_data.url,
+      fs.createReadStream(filePath),
+      {
+        headers: primary_file.presigned_data.headers
+      }
+    );
+
+    // Verify upload
+    const verifyResponse = await axios.post(
+      'https://app.buildstash.com/api/v1/upload/verify',
+      {
+        pending_upload_id: pending_upload_id
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    return verifyResponse.data;
+  }
+}
+```
+
+## Error Handling
+
+Always implement proper error handling:
+
+```javascript
+try {
+  const result = await uploadFile('example.zip', 'YOUR_API_KEY');
+  console.log('Upload successful:', result.build_id);
+} catch (error) {
+  if (error.response) {
+    console.error('Upload failed:', error.response.status, error.response.data);
+  } else {
+    console.error('Upload failed:', error.message);
+  }
+}
+```
+
+## Best Practices
+
+1. **Retry Logic**: Implement retry logic for failed uploads
+2. **Progress Tracking**: Track upload progress for large files
+3. **Parallel Uploads**: Upload parts in parallel for better performance
+4. **Validation**: Verify file integrity after upload
+5. **Cleanup**: Handle cleanup on upload failure 

@@ -1,0 +1,99 @@
+---
+title: "Request Multipart Upload Part"
+description: "Request a presigned URL for a specific part of a multipart upload"
+method: "POST"
+endpoint: "/upload/request/multipart"
+---
+
+<Note>
+  This endpoint is used for multipart uploads of files larger than 5GB. You must call this endpoint for each part of the file.
+</Note>
+
+## Overview
+
+The multipart upload request endpoint is used to get presigned URLs for individual parts of a large file upload. This is required for files larger than 5GB.
+
+## Request Body
+
+<ParamField body="pending_upload_id" type="string" required>
+  The pending upload ID returned from the initial `/upload/request` call
+</ParamField>
+
+<ParamField body="part_number" type="integer" required>
+  The part number (1-based) for this chunk of the file
+</ParamField>
+
+<ParamField body="content_length" type="integer" required>
+  The size of this part in bytes
+</ParamField>
+
+## Response
+
+<ResponseExample>
+  <ResponseExampleBody>
+```json
+{
+  "part_presigned_url": "https://s3.amazonaws.com/presigned-url-for-part-1"
+}
+```
+  </ResponseExampleBody>
+</ResponseExample>
+
+## Multipart Upload Process
+
+1. **Initial Request**: Call `/upload/request` to get upload information
+2. **For Each Part**: 
+   - Calculate the byte range for this part
+   - Call `/upload/request/multipart` with the part number and size
+   - Upload the part to the returned presigned URL
+   - Save the ETag from the upload response
+3. **Complete Upload**: Call `/upload/verify` with all ETags
+
+## Example Usage
+
+<CodeGroup>
+
+```bash Request Part 1
+curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pending_upload_id": "upload_123456789",
+    "part_number": 1,
+    "content_length": 104857600
+  }'
+```
+
+```bash Upload Part 1
+curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-1" \
+  -H "Content-Type: application/octet-stream" \
+  -H "Content-Length: 104857600" \
+  --data-binary @part1.bin
+```
+
+</CodeGroup>
+
+## Part Size Calculation
+
+For a file of size `total_size` with `num_parts` parts:
+
+- **Part Size**: `part_size = total_size / num_parts`
+- **Last Part**: May be smaller than other parts
+- **Byte Ranges**: 
+  - Part 1: `0` to `part_size - 1`
+  - Part 2: `part_size` to `2 * part_size - 1`
+  - Part N: `(N-1) * part_size` to `min(N * part_size - 1, total_size - 1)`
+
+## Error Handling
+
+- **400 Bad Request**: Invalid part number or content length
+- **401 Unauthorized**: Invalid or missing API key
+- **404 Not Found**: Invalid pending upload ID
+
+## Important Notes
+
+- Part numbers must be sequential starting from 1
+- Each part must be uploaded exactly once
+- The ETag from each upload must be saved for the final verification step
+- Parts can be uploaded in parallel for better performance
+- If a part upload fails, you can retry uploading to the same presigned URL 

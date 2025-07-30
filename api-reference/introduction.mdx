@@ -10,20 +10,49 @@ mode: "wide"
 
 ## Welcome
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card title="Plant Store Endpoints" icon="leaf" href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json">
-  View the OpenAPI specification file
-</Card>
+Buildstash provides a powerful API for uploading files and managing builds. The API supports both single part uploads for smaller files and multipart uploads for files larger than 5GB.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints are authenticated using Bearer tokens. Include your API key in the Authorization header:
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+Authorization: Bearer YOUR_API_KEY
 ```
+
+## Upload Methods
+
+### Single Part Upload
+For files smaller than 5GB, use the single part upload flow:
+
+1. **Request Upload** - Call `/upload/request` to get a presigned URL
+2. **Upload File** - Upload directly to the presigned URL
+3. **Verify Upload** - Call `/upload/verify` to complete the process
+
+### Multipart Upload
+For files larger than 5GB, use the multipart upload flow:
+
+1. **Request Upload** - Call `/upload/request` to get multipart information
+2. **Request Parts** - Call `/upload/request/multipart` for each part
+3. **Upload Parts** - Upload each part to its presigned URL
+4. **Verify Upload** - Call `/upload/verify` with all ETags
+
+<Card title="OpenAPI Specification" icon="code" href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json">
+  View the complete OpenAPI specification
+</Card>
+
+## File Size Limits
+
+- **Single Part Upload**: Up to 5GB
+- **Multipart Upload**: Up to 50-100GB, depending on plan
+
+## Error Handling
+
+All endpoints return standard HTTP status codes:
+
+- **200**: Success
+- **400**: Bad Request (invalid parameters)
+- **401**: Unauthorized (invalid API key)
+- **404**: Not Found (resource doesn't exist)
+- **409**: Conflict (upload already completed)
+- **429**: Too Many Requests (rate limit exceeded)

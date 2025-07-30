@@ -1,0 +1,227 @@
+---
+title: "Request Upload"
+description: "Initiate a file upload by requesting presigned URLs"
+method: "POST"
+endpoint: "/upload/request"
+---
+
+<Note>
+  This endpoint initiates the upload process by requesting presigned URLs. For files larger than 5GB, the response will indicate that chunked upload is required.
+</Note>
+
+## Overview
+
+The upload request endpoint is the first step in uploading files to Buildstash. It returns presigned URLs for direct upload or multipart upload information for large files.
+
+## Request Body
+
+<ParamField body="structure" type="string" required>
+  Upload structure type. Must be either `file` for single file uploads or `file+expansion` for uploads with expansion files.
+</ParamField>
+
+<ParamField body="primary_file" type="object" required>
+  Information about the primary file to upload.
+  
+  <Expandable title="File Info Object">
+    <ParamField body="filename" type="string" required>
+      Name of the file to upload
+    </ParamField>
+    <ParamField body="size_bytes" type="integer" required>
+      Size of the file in bytes
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="expansion_files" type="array">
+  Array of expansion file information. Required when `structure` is `file+expansion`.
+  
+  <Expandable title="Expansion File Object">
+    <ParamField body="filename" type="string" required>
+      Name of the expansion file
+    </ParamField>
+    <ParamField body="size_bytes" type="integer" required>
+      Size of the expansion file in bytes
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="version_component_1_major" type="string">
+  Major version component
+</ParamField>
+
+<ParamField body="version_component_2_minor" type="string">
+  Minor version component
+</ParamField>
+
+<ParamField body="version_component_3_patch" type="string">
+  Patch version component
+</ParamField>
+
+<ParamField body="version_component_extra" type="string">
+  Extra version component
+</ParamField>
+
+<ParamField body="version_component_meta" type="string">
+  Version metadata
+</ParamField>
+
+<ParamField body="custom_build_number" type="string">
+  Custom build number
+</ParamField>
+
+<ParamField body="labels" type="array">
+  Array of labels for the build
+</ParamField>
+
+<ParamField body="architectures" type="array">
+  Array of supported architectures
+</ParamField>
+
+<ParamField body="source" type="string">
+  Source of the upload (e.g., 'ghactions')
+</ParamField>
+
+<ParamField body="ci_pipeline" type="string">
+  CI pipeline name
+</ParamField>
+
+<ParamField body="ci_run_id" type="string">
+  CI run ID
+</ParamField>
+
+<ParamField body="ci_run_url" type="string">
+  CI run URL
+</ParamField>
+
+<ParamField body="ci_build_duration" type="string">
+  CI build duration
+</ParamField>
+
+<ParamField body="vc_host_type" type="string">
+  Version control host type
+</ParamField>
+
+<ParamField body="vc_host" type="string">
+  Version control host
+</ParamField>
+
+<ParamField body="vc_repo_name" type="string">
+  Repository name
+</ParamField>
+
+<ParamField body="vc_repo_url" type="string">
+  Repository URL
+</ParamField>
+
+<ParamField body="vc_branch" type="string">
+  Branch name
+</ParamField>
+
+<ParamField body="vc_commit_sha" type="string">
+  Commit SHA
+</ParamField>
+
+<ParamField body="vc_commit_url" type="string">
+  Commit URL
+</ParamField>
+
+<ParamField body="platform" type="string">
+  Platform information
+</ParamField>
+
+<ParamField body="stream" type="string">
+  Stream information
+</ParamField>
+
+<ParamField body="notes" type="string">
+  Additional notes
+</ParamField>
+
+## Response
+
+<ResponseExample>
+  <ResponseExampleBody>
+```json
+{
+  "pending_upload_id": "upload_123456789",
+  "primary_file": {
+    "chunked_upload": false,
+    "presigned_data": {
+      "url": "https://s3.amazonaws.com/presigned-url",
+      "headers": {
+        "Content-Type": "application/octet-stream",
+        "Content-Length": "1048576",
+        "Content-Disposition": "attachment; filename=\"example.zip\""
+      }
+    }
+  }
+}
+```
+  </ResponseExampleBody>
+</ResponseExample>
+
+<ResponseExample>
+  <ResponseExampleBody>
+```json
+{
+  "pending_upload_id": "upload_123456789",
+  "primary_file": {
+    "chunked_upload": true,
+    "chunked_number_parts": 3,
+    "chunked_part_size_mb": 100
+  }
+}
+```
+  </ResponseExampleBody>
+</ResponseExample>
+
+## Single Part Upload Flow
+
+For files smaller than 5GB, the response will include a presigned URL for direct upload:
+
+1. Call `/upload/request` with file information
+2. Upload the file directly to the presigned URL using a PUT request
+3. Call `/upload/verify` to complete the upload
+
+## Multipart Upload Flow
+
+For files larger than 5GB, the response will indicate chunked upload is required:
+
+1. Call `/upload/request` with file information
+2. For each part, call `/upload/request/multipart` to get a presigned URL
+3. Upload each part to its respective presigned URL
+4. Call `/upload/verify` with the ETags from all uploaded parts
+
+## Example Usage
+
+<CodeGroup>
+
+```bash Single Part Upload
+curl -X POST https://app.buildstash.com/api/v1/upload/request \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "structure": "file",
+    "primary_file": {
+      "filename": "example.zip",
+      "size_bytes": 1048576
+    },
+    "source": "ghactions"
+  }'
+```
+
+```bash Multipart Upload
+curl -X POST https://app.buildstash.com/api/v1/upload/request \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "structure": "file",
+    "primary_file": {
+      "filename": "large-file.zip",
+      "size_bytes": 6442450944
+    },
+    "source": "ghactions"
+  }'
+```
+
+</CodeGroup> 
