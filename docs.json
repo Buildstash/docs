@@ -21,41 +21,27 @@
       }
     }
   },
-  "topbarCtaButton": {
-    "name": "Go to app",
-    "url": "https://app.buildstash.com"
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "API",
+        "groups": [
+          {
+            "group": "Getting started",
+            "pages": [
+              "introduction"
+            ]
+          },
+          {
+            "group": "Upload",
+            "pages": [
+              "upload"
+            ]
+          }
+    ],
+  "global": {
+    "anchors": []
   },
-  "topbarLinks": [
-      {
-        "name": "Home",
-        "url": "https://buildstash.com"
-      },
-      {
-        "name": "Support",
-        "url": "https://buildstash.com/contact"
-      }
-  ],
-  "tabs": [
-    {
-      "name": "Docs",
-      "url": "/"
-    },
-    {
-      "name": "API",
-      "url": "/api-reference"
-    }
-  ],
-  "anchors": [
-
-  ],
-  "navigation": [
-    {
-      "group": "API",
-      "pages": [
-        "/api-reference/introduction"
-      ]
-    }
-  ],
   "redirects": [
     {
       "source": "/changelog",
