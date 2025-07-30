@@ -19,7 +19,14 @@
         "method": "key",
         "name": "bearer"
       }
-    }
+    },
+    "playground": {
+      "display": "simple"
+    },
+   "examples": {
+     "languages": ["curl", "javascript"],
+     "defaults": "required"
+   }
   },
   "navigation": {
     "languages": [
