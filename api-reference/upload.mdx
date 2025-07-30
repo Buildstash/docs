@@ -25,6 +25,8 @@ All **/upload** endpoints expect this API token in in the Authorization header a
 
 #### Upload - Single part
 
+If your primary build file is smaller than 5GB you have the option to upload as a single part.
+
 <Steps>
   <Step title="Upload file to presigned URL" icon="chevron-right" stepNumber={2}>
     Upload the file
@@ -228,6 +230,8 @@ All **/upload** endpoints expect this API token in in the Authorization header a
 </Steps>
 
 #### Upload - Multipart
+
+Alternatively, if your primary build file is larger than 5GB, you must upload as multiple parts. Your original upload request will also return a chunked_upload boolean indicating whether multipart upload is advised and available for this build.
 
 <Steps>
   <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
