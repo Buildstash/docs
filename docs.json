@@ -24,7 +24,6 @@
       "display": "simple"
     },
    "examples": {
-     "languages": ["curl", "javascript"],
      "defaults": "required"
    }
   },
