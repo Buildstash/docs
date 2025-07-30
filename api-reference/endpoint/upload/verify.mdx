@@ -1,17 +1,12 @@
 ---
 title: "Verify Upload"
-description: "Verify that all parts of an upload have been successfully uploaded and complete the upload process"
-method: "POST"
-endpoint: "/upload/verify"
+description: "Verify that all parts of an upload have been successfully uploaded and complete the build creation process"
+openapi: 'POST /upload/verify"
 ---
-
-<Note>
-  This endpoint completes the upload process by verifying all uploaded parts and creating the final build record.
-</Note>
 
 ## Overview
 
-The upload verification endpoint is the final step in the upload process. It verifies that all parts have been successfully uploaded and creates the final build record in Buildstash.
+The upload verification endpoint is the final step in the build upload process, for both single part and multipart uploads. It verifies that all parts have been successfully uploaded, and creates the final build record in Buildstash.
 
 ## Request Body
 
