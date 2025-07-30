@@ -27,16 +27,16 @@ Note, a Buildstash app-level API key is required for uploading builds.
   <Step title="Upload file to presigned URL" icon="chevron-right" stepNumber={2}>
     Upload the file
 
-    <CodeGroup dropdown>
+    <CodeGroup>
 
     ```cURL Request
-    curl -X PUT "https://example-presigned-url.com" \
-    --upload-file "path/to/your/file.txt" \
-    -H "Content-Type: content-type-from-upload-request" \
-    -H "Content-Length: returned-content-length" \
-    -H "Content-Disposition: returned-content-disposition" \
+      # Assuming you've parsed the values from previous `uploadRequest.data` into environment variables
+    curl -X PUT "$PRIMARY_FILE_URL" \
+    --upload-file "$PRIMARY_FILE_PATH" \
+    -H "Content-Type: $PRIMARY_FILE_CONTENT_TYPE" \
+    -H "Content-Length: $PRIMARY_FILE_CONTENT_LENGTH" \
+    -H "Content-Disposition: $PRIMARY_FILE_CONTENT_DISPOSITION" \
     -H "x-amz-acl: private"
-    
     ```
 
     
@@ -59,30 +59,146 @@ Note, a Buildstash app-level API key is required for uploading builds.
     );
     ```
 
+    
     ```python Request
-    //
+    # uploadRequest made as in above step
+    primary_file = uploadRequest["data"]["primary_file"]
+    primaryFilePath = "path/to/your/file.txt"
+    
+    with open(primaryFilePath, "rb") as f:
+        headers = {
+            "Content-Type": primary_file["presigned_data"]["headers"]["Content-Type"],
+            "Content-Length": primary_file["presigned_data"]["headers"]["Content-Length"],
+            "Content-Disposition": primary_file["presigned_data"]["headers"]["Content-Disposition"],
+            "x-amz-acl": "private"
+        }
+        response = requests.put(primary_file["presigned_data"]["url"], data=f, headers=headers)
     ```
+
     
     ```php Request
-    //
-    ```
-
-    ```go Request
-    //
-    ```
-
-    ```java Request
-    //
-    ```
-
-    ```csharp Request
-    //
-    ```
-
-    ```ruby Request
-    //
-    ```
+    // uploadRequest made as in above step
+    $primary_file = $uploadRequest["data"]["primary_file"];
+    $primaryFilePath = "path/to/your/file.txt";
     
+    $file = fopen($primaryFilePath, "rb");
+    $ch = curl_init($primary_file["presigned_data"]["url"]);
+    curl_setopt($ch, CURLOPT_PUT, true);
+    curl_setopt($ch, CURLOPT_INFILE, $file);
+    curl_setopt($ch, CURLOPT_INFILESIZE, filesize($primaryFilePath));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Content-Type: " . $primary_file["presigned_data"]["headers"]["Content-Type"],
+        "Content-Length: " . $primary_file["presigned_data"]["headers"]["Content-Length"],
+        "Content-Disposition: " . $primary_file["presigned_data"]["headers"]["Content-Disposition"],
+        "x-amz-acl: private"
+    ]);
+    
+    curl_exec($ch);
+    curl_close($ch);
+    fclose($file);
+    ```
+
+    
+    ```go Request
+    // uploadRequest made as in above step
+    
+    primaryFilePath := "path/to/your/file.txt"
+    data := uploadRequest["data"].(map[string]interface{})
+    primary := data["primary_file"].(map[string]interface{})
+    presigned := primary["presigned_data"].(map[string]interface{})
+    headers := presigned["headers"].(map[string]string)
+    
+    file, _ := os.Open(primaryFilePath)
+    defer file.Close()
+    
+    req, _ := http.NewRequest("PUT", presigned["url"].(string), file)
+    req.Header.Set("Content-Type", headers["Content-Type"])
+    req.Header.Set("Content-Length", headers["Content-Length"])
+    req.Header.Set("Content-Disposition", headers["Content-Disposition"])
+    req.Header.Set("x-amz-acl", "private")
+    
+    client := &http.Client{}
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+    ```
+
+    
+    ```java Request
+    // uploadRequest made as in above step
+    
+    String primaryFilePath = "path/to/your/file.txt";
+    File file = new File(primaryFilePath);
+    
+    Map<String, Object> data = (Map<String, Object>) uploadRequest.get("data");
+    Map<String, Object> primaryFile = (Map<String, Object>) data.get("primary_file");
+    Map<String, Object> presigned = (Map<String, Object>) primaryFile.get("presigned_data");
+    Map<String, String> headers = (Map<String, String>) presigned.get("headers");
+    
+    HttpURLConnection connection = (HttpURLConnection) new URL((String) presigned.get("url")).openConnection();
+    connection.setDoOutput(true);
+    connection.setRequestMethod("PUT");
+    
+    for (Map.Entry<String, String> header : headers.entrySet())
+        connection.setRequestProperty(header.getKey(), header.getValue());
+    connection.setRequestProperty("x-amz-acl", "private");
+    
+    try (OutputStream out = connection.getOutputStream();
+         FileInputStream in = new FileInputStream(file)) {
+        byte[] buffer = new byte[8192];
+        int len;
+        while ((len = in.read(buffer)) != -1)
+            out.write(buffer, 0, len);
+    }
+    
+    System.out.println("Response: " + connection.getResponseCode());
+    ```
+
+    
+    ```csharp Request
+    // uploadRequest made as in above step
+    
+    var primaryFilePath = "path/to/your/file.txt";
+    var primary = uploadRequest.data.primary_file;
+    var headers = primary.presigned_data.headers;
+    
+    using var stream = File.OpenRead(primaryFilePath);
+    
+    var request = new HttpRequestMessage(HttpMethod.Put, primary.presigned_data.url)
+    {
+        Content = new StreamContent(stream)
+    };
+    
+    request.Content.Headers.ContentType = new MediaTypeHeaderValue(headers["Content-Type"]);
+    request.Content.Headers.ContentLength = long.Parse(headers["Content-Length"]);
+    request.Headers.Add("Content-Disposition", headers["Content-Disposition"]);
+    request.Headers.Add("x-amz-acl", "private");
+    
+    var client = new HttpClient();
+    var response = await client.SendAsync(request);
+    ```
+
+    
+    ```ruby Request
+    # uploadRequest made as in above step
+    
+    primary_file = uploadRequest[:data][:primary_file]
+    primaryFilePath = "path/to/your/file.txt"
+    uri = URI.parse(primary_file[:presigned_data][:url])
+    
+    request = Net::HTTP::Put.new(uri)
+    headers = primary_file[:presigned_data][:headers]
+    request["Content-Type"] = headers["Content-Type"]
+    request["Content-Length"] = headers["Content-Length"]
+    request["Content-Disposition"] = headers["Content-Disposition"]
+    request["x-amz-acl"] = "private"
+    request.body = File.read(primaryFilePath)
+    
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+      http.request(request)
+    end
+    
+    puts response.code
+    ```
 
     </CodeGroup>
 
