@@ -29,6 +29,27 @@
         "url": "https://buildstash.com/contact"
       }
   ],
+  "tabs": [
+    {
+      "name": "Docs",
+      "url": "/"
+    },
+    {
+      "name": "API",
+      "url": "api"
+    }
+  ],
+  "anchors": [
+
+  ],
+  "navigation": [
+    {
+      "group": "API",
+      "pages": [
+        "api/introduction"
+      ]
+    }
+  ],
   "redirects": [
     {
       "source": "/changelog",
@@ -53,27 +74,6 @@
     {
       "source": "/guide",
       "destination": "https://support.buildstash.com/docs"
-    }
-  ],
-  "tabs": [
-    {
-      "name": "Docs",
-      "url": "/"
-    },
-    {
-      "name": "API",
-      "url": "api"
-    }
-  ],
-  "anchors": [
-
-  ],
-  "navigation": [
-    {
-      "group": "API",
-      "pages": [
-        "api/introduction"
-      ]
     }
   ],
   "footerSocials": {
