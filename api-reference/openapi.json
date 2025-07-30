@@ -171,11 +171,11 @@
     "schemas": {
       "UploadRequest": {
         "type": "object",
-        "required": ["structure", "primary_file"],
+        "required": ["structure", "primary_file", "version_component_1_major", "version_component_2_minor", "version_component_3_patch", "source", "platform", "stream"],
         "properties": {
           "structure": {
             "type": "string",
-            "description": "Upload structure type",
+            "description": "Upload structure type. Should use 'file' unless you're including an Android OBB expansion file",
             "enum": ["file", "file+expansion"]
           },
           "primary_file": {
@@ -186,11 +186,11 @@
             "items": {
               "$ref": "#/components/schemas/FileInfo"
             },
-            "description": "Expansion files (required when structure is 'file+expansion')"
+            "description": "Expansion files (only include if structure is 'file+expansion')"
           },
           "version_component_1_major": {
             "type": "string",
-            "description": "Major version component"
+            "description": "Semantic versioning: Major version component"
           },
           "version_component_2_minor": {
             "type": "string",
@@ -210,21 +210,21 @@
           },
           "custom_build_number": {
             "type": "string",
-            "description": "Custom build number"
+            "description": "Custom build number (any preferred format)"
           },
           "labels": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Labels for the build"
+            "description": "Labels for the build (will be created if they don't already exist)"
           },
           "architectures": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Supported architectures"
+            "description": "Architectures this build supports (the platform must also support the architecture)"
           },
           "source": {
             "type": "string",
@@ -294,7 +294,7 @@
         "properties": {
           "filename": {
             "type": "string",
-            "description": "Name of the file"
+            "description": "Filename with extension (excluding path)"
           },
           "size_bytes": {
             "type": "integer",
