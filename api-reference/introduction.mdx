@@ -1,58 +1,22 @@
 ---
 title: "Introduction"
 description: "Build custom integrations using our open API"
-mode: "wide"
 ---
 
 <Note>
   Our API is currently in a pre-release state. We will selectively document key endpoints here you can take advantage of ahead of a full release in Q3 2025.
 </Note>
 
-## Welcome
-
-Buildstash provides a powerful API for uploading files and managing builds. The API supports both single part uploads for smaller files and multipart uploads for files larger than 5GB.
-
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens. Include your API key in the Authorization header:
+Upload API endpoints are authenticated using Bearer tokens. Include your application-specific API key in the Authorization header:
 
 ```bash
 Authorization: Bearer YOUR_API_KEY
 ```
 
-## Upload Methods
+## Guides
 
-### Single Part Upload
-For files smaller than 5GB, use the single part upload flow:
-
-1. **Request Upload** - Call `/upload/request` to get a presigned URL
-2. **Upload File** - Upload directly to the presigned URL
-3. **Verify Upload** - Call `/upload/verify` to complete the process
-
-### Multipart Upload
-For files larger than 5GB, use the multipart upload flow:
-
-1. **Request Upload** - Call `/upload/request` to get multipart information
-2. **Request Parts** - Call `/upload/request/multipart` for each part
-3. **Upload Parts** - Upload each part to its presigned URL
-4. **Verify Upload** - Call `/upload/verify` with all ETags
-
-<Card title="OpenAPI Specification" icon="code" href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json">
-  View the complete OpenAPI specification
+<Card title="Upload a Build" icon="box">
+  Guides you through uploading a new build to Buildstash
 </Card>
-
-## File Size Limits
-
-- **Single Part Upload**: Up to 5GB
-- **Multipart Upload**: Up to 50-100GB, depending on plan
-
-## Error Handling
-
-All endpoints return standard HTTP status codes:
-
-- **200**: Success
-- **400**: Bad Request (invalid parameters)
-- **401**: Unauthorized (invalid API key)
-- **404**: Not Found (resource doesn't exist)
-- **409**: Conflict (upload already completed)
-- **429**: Too Many Requests (rate limit exceeded)
