@@ -5,11 +5,9 @@ description: "Upload a new build to Buildstash"
 
 This guide covers uploading via single or multipart upload flows. Multipart is required for build files above 5GB, and optional for files smaller than this.
 
-### Authentication
+### Authorization
 
 Note, a Buildstash app-level API key is required for uploading builds.
-
-All **/upload** endpoints expect this API token in in the Authorization header as a Bearer token with each request.
 
 #### Request to start
 
