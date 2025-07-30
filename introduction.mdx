@@ -1,8 +1,23 @@
 ---
-title: Introduction
-description: 'Transforming your build-to-release workflow'
+title: "Introduction"
+description: "Build custom integrations using our open API"
+mode: "wide"
 ---
 
-Use this documentation to work through integrations setup, and access our changelog.
+<Note>
+  Our API is currently in a pre-release state. We will selectively document key endpoints here you can take advantage of ahead of a full release in Q3 2025.
+</Note>
 
-We'll be fleshing it out more soon.
+## Authentication
+
+Upload API endpoints are authenticated using Bearer tokens. Include your application-specific API key in the Authorization header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Guides
+
+<Card title="Upload a Build" icon="box">
+  Guides you through uploading a new build to Buildstash
+</Card>
