@@ -33,9 +33,9 @@
         "language": "en",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get started",
             "pages": [
-              "introduction"
+              "/api-reference/introduction"
             ]
           },
           {
