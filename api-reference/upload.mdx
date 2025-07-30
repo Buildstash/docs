@@ -1,21 +1,17 @@
 ---
 title: "Upload Guide"
-description: "Complete guide to uploading files to Buildstash"
+description: "Upload a new build"
 ---
 
-# Upload Guide
+This guide covers uploading via single or multipart upload flows. Multipart is required for build files above 5GB, and optional for files smaller than this.
 
-This guide demonstrates how to upload files to Buildstash using both single part and multipart upload methods.
+### Authentication
 
-## Prerequisites
+A Buildstash app-level API key is required for uploading builds.
 
-- Buildstash API key
-- File to upload
-- HTTP client (curl, axios, etc.)
+## Single Part Upload (\< 5GB)
 
-## Single Part Upload (< 5GB)
-
-For files smaller than 5GB, use the single part upload flow:
+For files smaller than 5GB, you can use the single part upload flow:
 
 ### Step 1: Request Upload
 
@@ -38,6 +34,7 @@ curl -X POST https://app.buildstash.com/api/v1/upload/request \
 ```
 
 **Response:**
+
 ```json
 {
   "pending_upload_id": "upload_123456789",
@@ -77,6 +74,7 @@ curl -X POST https://app.buildstash.com/api/v1/upload/verify \
 ```
 
 **Response:**
+
 ```json
 {
   "build_id": "build_123456789",
@@ -86,7 +84,7 @@ curl -X POST https://app.buildstash.com/api/v1/upload/verify \
 }
 ```
 
-## Multipart Upload (> 5GB)
+## Multipart Upload (\> 5GB)
 
 For files larger than 5GB, use the multipart upload flow:
 
@@ -111,6 +109,7 @@ curl -X POST https://app.buildstash.com/api/v1/upload/request \
 ```
 
 **Response:**
+
 ```json
 {
   "pending_upload_id": "upload_123456789",
@@ -127,6 +126,7 @@ curl -X POST https://app.buildstash.com/api/v1/upload/request \
 For each part, request a presigned URL and upload the part:
 
 **Part 1:**
+
 ```bash
 # Request presigned URL for part 1
 curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
@@ -146,6 +146,7 @@ curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-1" \
 ```
 
 **Part 2:**
+
 ```bash
 # Request presigned URL for part 2
 curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
@@ -165,6 +166,7 @@ curl -X PUT "https://s3.amazonaws.com/presigned-url-for-part-2" \
 ```
 
 **Part 3:**
+
 ```bash
 # Request presigned URL for part 3
 curl -X POST https://app.buildstash.com/api/v1/upload/request/multipart \
@@ -354,4 +356,4 @@ try {
 2. **Progress Tracking**: Track upload progress for large files
 3. **Parallel Uploads**: Upload parts in parallel for better performance
 4. **Validation**: Verify file integrity after upload
-5. **Cleanup**: Handle cleanup on upload failure 
+5. **Cleanup**: Handle cleanup on upload failure
