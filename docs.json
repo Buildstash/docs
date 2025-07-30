@@ -10,11 +10,7 @@
   "colors": {
     "primary": "#9999ff",
     "light": "#b3b3ff",
-    "dark": "#6666ff",
-    "anchors": {
-      "from": "#6666ff",
-      "to": "#b3b3ff"
-    }
+    "dark": "#6666ff"
   },
   "api": {
     "mdx": {
