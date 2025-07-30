@@ -67,7 +67,7 @@ If your primary build file is smaller than 5GB you have the option to upload as 
     ```python Request
     # uploadRequest made as in above step
     primary_file = uploadRequest["data"]["primary_file"]
-    primaryFilePath = "path/to/your/file.txt"
+    primaryFilePath = "path/to/your/file.exe"
     
     with open(primaryFilePath, "rb") as f:
         headers = {
@@ -83,7 +83,7 @@ If your primary build file is smaller than 5GB you have the option to upload as 
     ```php Request
     // uploadRequest made as in above step
     $primary_file = $uploadRequest["data"]["primary_file"];
-    $primaryFilePath = "path/to/your/file.txt";
+    $primaryFilePath = "path/to/your/file.exe";
     
     $file = fopen($primaryFilePath, "rb");
     $ch = curl_init($primary_file["presigned_data"]["url"]);
@@ -106,7 +106,7 @@ If your primary build file is smaller than 5GB you have the option to upload as 
     ```go Request
     // uploadRequest made as in above step
     
-    primaryFilePath := "path/to/your/file.txt"
+    primaryFilePath := "path/to/your/file.exe"
     data := uploadRequest["data"].(map[string]interface{})
     primary := data["primary_file"].(map[string]interface{})
     presigned := primary["presigned_data"].(map[string]interface{})
@@ -130,7 +130,7 @@ If your primary build file is smaller than 5GB you have the option to upload as 
     ```java Request
     // uploadRequest made as in above step
     
-    String primaryFilePath = "path/to/your/file.txt";
+    String primaryFilePath = "path/to/your/file.exe";
     File file = new File(primaryFilePath);
     
     Map<String, Object> data = (Map<String, Object>) uploadRequest.get("data");
@@ -161,7 +161,7 @@ If your primary build file is smaller than 5GB you have the option to upload as 
     ```csharp Request
     // uploadRequest made as in above step
     
-    var primaryFilePath = "path/to/your/file.txt";
+    var primaryFilePath = "path/to/your/file.exe";
     var primary = uploadRequest.data.primary_file;
     var headers = primary.presigned_data.headers;
     
@@ -186,7 +186,7 @@ If your primary build file is smaller than 5GB you have the option to upload as 
     # uploadRequest made as in above step
     
     primary_file = uploadRequest[:data][:primary_file]
-    primaryFilePath = "path/to/your/file.txt"
+    primaryFilePath = "path/to/your/file.exe"
     uri = URI.parse(primary_file[:presigned_data][:url])
     
     request = Net::HTTP::Put.new(uri)
