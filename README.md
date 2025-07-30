@@ -1,16 +1,6 @@
-# Buildstash Documentation
+# Buildstash API Docs
 
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
-
-* Guide pages
-
-* Navigation
-
-* Customizations
-
-* API Reference pages
-
-* Use of popular components
+The Buildstash API documentation is [hosted on Mintlify](https://docs.buildstash.com/api/).
 
 ### Development
 
