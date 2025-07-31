@@ -1,7 +1,7 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
-    "title": "Buildstash Upload API",
+    "title": "Buildstash API",
     "description": "API for uploading files to Buildstash, supporting both single part uploads and multipart uploads for large files (>5GB)",
     "license": {
       "name": "MIT"
@@ -472,7 +472,8 @@
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "description": "App-specific access token"
       }
     }
   }
