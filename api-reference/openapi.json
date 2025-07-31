@@ -178,13 +178,25 @@
             "description": "Upload structure type. Should use 'file' unless you're including an Android OBB expansion file",
             "enum": ["file", "file+expansion"]
           },
+          "platform": {
+            "type": "string",
+            "description": "Platform information"
+          },
+          "stream": {
+            "type": "string",
+            "description": "Stream information"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source of the upload (e.g. cli-upload, ghactions, jenkins, etc)"
+          },
           "primary_file": {
-            "$ref": "#/components/schemas/FileInfo"
+            "$ref": "#/components/schemas/PrimaryFileInfo"
           },
           "expansion_files": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FileInfo"
+              "$ref": "#/components/schemas/ExpansionFileInfo"
             },
             "description": "Expansion files (only include if structure is 'file+expansion')"
           },
@@ -225,10 +237,6 @@
               "type": "string"
             },
             "description": "Architectures this build supports (the platform must also support the architecture)"
-          },
-          "source": {
-            "type": "string",
-            "description": "Source of the upload (e.g., 'ghactions')"
           },
           "ci_pipeline": {
             "type": "string",
@@ -274,23 +282,28 @@
             "type": "string",
             "description": "Commit URL"
           },
-          "platform": {
-            "type": "string",
-            "description": "Platform information"
-          },
-          "stream": {
-            "type": "string",
-            "description": "Stream information"
-          },
           "notes": {
             "type": "string",
             "description": "Additional notes"
           }
         }
       },
-      "FileInfo": {
+      "PrimaryFileInfo": {
         "type": "object",
         "required": ["filename", "size_bytes"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename with extension (excluding path)"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "description": "Size of the file in bytes"
+          }
+        }
+      },
+      "ExpansionFileInfo": {
+        "type": "object",
         "properties": {
           "filename": {
             "type": "string",

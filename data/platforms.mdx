@@ -1,50 +1,51 @@
 ---
-title: "Supported Platforms"
+title: "Platforms"
 description: "List of platforms that Buildstash supports with accompanying identifier."
+icon: "monitor-smartphone"
 ---
 
 If you're targeting a platform that isn't listed, use the "Generic" platform for any build type.
 
 
-| Platform                 | Identifier  | Supported architectures                                            |
-|--------------------------|-------------|--------------------------------------------------------------------|
-| Generic                  | generic     | Any                                                                |
-| Windows                  | windows     | x86, x64, armv8, arm64v8, armv9, ppc, mips                         |
-| macOS                    | macos       | u2b, apple, x86, x64, ppc                                          |
-| Android                  | android     | armv5, armv6, armv7, armv8, arm64v8, armv9, x86, x64, mips, mips64 |                                           |
-| iOS (iPhone/iPad)        | ios         | n/a                                                                   |
-| Meta Quest               | quest       | n/a                                                                   |
-| Nintendo Switch          | switch      | n/a                                                                   |
-| Nintendo Switch 2        | switch2     | n/a                                                                   |
-| PlayStation 5            | ps5         | n/a                                                                   |
-| PlayStation 4            | ps4         | n/a                                                                   |
-| Xbox Series X/S          | xbox-series | n/a                                                                   |
-| Apple Vision Pro         | vision-pro  | n/a                                                                   |
-| Pico XR                  | pico        | n/a                                                                   |
-| WearOS                   | wearos      | armv7, armv8, arm64v8, armv9, x86, x64                             |
-| HTC Vive (Mobile)        | vive        | n/a                                                                   |
-| Apple HomePod            | homepod     | n/a                                                                   |
-| Apple TV                 | apple-tv    | n/a                                                                   |
-| Apple Watch              | apple-watch | n/a                                                                   |
-| FreeBSD                  | freebsd     | x86, x64, armv8, arm64v8, armv9, ppc, ppc64, riscv64, sparc, mips64                                                                   |
-| OpenBSD                  | openbsd     | x86, x64, armv8, arm64v8, armv9, ppc, ppc64, riscv64, sparc, mips64, loongarch                                                                   |
-| Linux (Generic)          | linux       | x86, x64, armv5, armv6, armv7, armv8, arm64v8, armv9, mips, mips64, ppc, risc-v, ibmz                                                                   |
-| Debian/Ubuntu variants   | debian      |                                                                    |
-| Red Hat/Fedora/CentOS    | redhat      |                                                                    |
-| Gentoo Linux             | gentoo      |                                                                    |
-| Arch Linux               | arch        |                                                                    |
-| Playdate                 | playdate    | n/a                                                                   |
-| Magic Leap               | magic-leap  | n/a                                                                   |
-| Zephyr                   | zephyr      |                                                                    |
-| Roblox                   | roblox      | n/a                                                                   |
-| openSUSE                 | opensuse    |                                                                    |
-| Alpine Linux             | alpine      |                                                                    |
-| NixOS                    | nixos       |                                                                    |
-| Slackware Linux          | slackware   |                                                                    |
-| Void Linux               | void        |                                                                    |
-| Mageia/Mandriva/Mandrake | mageia      |                                                                    |
-| KaiOS                    | kaios       |                                                                    |
-| HTML5 Web Game           | web-game    | n/a                                                                   |
+| Platform                 | Identifier  |
+| ------------------------ | ----------- |
+| Generic                  | generic     |
+| Windows                  | windows     |
+| macOS                    | macos       |
+| Android                  | android     |
+| iOS (iPhone/iPad)        | ios         |
+| Meta Quest               | quest       |
+| Nintendo Switch          | switch      |
+| Nintendo Switch 2        | switch2     |
+| PlayStation 5            | ps5         |
+| PlayStation 4            | ps4         |
+| Xbox Series X/S          | xbox-series |
+| Apple Vision Pro         | vision-pro  |
+| Pico XR                  | pico        |
+| WearOS                   | wearos      |
+| HTC Vive (Mobile)        | vive        |
+| Apple HomePod            | homepod     |
+| Apple TV                 | apple-tv    |
+| Apple Watch              | apple-watch |
+| FreeBSD                  | freebsd     |
+| OpenBSD                  | openbsd     |
+| Linux (Generic)          | linux       |
+| Debian/Ubuntu variants   | debian      |
+| Red Hat/Fedora/CentOS    | redhat      |
+| Gentoo Linux             | gentoo      |
+| Arch Linux               | arch        |
+| Playdate                 | playdate    |
+| Magic Leap               | magic-leap  |
+| Zephyr                   | zephyr      |
+| Roblox                   | roblox      |
+| openSUSE                 | opensuse    |
+| Alpine Linux             | alpine      |
+| NixOS                    | nixos       |
+| Slackware Linux          | slackware   |
+| Void Linux               | void        |
+| Mageia/Mandriva/Mandrake | mageia      |
+| KaiOS                    | kaios       |
+
 
 When uploading a build to Buildstash via the API or CI/CD integration, the "platform" field should be set to the accompanying "identifier" for the targeted platform.
 

@@ -1,0 +1,50 @@
+---
+title: "Build Sources"
+description: "Options for specifying the source of a build."
+icon: "folder-git"
+---
+
+When specifying the 'source' field when uploading a build via API or CI integrations, you should use the matching identifier.
+
+| Source                 | Identifier          |
+|------------------------|---------------------|
+| Web Upload             | web-upload          |
+| CLI Upload             | cli-upload          |
+| GitHub Actions         | ghactions           |
+| Jenkins                | jenkins             |
+| Unity Build Automation | unity-build         |
+| GitLab CI              | gitlab-ci           |
+| Azure DevOps           | azure-devops        |
+| CircleCI               | circleci            |
+| Travis CI              | travisci            |
+| AppVeyor               | appveyor            |
+| TeamCity               | teamcity            |
+| Bitbucket Pipelines    | bitbucket-pipelines |
+| Bitrise                | bitrise             |
+| Codemagic              | codemagic           |
+| Buildkite              | buildkite           |
+| Google Cloud Build     | google-cloud-build  |
+| Bamboo                 | bamboo              |
+| Semaphore              | semaphore           |
+| AWS CodeBuild          | aws-codebuild       |
+| Abstruse               | abstruse            |
+| Cirrus CI              | cirrus-ci           |
+| Drone                  | drone               |
+| Concourse              | concourse           |
+
+Additionally, you may specify the source type in the 'vc_host_type' field.
+
+| Source Host Type      | Identifier |
+|-----------------------|------------|
+| Git                   | git        |
+| SVN                   | svn        |
+| Mercurial             | hg         |
+| Perforce              | perforce   |
+| Bazaar                | bzr        |
+| Fossil                | fossil     |
+| Darcs                 | darcs      |
+| CVS                   | cvs        |
+| Monotone              | monotone   |
+| Diversion             | diversion  |
+| Unity Version Control | unity-vc   |
+
