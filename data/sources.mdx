@@ -32,7 +32,34 @@ When specifying the 'source' field when uploading a build via API or CI integrat
 | Drone                  | drone               |
 | Concourse              | concourse           |
 
-Additionally, you may specify the source type in the 'vc_host_type' field.
+You can also specify where the source code is hosted in the 'vc_host' field.
+
+| Source Host            | Identifier       |
+|------------------------|------------------|
+| GitHub                 | github           |
+| GitLab                 | gitlab           |
+| GitLab Self-Hosted     | gitlab-self      |
+| Perforce               | perforce         |
+| Bitbucket              | bitbucket        |
+| Gitea                  | gitea            |
+| Forgejo                | forgejo          |
+| Gogs                   | gogs             |
+| Codeberg               | codeberg         |
+| SourceForge            | sourceforge      |
+| SourceHut              | sourcehut        |
+| RhodeCode              | rhodecode        |
+| Unity Version Control  | unity-vc         |
+| AWS CodeCommit         | aws-codecommit   |
+| Azure Repos            | azure-repos      |
+| Beanstalk              | beanstalk        |
+| Assembla               | assembla         |
+| Codebase               | codebase         |
+| Bonobo Git Server      | bonobo-git       |
+| Phabricator            | phabricator      |
+| Launchpad              | launchpad        |
+| OneDev                 | onedev           |
+
+Additionally, you may specify the host type in the 'vc_host_type' field.
 
 | Source Host Type      | Identifier |
 |-----------------------|------------|

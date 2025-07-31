@@ -176,19 +176,22 @@
           "structure": {
             "type": "string",
             "description": "Upload structure type. Should use 'file' unless you're including an Android OBB expansion file",
-            "enum": ["file", "file+expansion"]
+            "enum": ["file", "file+expansion"],
+            "default": "file"
           },
           "platform": {
             "type": "string",
-            "description": "Platform identifier"
+            "description": "Platform identifier. See [list](/data/platforms)"
           },
           "stream": {
             "type": "string",
-            "description": "Stream information"
+            "description": "Stream name. Must match exact name setup in your app",
+            "example": "nightlies"
           },
           "source": {
             "type": "string",
-            "description": "Source of the upload (e.g. cli-upload, ghactions, jenkins, etc)"
+            "description": "Source of the upload (e.g. cli-upload, ghactions, jenkins, etc)",,
+            "example": "ghactions"
           },
           "primary_file": {
             "$ref": "#/components/schemas/PrimaryFileInfo"
@@ -201,20 +204,24 @@
             "description": "Expansion files (only include if structure is 'file+expansion')"
           },
           "version_component_1_major": {
-            "type": "string",
-            "description": "Semantic versioning: Major version component"
+            "type": "integer",
+            "description": "Semantic versioning: Major version component",
+            "example": 1
           },
           "version_component_2_minor": {
-            "type": "string",
-            "description": "Minor version component"
+            "type": "integer",
+            "description": "Minor version component",
+            "example": 0
           },
           "version_component_3_patch": {
-            "type": "string",
-            "description": "Patch version component"
+            "type": "integer",
+            "description": "Patch version component",
+            "example": 1
           },
           "version_component_extra": {
             "type": "string",
-            "description": "Extra version component. Optional pre-release label like such as 'alpha', 'beta', 'rc', etc"
+            "description": "Extra version component. Optional pre-release label like such as 'alpha', 'beta', 'rc', etc",
+            "example": "alpha"
           },
           "version_component_meta": {
             "type": "string",
@@ -223,7 +230,8 @@
           },
           "custom_build_number": {
             "type": "string",
-            "description": "Custom build number (any preferred format)"
+            "description": "Custom build number (any preferred format)",
+            "example": "398"
           },
           "labels": {
             "type": "array",
@@ -261,7 +269,8 @@
           },
           "vc_host": {
             "type": "string",
-            "description": "Version control host"
+            "description": "Version control host",
+            "example": "github"
           },
           "vc_repo_name": {
             "type": "string",
@@ -474,7 +483,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "App-specific access token. Bearer authentication header of the form Bearer <token>, where <token> is your auth token."
+        "description": "App-specific auth token. Bearer authentication header of the form Bearer <token>, where <token> is your auth token."
       }
     }
   }
