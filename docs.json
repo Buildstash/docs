@@ -62,6 +62,7 @@
             "pages": [
               "/data/platforms",
               "/data/architectures",
+              "/data/filetypes",
               "/data/sources"
             ]
           }
