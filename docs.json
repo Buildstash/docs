@@ -61,7 +61,8 @@
             "group": "Data",
             "pages": [
               "/data/platforms",
-              "/data/architectures"
+              "/data/architectures",
+              "/data/sources"
             ]
           }
         ]
