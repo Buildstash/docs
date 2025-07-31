@@ -180,7 +180,7 @@
           },
           "platform": {
             "type": "string",
-            "description": "Platform information"
+            "description": "Platform identifier"
           },
           "stream": {
             "type": "string",
@@ -473,7 +473,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "App-specific access token"
+        "description": "App-specific access token. Bearer authentication header of the form Bearer <token>, where <token> is your auth token."
       }
     }
   }
