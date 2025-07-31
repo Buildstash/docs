@@ -214,11 +214,12 @@
           },
           "version_component_extra": {
             "type": "string",
-            "description": "Extra version component"
+            "description": "Extra version component. Optional pre-release label like such as 'alpha', 'beta', 'rc', etc"
           },
           "version_component_meta": {
             "type": "string",
-            "description": "Version metadata"
+            "description": "Version metadata. Optional metadata like such as 'build number', 'commit hash', etc",
+            "example": "2025.07.30"
           },
           "custom_build_number": {
             "type": "string",
