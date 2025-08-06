@@ -431,7 +431,7 @@
           "size_bytes": {
             "type": "integer",
             "description": "Size of the file in bytes",
-            "example": 1048576
+            "example": 52428800
           }
         }
       },
@@ -468,7 +468,7 @@
           "expansion_files": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UploadFileInfo"
+              "$ref": "#/components/schemas/UploadExpansionFileInfo"
             }
           }
         }
@@ -524,6 +524,34 @@
                 "example": "attachment; filename=\"example.exe\""
               }
             }
+          }
+        }
+      },
+      "UploadExpansionFileInfo": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename this upload relates to",
+            "example": "expansion.obb"
+          },
+          "chunked_upload": {
+            "type": "boolean",
+            "description": "Whether this file requires multipart upload",
+            "example": false
+          },
+          "chunked_number_parts": {
+            "type": "integer",
+            "description": "Number of parts for multipart upload (if chunked only)",
+            "example": null
+          },
+          "chunked_part_size_mb": {
+            "type": "integer",
+            "description": "Size of each part in MB (if chunked only)",
+            "example": null
+          },
+          "presigned_data": {
+            "$ref": "#/components/schemas/PresignedData"
           }
         }
       },
