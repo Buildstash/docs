@@ -654,6 +654,11 @@
       "VerifyResponse": {
         "type": "object",
         "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message for this request",
+            "example": "Upload verified successfully"
+          },
           "build_id": {
             "type": "string",
             "description": "Unique identifier for the completed build"
