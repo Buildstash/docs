@@ -453,6 +453,11 @@
       "UploadResponse": {
         "type": "object",
         "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success response message",
+            "example": "Upload request successful."
+          },
           "pending_upload_id": {
             "type": "string",
             "description": "Unique identifier for the pending upload"
