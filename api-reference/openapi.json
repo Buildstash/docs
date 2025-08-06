@@ -521,17 +521,29 @@
           },
           "part_number": {
             "type": "integer",
-            "description": "Part number (1-based)"
+            "description": "Part number you want to upload",
+            "example": 1
           },
           "content_length": {
             "type": "integer",
-            "description": "Size of this part in bytes"
+            "description": "Size of this part in bytes",
+            "example": 52428800
           }
         }
       },
       "MultipartResponse": {
         "type": "object",
         "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message for this request",
+            "example": "Generated pre-signed URL for part 1"
+          },
+          "part_number": {
+            "type": "integer",
+            "description": "Requested part number for this presigned upload URL",
+            "example": 1
+          },
           "part_presigned_url": {
             "type": "string",
             "description": "Presigned URL for uploading this part"
