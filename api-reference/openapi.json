@@ -182,7 +182,7 @@
           },
           "platform": {
             "type": "string",
-            "description": "Platform identifier. See [list](/data/platforms)",
+            "description": "Platform identifier. See [full list](/data/platforms)",
             "enum": [
               "generic",
               "windows",
@@ -230,7 +230,7 @@
           },
           "source": {
             "type": "string",
-            "description": "Source of the upload (see full list at https://docs.buildstash.com/data/sources)",
+            "description": "Source of the upload. See [full list](/data/sources)",
             "enum": [
               "web-upload",
               "cli-upload",
@@ -352,7 +352,7 @@
                 "microblaze"
               ]
             },
-            "description": "Architectures this build supports (the platform must also support the architecture)",
+            "description": "Architectures this build supports (the platform must also support the architecture). See [full list](/data/architectures)",
             "example": ["x86", "x64", "armv7"]
           },
           "ci_pipeline": {
@@ -377,13 +377,13 @@
           },
           "vc_host_type": {
             "type": "string",
-            "description": "Version control host type",
+            "description": "Version control host type. See [full list](/data/sources)",
             "enum": ["git", "svn", "hg", "perforce", "bzr", "fossil", "darcs", "cvs", "monotone", "diversion", "unity-vc"],
             "example": "git"
           },
           "vc_host": {
             "type": "string",
-            "description": "Version control host",
+            "description": "Version control host. See [full list](/data/sources)",
             "enum": ["github", "gitlab", "gitlab-self", "perforce", "bitbucket", "gitea", "forgejo", "gogs", "codeberg", "sourceforge", "sourcehut", "rhodecode", "unity-vc", "aws-codecommit", "azure-repos", "beanstalk", "assembla", "codebase", "bonobo-git", "phabricator", "launchpad", "onedev", "diversion"],
             "example": "github"
           },
