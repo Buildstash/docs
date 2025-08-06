@@ -10,29 +10,12 @@ openapi: "POST /upload/request/multipart"
 
 ## Overview
 
-This endpoint is used to request a presigned URL for each individual part of a multipart file upload. This is required for files larger than 5GB, and optional for smaller files.
+This endpoint is used to request a presigned URL for each individual part of a multipart file upload.
 
-## Part Size Calculation
-
-For a file of size `total_size` with `num_parts` parts:
-
-- **Part Size**: `part_size = total_size / num_parts`
-- **Last Part**: May be smaller than other parts
-- **Byte Ranges**: 
-  - Part 1: `0` to `part_size - 1`
-  - Part 2: `part_size` to `2 * part_size - 1`
-  - Part N: `(N-1) * part_size` to `min(N * part_size - 1, total_size - 1)`
-
-## Error Handling
-
-- **400 Bad Request**: Invalid part number or content length
-- **401 Unauthorized**: Invalid or missing API key
-- **404 Not Found**: Invalid pending upload ID
-
-## Important Notes
+### Notes
 
 - Part numbers must be sequential starting from 1
 - Each part must be uploaded exactly once
 - The ETag from each upload must be saved for the final verification step
 - Parts can be uploaded in parallel for better performance
-- If a part upload fails, you can retry uploading to the same presigned URL 
+- If a part upload fails, you can retry uploading to the same presigned URL
