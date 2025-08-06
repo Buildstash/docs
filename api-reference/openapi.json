@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.0.1",
   "info": {
     "title": "Buildstash API",
     "description": "API for uploading files to Buildstash, supporting both single part uploads and multipart uploads for large files (>5GB)",
@@ -177,11 +177,51 @@
             "type": "string",
             "description": "Upload structure type. Should use 'file' unless you're including an Android OBB expansion file",
             "enum": ["file", "file+expansion"],
+            "example": "file",
             "default": "file"
           },
           "platform": {
             "type": "string",
-            "description": "Platform identifier. See [list](/data/platforms)"
+            "description": "Platform identifier. See [list](/data/platforms)",
+            "enum": [
+              "generic",
+              "windows",
+              "macos",
+              "android",
+              "ios",
+              "quest",
+              "switch",
+              "switch2",
+              "ps5",
+              "ps4",
+              "xbox-series",
+              "vision-pro",
+              "pico",
+              "wearos",
+              "vive",
+              "homepod",
+              "apple-tv",
+              "apple-watch",
+              "freebsd",
+              "openbsd",
+              "linux",
+              "debian",
+              "redhat",
+              "gentoo",
+              "arch",
+              "playdate",
+              "magic-leap",
+              "zephyr",
+              "roblox",
+              "opensuse",
+              "alpine",
+              "nixos",
+              "slackware",
+              "void",
+              "mageia",
+              "kaios"
+            ],
+            "example": "windows"
           },
           "stream": {
             "type": "string",
@@ -190,7 +230,32 @@
           },
           "source": {
             "type": "string",
-            "description": "Source of the upload (e.g. cli-upload, ghactions, jenkins, etc)",,
+            "description": "Source of the upload (see full list at https://docs.buildstash.com/data/sources)",
+            "enum": [
+              "web-upload",
+              "cli-upload",
+              "ghactions",
+              "jenkins",
+              "unity-build",
+              "gitlab-ci",
+              "azure-devops",
+              "circleci",
+              "travisci",
+              "appveyor",
+              "teamcity",
+              "bitbucket-pipelines",
+              "bitrise",
+              "codemagic",
+              "buildkite",
+              "google-cloud-build",
+              "bamboo",
+              "semaphore",
+              "aws-codebuild",
+              "abstruse",
+              "cirrus-ci",
+              "drone",
+              "concourse"
+            ],
             "example": "ghactions"
           },
           "primary_file": {
@@ -238,38 +303,47 @@
             "items": {
               "type": "string"
             },
-            "description": "Labels for the build (will be created if they don't already exist)"
+            "description": "Labels for the build (will be created if they don't already exist)",
+            "example": ["signed", "to-test", "release"]
           },
           "architectures": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Architectures this build supports (the platform must also support the architecture)"
+            "description": "Architectures this build supports (the platform must also support the architecture)",
+            "example": ["x86", "x64", "armv7"]
           },
           "ci_pipeline": {
             "type": "string",
-            "description": "CI pipeline name"
+            "description": "CI pipeline name",
+            "example": "Nightly Build"
           },
           "ci_run_id": {
             "type": "string",
-            "description": "CI run ID"
+            "description": "CI run ID",
+            "example": "38836019427"
           },
           "ci_run_url": {
             "type": "string",
-            "description": "CI run URL"
+            "description": "CI run URL",
+            "example": "https://github.com/buildstash/example/actions/runs/38836019427"
           },
           "ci_build_duration": {
             "type": "string",
-            "description": "CI build duration"
+            "description": "CI build duration",
+            "example": "00:05:00"
           },
           "vc_host_type": {
             "type": "string",
-            "description": "Version control host type"
+            "description": "Version control host type",
+            "enum": ["git", "svn", "hg", "perforce", "bzr", "fossil", "darcs", "cvs", "monotone", "diversion", "unity-vc"],
+            "example": "git"
           },
           "vc_host": {
             "type": "string",
             "description": "Version control host",
+            "enum": ["github", "gitlab", "gitlab-self", "perforce", "bitbucket", "gitea", "forgejo", "gogs", "codeberg", "sourceforge", "sourcehut", "rhodecode", "unity-vc", "aws-codecommit", "azure-repos", "beanstalk", "assembla", "codebase", "bonobo-git", "phabricator", "launchpad", "onedev", "diversion"],
             "example": "github"
           },
           "vc_repo_name": {
