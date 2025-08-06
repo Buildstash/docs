@@ -148,7 +148,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/ErrorVerify"
                 }
               }
             }
@@ -702,7 +702,8 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "Error message"
+            "description": "Error message",
+            "example": "Error message explaining why the upload failed"
           }
         }
       },
@@ -713,6 +714,16 @@
             "type": "string",
             "description": "Error message",
             "example": "Error generating pre-signed URL for part"
+          }
+        }
+      },
+      "ErrorVerify": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Error explaining why upload verification failed"
           }
         }
       }
