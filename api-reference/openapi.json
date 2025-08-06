@@ -309,7 +309,48 @@
           "architectures": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "x86",
+                "x64",
+                "u2b",
+                "apple",
+                "ppc",
+                "ibmz",
+                "mips64",
+                "mips",
+                "armv5",
+                "armv6",
+                "armv7",
+                "armv8",
+                "arm64v8",
+                "armv9",
+                "risc-v",
+                "risc-v64",
+                "msp430",
+                "loongarch",
+                "ppc64",
+                "ia64",
+                "sparc",
+                "alpha",
+                "vax",
+                "pdp11",
+                "sh1",
+                "sh2",
+                "sh3",
+                "sh4",
+                "680x0",
+                "xtensa",
+                "nios",
+                "nios2",
+                "niosv",
+                "rx",
+                "avr",
+                "8051",
+                "z80",
+                "mipsx",
+                "microblaze"
+              ]
             },
             "description": "Architectures this build supports (the platform must also support the architecture)",
             "example": ["x86", "x64", "armv7"]
@@ -348,27 +389,33 @@
           },
           "vc_repo_name": {
             "type": "string",
-            "description": "Repository name"
+            "description": "Repository name",
+            "example": "buildstash/example"
           },
           "vc_repo_url": {
             "type": "string",
-            "description": "Repository URL"
+            "description": "Repository URL",
+            "example": "https://github.com/buildstash/example"
           },
           "vc_branch": {
             "type": "string",
-            "description": "Branch name"
+            "description": "Branch name",
+            "example": "main"
           },
           "vc_commit_sha": {
             "type": "string",
-            "description": "Commit SHA"
+            "description": "Commit SHA",
+            "example": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
           },
           "vc_commit_url": {
             "type": "string",
-            "description": "Commit URL"
+            "description": "Commit URL",
+            "example": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
           },
           "notes": {
             "type": "string",
-            "description": "Additional notes"
+            "description": "Additional notes",
+            "example": "Example build notes here."
           }
         }
       },
