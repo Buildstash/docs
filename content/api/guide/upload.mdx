@@ -14,7 +14,9 @@ This guide covers uploading via single or multipart upload flows. Multipart is r
 
 Note, a Buildstash app-level API key is required for uploading builds.
 
-#### Request to start
+---
+
+### Request to start
 
 <Steps>
   <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
@@ -27,7 +29,9 @@ Note, a Buildstash app-level API key is required for uploading builds.
   </Step>
 </Steps>
 
-#### Upload - Single part
+---
+
+### Upload - Single part
 
 If your primary build file is smaller than 5GB you have the option to upload as a single part.
 
@@ -218,7 +222,9 @@ If your primary build file is smaller than 5GB you have the option to upload as 
   </Step>
 </Steps>
 
-#### Upload - Multipart
+---
+
+### Upload - Multipart
 
 Alternatively, if your primary build file is larger than 5GB, you must upload as multiple parts. Your original upload request will also return a chunked_upload boolean indicating whether multipart upload is advised and available for this build.
 
@@ -659,7 +665,9 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
       </Step>
     </Steps>
 
-  #### Expansion upload
+---
+
+  ### Expansion upload
 
   In addition to your primary build file, you may also optionally upload an expansion file, where this is supported by the target platform on Buildstash. An example of this is uploading an OBB expansion file to accompany a primary APK.
 
@@ -673,7 +681,9 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
       </Step>
     </Steps>
 
-  #### Verify and complete
+---
+
+  ### Verify and complete
 
     <Steps>
       <Step title="Verify and complete upload" icon="chevron-right" stepNumber={4}>
@@ -688,6 +698,8 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
       </Step>
     </Steps>
 
+---
+
   ### Best practices
 
   1. **Retry Logic**: Implement retry logic for failed S3 file uploads
@@ -695,9 +707,13 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
   3. **Parallel Uploads**: Upload parts in parallel for better performance
   4. **Cleanup**: Handle cleanup on upload failure
 
+---
+
   ### Provided integrations
   <Cards>
       <Card title="CI Integrations" href="/integrations" icon={<ToyBrickIcon />}>
         We provide a number of off-the-shelf integrations for uploading builds to Buildstash via widely used CI platforms - like GitHub Actions and Azure Pipelines.
       </Card>
   </Cards>
+
+---
