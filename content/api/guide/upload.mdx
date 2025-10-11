@@ -5,7 +5,7 @@ icon: "Upload"
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
-import { SquareTerminal } from 'lucide-react';
+import { SquareTerminal, ToyBrickIcon } from 'lucide-react';
 import { BashPlain, JavascriptPlain, JavaPlain, CsharpPlain, PythonPlain, PhpPlain, GoPlain, RubyPlain } from 'devicons-react';
 
 This guide covers uploading via single or multipart upload flows. Multipart is required for build files above 5GB, and optional for files smaller than this.
@@ -20,9 +20,10 @@ Note, a Buildstash app-level API key is required for uploading builds.
   <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
     Use [/upload/request](/api-reference/endpoint/upload/request) endpoint to pass in all key build information, request to begin the upload process, and receive a presigned URL for uploading the build file to.
 
-    <Card title="/upload/request" icon="terminal" horizontal href="/api-reference/endpoint/upload/request">
-
-    </Card>
+    <Cards>
+      <Card title="/upload/request" icon={<SquareTerminal />} horizontal href="/api-reference/endpoint/upload/request">
+      </Card>
+    </Cards>
   </Step>
 </Steps>
 
@@ -225,9 +226,10 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
     <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
       Use [/upload/request/multipart](/api-reference/endpoint/upload/request-multipart) endpoint to request the presigned URL for each part.
 
-      <Card title="/upload/request/multipart" icon="terminal" horizontal href="/api-reference/endpoint/upload/request-multipart">
-
+    <Cards>
+      <Card title="/upload/request/multipart" icon={<SquareTerminal />} horizontal href="/api-reference/endpoint/upload/request-multipart">
       </Card>
+    </Cards>
     </Step>
   <Step title="Upload part" icon="chevron-right">
     For multipart uploads, once you have the presigned URL for each part, you'll need to upload that part, store returned ETag, and upload the next part, until all are complete. The provided examples demonstrate a relatively simple approach to this. Note more advanced approaches are possible including parallel uploads for efficiency.
@@ -677,9 +679,10 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
       <Step title="Verify and complete upload" icon="chevron-right" stepNumber={4}>
         Once all files are uploaded, use [/upload/verify](/api-reference/endpoint/upload/verify) endpoint to inform Buildstash the upload is complete, validate all parts have successfully uploaded, and complete the upload flow. Once you receive a successful response from the endpoint, the build will be available in the Buildstash interface!
 
-        <Card title="/upload/verify" icon="terminal" horizontal href="/api-reference/endpoint/upload/verify">
-
-        </Card>
+        <Cards>
+          <Card title="/upload/verify" icon={<SquareTerminal />} horizontal href="/api-reference/endpoint/upload/verify">
+          </Card>
+        </Cards>
 
         Note, for some build types where additional server side processing is required (for example iOS and Android builds), the verify endpoint will return the pending_processing boolean as true. In this case there will be a small delay before the build is available for download.
       </Step>
@@ -693,7 +696,8 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
   4. **Cleanup**: Handle cleanup on upload failure
 
   ### Provided integrations
-
-    <Card title="CI Integrations" href="https://support.buildstash.com/docs">
-      We provide a number of off-the-shelf integrations for uploading builds to Buildstash via widely used CI platforms - like GitHub Actions and Azure Pipelines.
-    </Card>
+  <Cards>
+      <Card title="CI Integrations" href="/integrations" icon={<ToyBrickIcon />}>
+        We provide a number of off-the-shelf integrations for uploading builds to Buildstash via widely used CI platforms - like GitHub Actions and Azure Pipelines.
+      </Card>
+  </Cards>

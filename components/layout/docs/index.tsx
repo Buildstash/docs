@@ -291,6 +291,7 @@ export function DocsLayout(props: DocsLayoutProps) {
             {...props}
             links={links}
             tabs={tabs}
+            tabMode={tabMode}
           />
           {props.children}
         </LayoutBody>
@@ -305,10 +306,12 @@ function DocsNavbar({
   searchToggle = {},
   themeSwitch = {},
   nav = {},
+  tabMode = 'sidebar',
   ...props
 }: DocsLayoutProps & {
   links: LinkItemType[];
   tabs: Option[];
+  tabMode?: 'sidebar' | 'navbar';
 }) {
   const navMode = nav.mode ?? 'auto';
   const sidebarCollapsible = props.sidebar?.collapsible ?? true;
@@ -318,7 +321,7 @@ function DocsNavbar({
       mode={navMode}
       className={cn(
         'on-root:[--fd-nav-height:56px] md:on-root:[--fd-nav-height:64px]',
-        tabs.length > 0 && 'lg:on-root:[--fd-nav-height:104px]',
+        tabMode === 'navbar' && tabs.length > 0 && 'lg:on-root:[--fd-nav-height:104px]',
       )}
     >
       <div
@@ -444,7 +447,7 @@ function DocsNavbar({
           </div>
         </div>
       </div>
-      {tabs.length > 0 && (
+      {tabMode === 'navbar' && tabs.length > 0 && (
         <LayoutTabs
           className={cn(
             'border-b px-6 h-10 max-lg:hidden',
