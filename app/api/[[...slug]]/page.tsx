@@ -9,6 +9,7 @@ import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
+import { getGithubLastEdit } from 'fumadocs-core/content/github';
 
 export default async function Page(props: PageProps<'/api/[[...slug]]'>) {
   const params = await props.params;
@@ -16,9 +17,20 @@ export default async function Page(props: PageProps<'/api/[[...slug]]'>) {
   if (!page) notFound();
 
   const MDX = page.data.body;
+  
+  // Get last edit time from GitHub
+  const lastEditTime = await getGithubLastEdit({
+    owner: 'buildstash',
+    repo: 'docs',
+    path: `content/api/${page.path}`,
+  });
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    <DocsPage 
+      toc={page.data.toc} 
+      full={page.data.full} 
+      lastUpdate={lastEditTime ? new Date(lastEditTime) : undefined}
+    >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>

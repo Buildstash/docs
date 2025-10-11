@@ -5,7 +5,7 @@ export const sidebarTabs: DocsLayoutProps['sidebar'] = {
     { 
       title: 'Guide', 
       url: '/guide', 
-      description: 'Guide to the Buildstash platform',
+      description: 'Buildstash platform docs',
       logo: {
         light: '/logos/logo-api-light.svg',
         dark: '/logos/logo-api-dark.svg'
@@ -14,7 +14,7 @@ export const sidebarTabs: DocsLayoutProps['sidebar'] = {
     { 
       title: 'Integrations', 
       url: '/integrations', 
-      description: 'Connect Buildstash to the other tools you use',
+      description: 'Connect external tools',
       logo: {
         light: '/logos/logo-api-light.svg',
         dark: '/logos/logo-api-dark.svg'

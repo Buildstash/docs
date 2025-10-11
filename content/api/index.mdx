@@ -1,13 +1,27 @@
 ---
-title: API home
-description: Your first document
+title: "Introduction"
+description: "Build custom integrations using our open API"
+icon: House
 ---
 
-API
+import { Upload } from 'lucide-react';
 
-## What is Next?
+<Callout>
+  Our API is currently in a pre-release state. We will selectively document key endpoints here you can take advantage of ahead of a full release in Q4 2025.
+</Callout>
+
+## Authentication
+
+Upload API endpoints are authenticated using Bearer tokens. Include your application-specific API key in the Authorization header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Guides
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card title="Upload a Build" icon={<Upload />} href="/api-reference/upload">
+    Guides you through uploading a new build to Buildstash
+  </Card>
 </Cards>

@@ -1,5 +1,13 @@
 {
   "title": "API",
-  "description": "The description of root folder (optional)",
-  "root": true
+  "description": "Buildstash API docs",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "---Guides---",
+    "guide/upload",
+    "---Endpoints---",
+    "endpoint/upload"
+  ]
 }

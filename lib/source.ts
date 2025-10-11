@@ -1,6 +1,9 @@
 import { guide, api, integrations } from '@/.source';
 import { type InferPageType, loader } from 'fumadocs-core/source';
 import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
+import { icons } from 'lucide-react';
+import { openapiPlugin } from 'fumadocs-openapi/server';
+import { createElement } from 'react';
 
 // Single combined source with all content
 export const source = loader({
@@ -34,7 +37,7 @@ export const guideDocs = loader({
 export const apiDocs = loader({
   baseUrl: '/api',
   source: api.toFumadocsSource(),
-  plugins: [lucideIconsPlugin()],
+  plugins: [lucideIconsPlugin(), openapiPlugin()],
 });
 
 export const integrationsDocs = loader({

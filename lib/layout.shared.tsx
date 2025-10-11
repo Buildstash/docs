@@ -41,7 +41,7 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         text: 'Support',
-        url: 'https://support.buildstash.com',
+        url: 'https://support.buildstash.com/requests',
         secondary: false,
       },
       {
@@ -61,6 +61,11 @@ export function baseOptions(): BaseLayoutProps {
           {
             text: 'Pricing',
             url: 'https://buildstash.com/pricing',
+            secondary: false,
+          },
+          {
+            text: 'Status',
+            url: 'https://status.buildstash.com',
             secondary: false,
           },
           {
