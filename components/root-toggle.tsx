@@ -57,7 +57,7 @@ export function RootToggle({
           <img 
             src={isDark ? selected.logo.dark : selected.logo.light}
             alt={typeof selected.title === 'string' ? selected.title : 'Logo'}
-            className="w-[72%] h-[72%] object-contain"
+            className="h-6 w-auto object-contain"
           />
         ) : (
           selected.icon
