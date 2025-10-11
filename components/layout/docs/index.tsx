@@ -259,7 +259,7 @@ export function DocsLayout(props: DocsLayoutProps) {
           ) : null}
           {themeSwitch.enabled !== false &&
             (themeSwitch.component ?? (
-              <ThemeToggle mode={themeSwitch.mode ?? 'light-dark-system'} />
+              <ThemeToggle />
             ))}
           {footer}
         </HideIfEmpty>
@@ -429,7 +429,7 @@ function DocsNavbar({
             ) : null}
             {themeSwitch.enabled !== false &&
               (themeSwitch.component ?? (
-                <ThemeToggle mode={themeSwitch.mode ?? 'light-dark-system'} />
+                <ThemeToggle />
               ))}
             {sidebarCollapsible && navMode === 'top' && (
               <SidebarCollapseTrigger

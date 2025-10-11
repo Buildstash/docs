@@ -1,6 +1,6 @@
 'use client';
 import { cva } from 'class-variance-authority';
-import { Moon, Sun, Airplay } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { type HTMLAttributes, useLayoutEffect, useState } from 'react';
 import { cn } from '../lib/cn';
@@ -17,19 +17,15 @@ const itemVariants = cva(
   },
 );
 
-const full = [
+const themes = [
   ['light', Sun] as const,
   ['dark', Moon] as const,
-  ['system', Airplay] as const,
 ];
 
 export function ThemeToggle({
   className,
-  mode = 'light-dark',
   ...props
-}: HTMLAttributes<HTMLElement> & {
-  mode?: 'light-dark' | 'light-dark-system';
-}) {
+}: HTMLAttributes<HTMLElement>) {
   const { setTheme, theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -42,46 +38,28 @@ export function ThemeToggle({
     className,
   );
 
-  if (mode === 'light-dark') {
-    const value = mounted ? resolvedTheme : null;
-
-    return (
-      <button
-        className={container}
-        aria-label={`Toggle Theme`}
-        onClick={() => setTheme(value === 'light' ? 'dark' : 'light')}
-        data-theme-toggle=""
-        {...props}
-      >
-        {full.map(([key, Icon]) => {
-          if (key === 'system') return;
-
-          return (
-            <Icon
-              key={key}
-              fill="currentColor"
-              className={cn(itemVariants({ active: value === key }))}
-            />
-          );
-        })}
-      </button>
-    );
-  }
-
-  const value = mounted ? theme : null;
+  // Use resolvedTheme to get the actual theme being applied (system preference when theme is 'system')
+  // If no theme is set, default to system preference
+  const currentTheme = mounted ? resolvedTheme : null;
+  
+  // Determine which theme to toggle to
+  const toggleToTheme = currentTheme === 'light' ? 'dark' : 'light';
 
   return (
-    <div className={container} data-theme-toggle="" {...props}>
-      {full.map(([key, Icon]) => (
-        <button
+    <button
+      className={container}
+      aria-label={`Toggle Theme`}
+      onClick={() => setTheme(toggleToTheme)}
+      data-theme-toggle=""
+      {...props}
+    >
+      {themes.map(([key, Icon]) => (
+        <Icon
           key={key}
-          aria-label={key}
-          className={cn(itemVariants({ active: value === key }))}
-          onClick={() => setTheme(key)}
-        >
-          <Icon className="size-full" fill="currentColor" />
-        </button>
+          fill="currentColor"
+          className={cn(itemVariants({ active: currentTheme === key }))}
+        />
       ))}
-    </div>
+    </button>
   );
 }
