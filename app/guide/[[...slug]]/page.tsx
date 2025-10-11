@@ -30,6 +30,9 @@ export default async function Page(props: PageProps<'/guide/[[...slug]]'>) {
       toc={page.data.toc} 
       full={page.data.full} 
       lastUpdate={lastEditTime ? new Date(lastEditTime) : undefined}
+      tableOfContent={{
+        style: 'clerk'
+      }}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
