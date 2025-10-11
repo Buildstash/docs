@@ -147,19 +147,6 @@ export function DocsLayout(props: DocsLayoutProps) {
         {tabMode === 'navbar' && tabs.length > 0 && (
           <RootToggle options={tabs} className="lg:hidden w-full" />
         )}
-        {collapsible && (
-          <SidebarCollapseTrigger
-            className={cn(
-              buttonVariants({
-                color: 'ghost',
-                size: 'icon-sm',
-                className: 'mt-1 mb-auto text-fd-muted-foreground',
-              }),
-            )}
-          >
-            <SidebarIcon />
-          </SidebarCollapseTrigger>
-        )}
       </div>
     );
 
@@ -492,7 +479,7 @@ function NavbarLinkItem({
           )}
           <ChevronDown className="size-3" />
         </PopoverTrigger>
-        <PopoverContent className="flex flex-col">
+        <PopoverContent className="flex flex-col p-1 w-auto min-w-fit">
           {item.items.map((child, i) => {
             if (child.type === 'custom')
               return <Fragment key={i}>{child.children}</Fragment>;
@@ -501,7 +488,7 @@ function NavbarLinkItem({
               <BaseLinkItem
                 key={i}
                 item={child}
-                className="inline-flex items-center gap-2 rounded-md p-2 text-start hover:bg-fd-accent hover:text-fd-accent-foreground data-[active=true]:text-fd-primary [&_svg]:size-4"
+                className="inline-flex items-center gap-2 rounded-md p-1 text-start hover:bg-fd-accent hover:text-fd-accent-foreground data-[active=true]:text-fd-primary [&_svg]:size-4"
               >
                 {child.icon}
                 {child.text}

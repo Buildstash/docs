@@ -1,5 +1,4 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import {BookIcon} from "lucide-react";
 
 /**
  * Shared layout configurations
@@ -25,14 +24,51 @@ export function baseOptions(): BaseLayoutProps {
         </>
       ),
     },
+    githubUrl: 'https://github.com/buildstash',
     // see https://fumadocs.dev/docs/ui/navigation/links
     links: [
       {
-        icon: <BookIcon />,
-        text: 'Blog',
-        url: '/blog',
+        text: 'Roadmap',
+        url: 'https://support.buildstash.com',
         // secondary items will be displayed differently on navbar
         secondary: false,
+      },
+      {
+        text: 'Changelog',
+        url: 'https://support.buildstash.com/changelog',
+        // secondary items will be displayed differently on navbar
+        secondary: false,
+      },
+      {
+        text: 'Support',
+        url: 'https://support.buildstash.com',
+        secondary: false,
+      },
+      {
+        type: 'menu',
+        text: 'More',
+        items: [
+          {
+            text: 'Buildstash.com',
+            url: 'https://buildstash.com',
+            secondary: false,
+          },
+          {
+            text: 'Blog',
+            url: 'https://blog.buildstash.com',
+            secondary: false,
+          },
+          {
+            text: 'Pricing',
+            url: 'https://buildstash.com/pricing',
+            secondary: false,
+          },
+          {
+            text: 'Go to App',
+            url: 'https://app.buildstash.com',
+            secondary: false,
+          },
+        ],
       },
     ],
   };
