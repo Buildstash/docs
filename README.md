@@ -1,6 +1,6 @@
 # Buildstash Docs
 
-Documentation for Buildstash - a platform for managing software binaries and releases.
+Documentation for [Buildstash](https://buildstash.com) - a platform for managing software binaries and releases.
 
 Content is organized within 3 parent sections:
 - Platform (core docs for Buildstash)
@@ -43,4 +43,3 @@ Some other useful links
 
 - [View these docs live](https://docs.buildstash.com)
 - [Buildstash.com](https://buildstash.com)
-- [Buildstash.com landing](https://buildstash.com)
