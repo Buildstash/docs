@@ -1,0 +1,5 @@
+{
+  "title": "CI/CD",
+  "description": "Connect Buildstash to the other tools you use",
+  "root": false
+}
