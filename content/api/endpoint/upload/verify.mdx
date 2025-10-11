@@ -1,0 +1,20 @@
+---
+title: "Verify Upload"
+description: "Verify that all parts of an upload have been successfully uploaded and complete the build creation process"
+full: true
+method: POST
+route: /upload/verify
+openapi: "POST /upload/verify"
+---
+
+## Overview
+
+The upload verification endpoint is the final step in the build upload process, for both single part and multipart uploads. It verifies that all parts have been successfully uploaded, and creates the final build record in Buildstash.
+
+<APIPage document={"./openapi.json"} operations={[{"path":"/upload/verify","method":"post"}]} webhooks={[]} hasHead={false} />
+
+### Notes
+
+- For multipart uploads, all parts with ETags must be included in the `multipart_chunks` array
+- ETags must match exactly what was returned from the upload requests
+- Some builds may take a short delay to process, indicated by `pending_processing: true`
