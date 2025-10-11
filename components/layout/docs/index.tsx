@@ -55,6 +55,7 @@ import {
 } from './client';
 import { NavProvider } from 'fumadocs-ui/contexts/layout';
 import { type Option, RootToggle } from '../../root-toggle';
+import { ActiveTabLogo } from '../../active-tab-logo';
 import Link from 'fumadocs-core/link';
 import {
   LargeSearchToggle,
@@ -289,7 +290,7 @@ export function DocsLayout(props: DocsLayoutProps) {
           <DocsNavbar
             {...props}
             links={links}
-            tabs={tabMode == 'navbar' ? tabs : []}
+            tabs={tabs}
           />
           {props.children}
         </LayoutBody>
@@ -350,15 +351,13 @@ function DocsNavbar({
               <SidebarIcon />
             </SidebarCollapseTrigger>
           )}
-          <Link
-            href={nav.url ?? '/'}
-            className={cn(
-              'inline-flex items-center gap-2.5 font-semibold',
-              navMode === 'auto' && 'md:hidden',
-            )}
-          >
-            {nav.title}
-          </Link>
+          {tabs.length > 0 ? (
+            <ActiveTabLogo options={tabs} />
+          ) : (
+            <div className="h-8 w-8 bg-green-500 flex items-center justify-center text-white text-xs">
+              {tabs.length}
+            </div>
+          )}
         </div>
         <div className="flex flex-1 items-center md:gap-2">
           {searchToggle.enabled !== false &&
@@ -457,6 +456,7 @@ function DocsNavbar({
     </Navbar>
   );
 }
+
 
 function NavbarLinkItem({
   item,

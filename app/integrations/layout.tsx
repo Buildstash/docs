@@ -9,6 +9,7 @@ export default function Layout({ children }: LayoutProps<'/integrations'>) {
       tree={source.pageTree} 
       sidebar={sidebarTabs}
       {...baseOptions()}
+      nav={{ title: null }}
     >
       {children}
     </DocsLayout>

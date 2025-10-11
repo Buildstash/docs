@@ -10,7 +10,7 @@ export const sidebarTabs: DocsLayoutProps['sidebar'] = {
         light: '/logos/logo-api-light.svg',
         dark: '/logos/logo-api-dark.svg'
       }
-    },
+    } as any,
     { 
       title: 'Integrations', 
       url: '/integrations', 
@@ -19,7 +19,7 @@ export const sidebarTabs: DocsLayoutProps['sidebar'] = {
         light: '/logos/logo-api-light.svg',
         dark: '/logos/logo-api-dark.svg'
       }
-    },
+    } as any,
     { 
       title: 'API', 
       url: '/api', 
@@ -28,6 +28,6 @@ export const sidebarTabs: DocsLayoutProps['sidebar'] = {
         light: '/logos/logo-api-light.svg',
         dark: '/logos/logo-api-dark.svg'
       }
-    },
+    } as any,
   ],
 };
