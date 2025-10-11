@@ -28,6 +28,32 @@ export function baseOptions(): BaseLayoutProps {
     // see https://fumadocs.dev/docs/ui/navigation/links
     links: [
       {
+        type: 'menu',
+        text: 'Docs',
+        items: [
+          {
+            text: 'Platform',
+            url: '/guide',
+            secondary: false,
+          },
+          {
+            text: 'Integrations',
+            url: '/integrations',
+            secondary: false,
+          },
+          {
+            text: 'API',
+            url: '/api',
+            secondary: false,
+          },
+          {
+            text: 'Improve these docs',
+            url: 'https://github.com/buildstash/docs',
+            secondary: false,
+          }
+        ],
+      },
+      {
         text: 'Roadmap',
         url: 'https://support.buildstash.com',
         // secondary items will be displayed differently on navbar
