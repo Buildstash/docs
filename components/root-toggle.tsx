@@ -1,6 +1,6 @@
 'use client';
 import { Check, ChevronsUpDown } from 'lucide-react';
-import { type ComponentProps, type ReactNode, useMemo, useState } from 'react';
+import { type ComponentProps, type ReactNode, useMemo, useState, useEffect } from 'react';
 import Link from 'fumadocs-core/link';
 import { usePathname } from 'fumadocs-core/framework';
 import { cn } from '../lib/cn';
@@ -8,9 +8,14 @@ import { isTabActive } from '../lib/is-active';
 import { useSidebar } from 'fumadocs-ui/contexts/sidebar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import type { SidebarTab } from 'fumadocs-ui/utils/get-sidebar-tabs';
+import { useTheme } from 'next-themes';
 
 export interface Option extends SidebarTab {
   props?: ComponentProps<'a'>;
+  logo?: {
+    light: string; // URL to light mode SVG logo
+    dark: string;  // URL to dark mode SVG logo
+  };
 }
 
 export function RootToggle({
@@ -22,8 +27,15 @@ export function RootToggle({
   options: Option[];
 } & ComponentProps<'button'>) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { closeOnRedirect } = useSidebar();
+  const { theme, resolvedTheme, systemTheme } = useTheme();
   const pathname = usePathname();
+
+  // Ensure component is mounted before using theme
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const selected = useMemo(() => {
     return options.findLast((item) => isTabActive(item, pathname));
@@ -34,14 +46,22 @@ export function RootToggle({
     setOpen(false);
   };
 
+  // More robust theme detection with mounted check
+  const currentTheme = mounted ? (resolvedTheme || theme || systemTheme || 'light') : 'light';
+  const isDark = currentTheme === 'dark';
+
   const item = selected ? (
     <>
-      <div className="size-9 shrink-0 md:size-5">{selected.icon}</div>
-      <div>
-        <p className="text-sm font-medium">{selected.title}</p>
-        <p className="text-[13px] text-fd-muted-foreground empty:hidden md:hidden">
-          {selected.description}
-        </p>
+      <div className="flex-1 flex items-center justify-start">
+        {selected.logo ? (
+          <img 
+            src={isDark ? selected.logo.dark : selected.logo.light}
+            alt={selected.title}
+            className="w-[90%] h-[90%] object-contain"
+          />
+        ) : (
+          selected.icon
+        )}
       </div>
     </>
   ) : (
@@ -54,7 +74,7 @@ export function RootToggle({
         <PopoverTrigger
           {...props}
           className={cn(
-            'flex items-center gap-2 rounded-lg p-2 border bg-fd-secondary/50 text-start text-fd-secondary-foreground transition-colors hover:bg-fd-accent data-[state=open]:bg-fd-accent data-[state=open]:text-fd-accent-foreground',
+            'flex items-center gap-2 rounded-lg p-2 text-start text-fd-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground data-[state=open]:bg-fd-accent data-[state=open]:text-fd-accent-foreground',
             props.className,
           )}
         >

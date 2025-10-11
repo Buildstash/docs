@@ -139,32 +139,21 @@ export function DocsLayout(props: DocsLayoutProps) {
     } = sidebarProps;
     const iconLinks = links.filter((item) => item.type === 'icon');
 
-    const rootToggle = (
-      <>
+    const sidebarNav = (
+      <div className="flex justify-between items-start gap-3">
         {tabMode === 'sidebar' && tabs.length > 0 && (
-          <RootToggle className="mb-2" options={tabs} />
+          <RootToggle className="mb-2 w-full" options={tabs} />
         )}
         {tabMode === 'navbar' && tabs.length > 0 && (
-          <RootToggle options={tabs} className="lg:hidden" />
+          <RootToggle options={tabs} className="lg:hidden w-full" />
         )}
-      </>
-    );
-
-    const sidebarNav = (
-      <div className="flex justify-between">
-        <Link
-          href={nav.url ?? '/'}
-          className="inline-flex items-center gap-2.5 font-medium"
-        >
-          {nav.title}
-        </Link>
         {collapsible && (
           <SidebarCollapseTrigger
             className={cn(
               buttonVariants({
                 color: 'ghost',
                 size: 'icon-sm',
-                className: 'mt-px mb-auto text-fd-muted-foreground',
+                className: 'mt-1 mb-auto text-fd-muted-foreground',
               }),
             )}
           >
@@ -204,7 +193,6 @@ export function DocsLayout(props: DocsLayoutProps) {
           {navMode === 'auto' && sidebarNav}
           {nav.children}
           {banner}
-          {rootToggle}
         </HideIfEmpty>
         {viewport}
         <HideIfEmpty
@@ -247,7 +235,12 @@ export function DocsLayout(props: DocsLayoutProps) {
             <X />
           </SidebarTrigger>
           {banner}
-          {rootToggle}
+          {tabMode === 'sidebar' && tabs.length > 0 && (
+            <RootToggle className="mb-2 w-full" options={tabs} />
+          )}
+          {tabMode === 'navbar' && tabs.length > 0 && (
+            <RootToggle options={tabs} className="lg:hidden w-full" />
+          )}
         </SidebarHeader>
         {viewport}
         <HideIfEmpty
@@ -345,6 +338,7 @@ function DocsNavbar({
           'flex border-b px-4 gap-2 flex-1 md:px-6',
           navMode === 'top' && 'ps-7',
         )}
+        style={{ transform: 'translateY(3px)' }}
       >
         <div
           className={cn(
@@ -379,29 +373,29 @@ function DocsNavbar({
             {nav.title}
           </Link>
         </div>
-        {searchToggle.enabled !== false &&
-          (searchToggle.components?.lg ? (
-            <div
-              className={cn(
-                'w-full my-auto max-md:hidden',
-                navMode === 'top' ? 'rounded-xl max-w-sm' : 'max-w-[240px]',
-              )}
-            >
-              {searchToggle.components.lg}
-            </div>
-          ) : (
-            <LargeSearchToggle
-              hideIfDisabled
-              className={cn(
-                'w-full my-auto max-md:hidden',
-                navMode === 'top'
-                  ? 'rounded-xl max-w-sm ps-2.5'
-                  : 'max-w-[240px]',
-              )}
-            />
-          ))}
-        <div className="flex flex-1 items-center justify-end md:gap-2">
-          <div className="flex items-center gap-6 empty:hidden max-lg:hidden">
+        <div className="flex flex-1 items-center md:gap-2">
+          {searchToggle.enabled !== false &&
+            (searchToggle.components?.lg ? (
+              <div
+                className={cn(
+                  'w-full my-auto max-md:hidden',
+                  navMode === 'top' ? 'rounded-xl max-w-sm' : 'max-w-[240px]',
+                )}
+              >
+                {searchToggle.components.lg}
+              </div>
+            ) : (
+              <LargeSearchToggle
+                hideIfDisabled
+                className={cn(
+                  'w-full my-auto max-md:hidden',
+                  navMode === 'top'
+                    ? 'rounded-xl max-w-sm ps-2.5'
+                    : 'max-w-[240px]',
+                )}
+              />
+            ))}
+          <div className="flex items-center gap-6 empty:hidden max-lg:hidden ml-3">
             {links
               .filter((item) => item.type !== 'icon')
               .map((item, i) => (
@@ -412,7 +406,8 @@ function DocsNavbar({
                 />
               ))}
           </div>
-          {nav.children}
+        </div>
+        <div className="flex items-center gap-2">
           {links
             .filter((item) => item.type === 'icon')
             .map((item, i) => (

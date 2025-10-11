@@ -1,9 +1,15 @@
-import { getLLMText, source } from '@/lib/source';
-
-export const revalidate = false;
+import { getLLMText } from '@/lib/source';
+import { guideDocs, apiDocs, integrationsDocs } from '@/lib/source';
 
 export async function GET() {
-  const scan = source.getPages().map(getLLMText);
+  // Combine pages from all three sources
+  const allPages = [
+    ...guideDocs.getPages(),
+    ...apiDocs.getPages(),
+    ...integrationsDocs.getPages(),
+  ];
+
+  const scan = allPages.map(getLLMText);
   const scanned = await Promise.all(scan);
 
   return new Response(scanned.join('\n\n'));

@@ -4,7 +4,7 @@ import { lucideIconsPlugin } from 'fumadocs-core/source/lucide-icons';
 
 // Single combined source with all content
 export const source = loader({
-  baseUrl: '/', // doesn't really matter for multi-root
+  baseUrl: '/',
   source: {
     files: [
       ...guide.toFumadocsSource().files.map(file => ({
@@ -24,7 +24,7 @@ export const source = loader({
   plugins: [lucideIconsPlugin()],
 });
 
-// You still need individual sources for the page routes
+// Individual sources for page routes
 export const guideDocs = loader({
   baseUrl: '/guide',
   source: guide.toFumadocsSource(),
@@ -43,7 +43,7 @@ export const integrationsDocs = loader({
   plugins: [lucideIconsPlugin()],
 });
 
-export function getPageImage(page: InferPageType<typeof guideDocs | typeof apiDocs | typeof integrationsDocs>) {
+export function getPageImage(page: InferPageType<typeof guideDocs>) {
   const segments = [...page.slugs, 'image.png'];
 
   return {
@@ -52,7 +52,7 @@ export function getPageImage(page: InferPageType<typeof guideDocs | typeof apiDo
   };
 }
 
-export async function getLLMText(page: InferPageType<typeof guideDocs | typeof apiDocs | typeof integrationsDocs>) {
+export async function getLLMText(page: InferPageType<typeof guideDocs>) {
   const processed = await page.data.getText('processed');
 
   return `# ${page.data.title} (${page.url})
