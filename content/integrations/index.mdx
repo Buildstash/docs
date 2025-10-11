@@ -1,13 +1,42 @@
 ---
-title: Integrations home
-description: Your first document
+title: 'Directory'
+description: 'Connect Buildstash to the other tools you use'
+icon: 'ToyBrick'
 ---
 
-Integrations
+import { SquareTerminal, ToyBrickIcon } from 'lucide-react';
+import { GithubactionsOriginal, AzuredevopsOriginal, JenkinsOriginal, UnityOriginal, SlackOriginal, AmazonwebservicesOriginalWordmark, CloudflareOriginal } from 'devicons-react';
+import { BrandFastlaneIcon, BrandJumpcloudIcon, BrandMicrosoftEntraIcon, BrandOktaIcon, BrandAuth0Icon } from 'stashicons/react/brand';
 
-## What is Next?
+### CI / Build Tools
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card title="GitHub Actions" icon={<GithubactionsOriginal />} href="/integrations/ci/github-actions" />
+  <Card title="Azure DevOps Pipelines" icon={<AzuredevopsOriginal />} href="/integrations/ci/azure-pipelines" />
+  <Card title="fastlane" icon={<BrandFastlaneIcon />} href="/integrations/ci/fastlane" />
+  <Card title="Jenkins" icon={<JenkinsOriginal />} href="/integrations/ci/jenkins" />
+  <Card title="Unity Build Automation" icon={<UnityOriginal />} href="/integrations/ci/unity-build-automation" />
+</Cards>
+
+### Notifications
+
+<Cards>
+  <Card title="Slack" icon={<SlackOriginal />} color="grey" disabled="true" />
+</Cards>
+
+### Build Storage (S3 Compatible)
+
+<Cards>
+  <Card title="AWS S3" icon={<AmazonwebservicesOriginalWordmark />} color="grey" disabled="true" />
+
+  <Card title="Cloudflare R2" icon={<CloudflareOriginal />} color="grey" disabled="true" />
+</Cards>
+
+### Enterprise SSO
+
+<Cards>
+  <Card title="Microsoft Entra" icon={<BrandMicrosoftEntraIcon />} href="/integrations/sso/entra" />
+  <Card title="JumpCloud" icon={<BrandJumpcloudIcon />} href="/integrations/sso/jumpcloud" />
+  <Card title="Okta" icon={<BrandOktaIcon />} href="/integrations/sso/jumpcloud" />
+  <Card title="Auth0" icon={<BrandAuth0Icon />} href="/integrations/sso/jumpcloud" />
 </Cards>
