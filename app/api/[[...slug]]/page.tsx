@@ -11,6 +11,7 @@ import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getGithubLastEdit } from 'fumadocs-core/content/github';
 import { APIPage } from '@/components/ui/api-page';
+import { LLMCopyButton, ViewOptions } from '@/components/page-actions';
 
 export default async function Page(props: PageProps<'/api/[[...slug]]'>) {
   const params = await props.params;
@@ -37,6 +38,15 @@ export default async function Page(props: PageProps<'/api/[[...slug]]'>) {
     >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
+      <div className="relative h-0 pointer-events-none">
+        <div className="absolute -top-20 right-0 flex flex-row gap-2 items-center pointer-events-auto">
+          <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
+          <ViewOptions
+            markdownUrl={`${page.url}.mdx`}
+            githubUrl={`https://github.com/buildstash/docs/blob/main/content/api/${page.path}`}
+          />
+        </div>
+      </div>
       <DocsBody>
         <MDX
           components={getMDXComponents({
