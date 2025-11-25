@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Buildstash API",
-    "description": "API for uploading files to Buildstash, supporting both single part uploads and multipart uploads for large files (>5GB)",
+    "description": "Buildstash API for managing application builds and releases",
     "license": {
       "name": "MIT"
     },
