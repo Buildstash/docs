@@ -47,12 +47,26 @@ export const integrationsDocs = loader({
   plugins: [pageTreeCodeTitles(), customIconsPlugin()],
 });
 
-export function getPageImage(page: InferPageType<typeof guideDocs>) {
+// Generic function to get OG image URL for any page type
+export function getPageImage(
+  page:
+    | InferPageType<typeof guideDocs>
+    | InferPageType<typeof apiDocs>
+    | InferPageType<typeof integrationsDocs>,
+) {
+  // Determine the base path based on the page URL
+  let basePath = 'root';
+  if (page.url.startsWith('/api/')) {
+    basePath = 'api';
+  } else if (page.url.startsWith('/integrations/')) {
+    basePath = 'integrations';
+  }
+
   const segments = [...page.slugs, 'image.png'];
 
   return {
     segments,
-    url: `/og/${segments.join('/')}`,
+    url: `/og/${basePath}/${segments.join('/')}`,
   };
 }
 
