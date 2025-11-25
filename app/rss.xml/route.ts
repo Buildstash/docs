@@ -5,7 +5,8 @@ export const revalidate = false;
 export function GET() {
   return new Response(getRSS(), {
     headers: {
-      'Content-Type': 'application/rss+xml; charset=utf-8',
+      'Content-Type': 'text/xml; charset=utf-8',
+      'Content-Disposition': 'inline',
     },
   });
 }
