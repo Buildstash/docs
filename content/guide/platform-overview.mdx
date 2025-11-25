@@ -7,7 +7,7 @@ description: A guide to Buildstash and some core concepts
 
 Buildstash is a platform for managing, sharing, and distributing software binaries.
 
-By connecting Buildstash to your [CI/CD pipeline](/connect-ci-cd), as well as capturing local builds, you can archive and organise all of your binary builds.
+By connecting Buildstash to your [CI/CD pipeline](/builds-and-releases/connect-ci-cd), as well as capturing local builds, you can archive and organise all of your binary builds.
 
 Builds are stored while maintaining related context and metadata, whether regarding CI run and git context, related issues, review status, and so on.
 
@@ -56,7 +56,7 @@ At the same, we have integrated support for over [80 platforms](/api/data/platfo
 
 #### Streams
 
-Each build is organized into a single [stream](/builds-and-releases/streams). You set which stream you wish the build to enter on upload, and the stream can be changed at any time.
+Each build is organized into a single [stream](/builds-and-releases/streams-and-retention). You set which stream you wish the build to enter on upload, and the stream can be changed at any time.
 
 Streams are fully customizable to your workflow - you may for example have a stream for nightlies, and a stream for production builds, with the ability to "promote" a build upwards post-review.
 
