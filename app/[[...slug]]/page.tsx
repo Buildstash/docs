@@ -19,18 +19,17 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
 
   const MDX = page.data.body;
   
-  // Get last edit time from GitHub
-  const lastEditTime = await getGithubLastEdit({
-    owner: 'buildstash',
-    repo: 'docs',
-    path: `content/guide/${page.path}`,
-  });
+  // Get last edit time from GitHub (hidden for now, may add back later)
+  // const lastEditTime = await getGithubLastEdit({
+  //   owner: 'buildstash',
+  //   repo: 'docs',
+  //   path: `content/guide/${page.path}`,
+  // });
 
   return (
     <DocsPage 
       toc={page.data.toc} 
       full={page.data.full} 
-      lastUpdate={lastEditTime ? new Date(lastEditTime) : undefined}
       tableOfContent={{
         style: 'clerk'
       }}
