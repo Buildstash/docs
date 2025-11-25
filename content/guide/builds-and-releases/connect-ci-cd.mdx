@@ -1,0 +1,51 @@
+---
+title: Connect CI/CD
+description: Automate upload from your CI/CD pipeline to Buildstash
+---
+
+## Introduction
+
+If you use a CI/CD platform or build automation tool of some kind, it's easy to automate uploads of your build artifacts.
+
+From your CI/CD pipeline you can:
+
+- Upload the built binaries, as well as optional associated metadata files
+- Set build versioning
+- Determine what stream a build should be sent into
+- Attach labels
+- And pass in many more optional metadata fields..
+
+## Available CI/CD integrations
+
+We offer a wide range of ready-made integrations for popular CI/CD platforms. You can view a full list in our [Integrations Directory](/integrations), or build your own using our [API](/api).
+
+All of our integrations are open source, and can be found on [our GitHub](https://github.com/buildstash). If you'd like to see an integration we don't have yet, [request it](https://support.buildstash.com/roadmap), or even use an [existing integration](https://github.com/Buildstash/upload-to-buildstash) as a template to build your own!
+
+<Cards>
+  <Card title="CI/CD Integrations" icon={<PlugIcon />} href="/integrations#ci--build-tools" />
+  <Card title="API - Upload guide" icon={<Upload />} href="/api/guides/upload" />
+</Cards>
+
+## Generate an application API token
+
+<Steps>
+  <Step title="Create API token">
+    <strong>Create API token</strong>
+
+    In your application settings, navigate to the “Connections” tab, and select “New Token”.
+
+    ![Create application token](https://media.buildstash.com/docs/guide/connect-ci-cd/create_5e7bab07467281fee4846c2d031233d1.png)
+
+    Give the token a name to help you remember where it's being used.
+  </Step>
+  <br />
+  <Step title="Safely store for use">
+    <strong>Safely store for use</strong>
+
+    Your new API token will be shown.
+
+    ![Note the created token](https://media.buildstash.com/docs/guide/connect-ci-cd/note_ff59d991e66c7ec63bf623150d9b6bcb.png)
+
+    Note this is the only time the token will be shown, so be careful to record it securely (like in a password manager).
+  </Step>
+</Steps>

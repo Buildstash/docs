@@ -1,0 +1,36 @@
+---
+title: 'Other Providers'
+description: "Store your builds in a custom S3-API compatible bucket"
+icon: 'Lucide-Cloud'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  This feature is available to users on our [Pro plan](https://buildstash.com/pricing) and up.
+</Callout>
+
+## Introduction
+
+While Buildstash offers simple, low-cost storage for your builds out the box, you may prefer to host your own build data.
+
+We provide documented support for [AWS S3](/integrations/storage/aws-s3) and [Cloudflare R2](/integrations/storage/cloudflare-r2), however in theory you can connect any S3-API compatible storage provider.
+
+<Callout>
+  Using providers other than AWS or Cloudflare is not officially supported at this time, and it is possible you may encounter issues.
+</Callout>
+
+## Configuration
+
+If you haven't already created a storage bucket to use with Buildstash, it is strongly advised to start with a new or empty bucket. Our application expects a certain directory structure and won't be able to work with existing files.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/custom-storage/01_config.png"
+  alt="Configure in Buildstash"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+You will need to configure the bucket region if it has one specified. For non-AWS providers, this is often just 'auto'.
+
+Most importantly, you will have to enter the custom endpoint for the bucket - excluding the bucket name itself.

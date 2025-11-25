@@ -1,0 +1,30 @@
+---
+title: Notifications
+description: Configure automated notifications for application events
+---
+import { SlackOriginal } from 'devicons-react';
+import {BellIcon, MailIcon, WebhookIcon} from "lucide-react";
+
+## Notification channels
+
+You can configure notifications to inform external services and your connected tools of application events, such as a new build being uploaded, a label attached, or a build being moved into a specific stream.
+
+Find documentation for available channels via the [integrations directory](/integrations).
+
+<Cards>
+  <Card title="Email" icon={<MailIcon />} href="/integrations/notifications/email">
+    Send email notifications
+  </Card>
+
+  <Card title="Slack" icon={<SlackOriginal />} href="/integrations/notifications/slack">
+    Notify your team in Slack of application events
+  </Card>
+
+  <Card title="Webhooks" icon={<WebhookIcon />} href="/guide/automations/webhooks">
+    Build custom automations using webhooks
+  </Card>
+
+  <Card title="Other notification channels" icon={<BellIcon />} href="/integrations#notifications">
+    See the integrations directory for further channels
+  </Card>
+</Cards>

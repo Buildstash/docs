@@ -1,0 +1,9 @@
+{
+  "title": "Upload",
+  "defaultOpen": false,
+  "pages": [
+    "request",
+    "request-multipart",
+    "verify"
+  ]
+}

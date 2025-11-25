@@ -1,0 +1,93 @@
+---
+title: "Platforms"
+description: "List of supported platforms"
+icon: "Lucide-MonitorSmartphone"
+full: true
+---
+
+If you're targeting a platform that isn't listed, use the "Generic" platform for any build type.
+
+When uploading a build to Buildstash via the API or CI/CD integration, the "platform" field should be set to the accompanying "identifier" for the targeted platform.
+
+| Platform                            | Identifier    | Primary Filetypes                                       |
+|-------------------------------------|---------------|---------------------------------------------------------|
+| Generic                             | generic       | Supports generics, [see full list](/api/data/filetypes) |
+| Windows                             | windows       | Supports generics, [see full list](/api/data/filetypes) |
+| macOS                               | macos         | Supports generics, [see full list](/api/data/filetypes) |
+| Android                             | android       | aab, apk                                                |
+| iOS (iPhone/iPad)                   | ios           | ipa                                                     |
+| Apple Watch standalone (watchOS)    | apple-watch   | ipa                                                     |
+| Apple Vision Pro                    | vision-pro    | ipa                                                     |
+| Apple TV (tvOS)                     | apple-tv      | ipa                                                     |
+| HomePod (audioOS)                   | homepod       | ipa                                                     |
+| Meta Quest                          | quest         | apk                                                     |
+| Pico XR                             | pico          | apk                                                     |
+| VIVE XR Mobile                      | vive          | apk                                                     |
+| Magic Leap                          | magic-leap    | apk, mpk                                                |
+| Wear OS                             | wearos        | aab, apk                                                |
+| Fitbit OS                           | fitbit        | fba, dfu                                                |
+| PebbleOS                            | pebble        | pbw                                                     |
+| HarmonyOS                           | harmonyos     | app, hap, har                                           |
+| Sailfish OS                         | sailfish      | apk, rpm                                                |
+| KaiOS                               | kaios         | Supports generics                                       |
+| webOS                               | webos         | Supports generics                                       |
+| Tizen                               | tizen         | tpk, wgt                                                |
+| Titan OS                            | titan         | Supports generics                                       |
+| Roku OS                             | roku          | pkg                                                     |
+| Linux (Generic)                     | linux         | Supports generics, [see full list](/api/data/filetypes) |
+| Debian/Ubuntu variants              | debian        | Supports generics, [see full list](/api/data/filetypes) |
+| Red Hat/Fedora/CentOS               | redhat        | Supports generics, [see full list](/api/data/filetypes) |
+| Gentoo Linux                        | gentoo        | Supports generics, [see full list](/api/data/filetypes) |
+| Arch Linux                          | arch          | Supports generics, [see full list](/api/data/filetypes) |
+| openSUSE                            | opensuse      | Supports generics, [see full list](/api/data/filetypes) |
+| Alpine Linux                        | alpine        | Supports generics, [see full list](/api/data/filetypes) |
+| NixOS                               | nixos         | Supports generics, [see full list](/api/data/filetypes) |
+| Slackware Linux                     | slackware     | Supports generics, [see full list](/api/data/filetypes) |
+| Void Linux                          | void          | Supports generics, [see full list](/api/data/filetypes) |
+| Mageia/Mandriva/Mandrake            | mageia        | Supports generics, [see full list](/api/data/filetypes) |
+| Nintendo Switch                     | switch        | See [specific filetypes](/api/data/filetypes) supported |
+| Nintendo Switch 2                   | switch2       | See [specific filetypes](/api/data/filetypes) supported |
+| PlayStation 5                       | ps5           | pkg                                                     |
+| PlayStation 4                       | ps4           | pkg                                                     |
+| Xbox Series X/S                     | xbox-series   | xvc                                                     |
+| Playdate                            | playdate      | pdx                                                     |
+| Roblox                              | roblox        | rbxl, rbxlx                                             |
+| FreeBSD                             | freebsd       | Supports generics, [see full list](/api/data/filetypes) |
+| OpenBSD                             | openbsd       | Supports generics, [see full list](/api/data/filetypes) |
+| NetBSD                              | netbsd        | Supports generics                                       |
+| Illumos/OpenIndiana/OpenSolaris     | illumos       | Supports generics, [see full list](/api/data/filetypes) |
+| Oracle Solaris                      | solaris       | Supports generics, [see full list](/api/data/filetypes) |
+| Haiku                               | haiku         | Supports generics, [see full list](/api/data/filetypes) |
+| IBM AIX                             | aix           | Supports generics, [see full list](/api/data/filetypes) |
+| HP-UX                               | hp-ux         | Supports generics, [see full list](/api/data/filetypes) |
+| HTML5 Web Game                      | web-game      | Supports generics                                       |
+| Zephyr                              | zephyr        | Supports generics, [see full list](/api/data/filetypes) |
+| FreeRTOS                            | freertos      | Supports generics                                       |
+| VxWorks                             | vxworks       | Supports generics                                       |
+| INTEGRITY RTOS                      | integrity     | Supports generics                                       |
+| QNX                                 | qnx           | Supports generics                                       |
+| RTEMS                               | rtems         | Supports generics                                       |
+| ThreadX                             | threadx       | Supports generics                                       |
+| Micrium OS                          | micrium       | Supports generics                                       |
+| Contiki OS                          | contiki       | Supports generics                                       |
+| TinyOS                              | tinyos        | Supports generics                                       |
+| Nucleus RTOS                        | nucleus       | Supports generics                                       |
+| LynxOS                              | lynxos        | Supports generics                                       |
+| embOS                               | embos         | Supports generics                                       |
+| Apache Mynewt                       | mynewt        | Supports generics                                       |
+| RT-Thread                           | rtthread      | Supports generics                                       |
+| Mbed                                | mbed          | Supports generics                                       |
+| RIOT OS                             | riot          | Supports generics                                       |
+| Hubris                              | hubris        | Supports generics                                       |
+| Tock OS                             | tock          | Supports generics                                       |
+| Pike OS                             | pike          | Supports generics                                       |
+| PX5 RTOS                            | px5           | Supports generics                                       |
+| Phantom OS                          | phantom       | Supports generics                                       |
+| Apache NuttX                        | nuttx         | Supports generics                                       |
+| eCos                                | ecos          | Supports generics                                       |
+| ChibiOS/RT                          | chibios       | Supports generics                                       |
+| ERIKA Enterprise                    | erika         | Supports generics                                       |
+
+You can see full detail on which [filetypes](/api/data/filetypes), or [architectures](/api/data/architectures), each platform supports, on the relevant pages.
+
+While the "Generic" platform can be used where we don't have explicit support yet, if there is an additional platform you'd like us to offer deeper support for - [let us know!](https://support.buildstash.com/roadmap)

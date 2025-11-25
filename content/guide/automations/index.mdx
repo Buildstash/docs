@@ -1,0 +1,43 @@
+---
+title: Overview
+description: Trigger actions on application events
+---
+import {WebhookIcon} from "lucide-react";
+import {SlackOriginal} from "devicons-react";
+
+## Introduction
+
+You can use automations to trigger actions on application events, such as when a build is uploaded, or when a release is created.
+
+This feature can be used to easily notify external services of actions within your workspace, passing relevant build data, perhaps allowing further actions to be triggered - such as a custom deployment workflow.
+
+## Supported events
+
+You can configure automations to trigger on the following events:
+
+| Event Name             | Description                                    |
+|------------------------|------------------------------------------------|
+| `build.created`        | New build uploaded                             |
+| `build.created.stream` | Build created in a specific stream             |
+| `build.moved`          | Build moved to a different stream (any stream) |
+| `build.moved.stream`   | Build moved into a specified stream            |
+| `build.label.added`    | Label added to build (new or existing)         |
+| `release.created`      | Release created                                |
+| `release.updated`      | Release updated - builds added or removed      |
+
+## Available automations
+
+Find documentation for the available automations below.
+
+<Cards>
+  <Card title="Webhooks" href="/automations/webhooks" icon={<WebhookIcon />}>
+    Trigger webhooks, notifying external services and passing build or release data.
+  </Card>
+
+  <Card title="Notifications" href="/automations/notifications" icon={<SlackOriginal />}>
+    Connect and notify external services. Whether a simple email, or notification to a team chat channel like Slack.
+  </Card>
+
+</Cards>
+
+<br />

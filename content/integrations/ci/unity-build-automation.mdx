@@ -1,0 +1,101 @@
+---
+title: 'Unity Build Automation'
+description: "Automate uploading your builds from Unity"
+icon: 'Devicons-UnityOriginal'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+Unity DevOps users can connect to Buildstash, to automate uploading their builds from Unity Build Automation (formerly Cloud Build).
+
+This integration lets you store all your Unity builds, as well as setting up rules for assigning streams and labels to particular builds. You can then share uploaded builds with your team or testers, attach to releases, and deploy - all within the Buildstash platform.
+
+Importantly, once a build is uploaded Buildstash maintains the link to the original Unity build - storing relating build artifacts, and context like the Unity build log, and SCM branch and commit.
+
+## Configure Unity connection
+
+<Steps>
+  <Step>
+    <strong>Configure new connection in Buildstash</strong>
+
+    In the Buildstash application you want to connect to Unity Build Automation, go to your application settings > Connections. Under "Add connection" select "Unity Build Automation".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/unity-build/01a_configure.png"
+      alt="Configure new connection"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    Provide a descriptive name for this connection (this is only used to help you identify the connection later), your Unity Build Automation API key (see below for where to find it), and a default stream which builds coming from Unity will be organized into in Buildstash (this can be customized further later).
+
+  </Step>
+  <br />
+  <Step>
+    <strong>Find your Unity API key</strong>
+
+    In Unity DevOps, with the Unity project selected which you wish to connect, navigate to Build Automation > Settings, and scroll down to the "API settings" section.
+
+    ![Copy key](https://media.buildstash.com/docs/integrations/unity-build/02_key.png)
+
+    Here you'll find the Unity API key you need to copy and paste into the "Connect Unity Build Automation" dialog in Buildstash.
+
+  </Step>
+  <br />
+  <Step>
+    <strong>Finish setup in Buildstash</strong>
+
+    On the next screen you'll find the webhook URL and authorization secret you'll need to input into Unity (see step 4).
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/unity-build/03a_setup.png"
+      alt="Webhook"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    You can also define Unity build targets, and further customize what stream builds from a specific target name should go into, or automatically attach certain labels.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/unity-build/03b_target.png"
+      alt="Customize target"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    Note the target name must be an exact match for the string configured in Unity for the build to be directed into this stream / labels attached.
+
+    ![Customize](https://media.buildstash.com/docs/integrations/unity-build/03c_unity.png)
+
+  </Step>
+  <br />
+  <Step>
+    <strong>Add webhook on Unity end</strong>
+
+    In the Unity Cloud portal, go to "Projects", and select the project you wish to connect to Buildstash. Under the project go to "Settings", and scroll down to "Project Integrations".
+
+    ![Add webhook](https://media.buildstash.com/docs/integrations/unity-build/04a_webhook.png)
+
+    Here you want to add a new Webhook.
+
+    ![Add webhook](https://media.buildstash.com/docs/integrations/unity-build/04b_configurehook.png)
+
+    Enter the webhook URL, and authorization secret displayed in Buildstash from the previous step. For Authorization type select "HMAC-SHA256 Signature", and ensure Content type is set to "application/json".
+
+    The only events that should be selected are "Build Success" - which will ensure successful builds are uploaded to Buildstash, and you can also select "Uploaded Local Build" if you'd like to automatically upload builds you drag and drop Into Unity to Buildstash also.
+
+  </Step>
+  <br />
+  <Step>
+    <strong>And done!</strong>
+
+    Your Unity builds will now automatically upload to Buildstash.
+
+    ![Done](https://media.buildstash.com/docs/integrations/unity-build/05_done.png)
+
+  </Step>
+</Steps>

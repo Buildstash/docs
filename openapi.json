@@ -1,0 +1,739 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Buildstash API",
+    "description": "API for uploading files to Buildstash, supporting both single part uploads and multipart uploads for large files (>5GB)",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://app.buildstash.com/api/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/upload/request": {
+      "post": {
+        "summary": "Request Upload",
+        "description": "Initiate a file upload by requesting presigned URLs. For files larger than 5GB, this will return multipart upload information.",
+        "requestBody": {
+          "description": "Upload request details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Upload request successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUploadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload/request/multipart": {
+      "post": {
+        "summary": "Request Multipart Upload Part",
+        "description": "Request a presigned URL for a specific part of a multipart upload. Used for files larger than 5GB.",
+        "requestBody": {
+          "description": "Multipart upload part request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Multipart upload part request successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMultipartRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload/verify": {
+      "post": {
+        "summary": "Verify Upload",
+        "description": "Verify that all parts of an upload have been successfully uploaded and complete the upload process.",
+        "requestBody": {
+          "description": "Upload verification request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Upload verification successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorVerify"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorized"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UploadRequest": {
+        "type": "object",
+        "required": ["structure", "primary_file", "version_component_1_major", "version_component_2_minor", "version_component_3_patch", "source", "platform", "stream"],
+        "properties": {
+          "structure": {
+            "type": "string",
+            "description": "Upload structure type. Should use 'file' unless you're including an Android OBB expansion file",
+            "enum": ["file", "file+expansion"],
+            "example": "file",
+            "default": "file"
+          },
+          "platform": {
+            "type": "string",
+            "description": "Platform identifier. See [full list](/data/platforms)",
+            "enum": [
+              "generic",
+              "windows",
+              "macos",
+              "android",
+              "ios",
+              "quest",
+              "switch",
+              "switch2",
+              "ps5",
+              "ps4",
+              "xbox-series",
+              "vision-pro",
+              "pico",
+              "wearos",
+              "vive",
+              "homepod",
+              "apple-tv",
+              "apple-watch",
+              "freebsd",
+              "openbsd",
+              "linux",
+              "debian",
+              "redhat",
+              "gentoo",
+              "arch",
+              "playdate",
+              "magic-leap",
+              "zephyr",
+              "roblox",
+              "opensuse",
+              "alpine",
+              "nixos",
+              "slackware",
+              "void",
+              "mageia",
+              "kaios"
+            ],
+            "example": "windows"
+          },
+          "stream": {
+            "type": "string",
+            "description": "Stream name. Must match exact name setup in your app",
+            "example": "nightlies"
+          },
+          "source": {
+            "type": "string",
+            "description": "Source of the upload. See [full list](/data/sources)",
+            "enum": [
+              "web-upload",
+              "cli-upload",
+              "ghactions",
+              "jenkins",
+              "unity-build",
+              "gitlab-ci",
+              "azure-devops",
+              "circleci",
+              "travisci",
+              "appveyor",
+              "teamcity",
+              "bitbucket-pipelines",
+              "bitrise",
+              "codemagic",
+              "buildkite",
+              "google-cloud-build",
+              "bamboo",
+              "semaphore",
+              "aws-codebuild",
+              "abstruse",
+              "cirrus-ci",
+              "drone",
+              "concourse"
+            ],
+            "example": "ghactions"
+          },
+          "primary_file": {
+            "$ref": "#/components/schemas/PrimaryFileInfo"
+          },
+          "expansion_files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExpansionFileInfo"
+            },
+            "description": "Expansion files (only include if structure is 'file+expansion')"
+          },
+          "version_component_1_major": {
+            "type": "integer",
+            "description": "Semantic versioning: Major version component",
+            "example": 1
+          },
+          "version_component_2_minor": {
+            "type": "integer",
+            "description": "Minor version component",
+            "example": 0
+          },
+          "version_component_3_patch": {
+            "type": "integer",
+            "description": "Patch version component",
+            "example": 1
+          },
+          "version_component_extra": {
+            "type": "string",
+            "description": "Extra version component. Optional pre-release label like such as 'alpha', 'beta', 'rc', etc",
+            "example": "alpha"
+          },
+          "version_component_meta": {
+            "type": "string",
+            "description": "Version metadata. Optional metadata like such as 'build number', 'commit hash', etc",
+            "example": "2025.07.30"
+          },
+          "custom_build_number": {
+            "type": "string",
+            "description": "Custom build number (any preferred format)",
+            "example": "398"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Labels for the build (will be created if they don't already exist)",
+            "example": ["signed", "to-test", "release"]
+          },
+          "architectures": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "x86",
+                "x64",
+                "u2b",
+                "apple",
+                "ppc",
+                "ibmz",
+                "mips64",
+                "mips",
+                "armv5",
+                "armv6",
+                "armv7",
+                "armv8",
+                "arm64v8",
+                "armv9",
+                "risc-v",
+                "risc-v64",
+                "msp430",
+                "loongarch",
+                "ppc64",
+                "ia64",
+                "sparc",
+                "alpha",
+                "vax",
+                "pdp11",
+                "sh1",
+                "sh2",
+                "sh3",
+                "sh4",
+                "680x0",
+                "xtensa",
+                "nios",
+                "nios2",
+                "niosv",
+                "rx",
+                "avr",
+                "8051",
+                "z80",
+                "mipsx",
+                "microblaze"
+              ]
+            },
+            "description": "Architectures this build supports (the platform must also support the architecture). See [full list](/data/architectures)",
+            "example": ["x86", "x64", "armv7"]
+          },
+          "ci_pipeline": {
+            "type": "string",
+            "description": "CI pipeline name",
+            "example": "Nightly Build"
+          },
+          "ci_run_id": {
+            "type": "string",
+            "description": "CI run ID",
+            "example": "38836019427"
+          },
+          "ci_run_url": {
+            "type": "string",
+            "description": "CI run URL",
+            "example": "https://github.com/buildstash/example/actions/runs/38836019427"
+          },
+          "ci_build_duration": {
+            "type": "string",
+            "description": "CI build duration",
+            "example": "00:05:00"
+          },
+          "vc_host_type": {
+            "type": "string",
+            "description": "Version control host type. See [full list](/data/sources)",
+            "enum": ["git", "svn", "hg", "perforce", "bzr", "fossil", "darcs", "cvs", "monotone", "diversion", "unity-vc"],
+            "example": "git"
+          },
+          "vc_host": {
+            "type": "string",
+            "description": "Version control host. See [full list](/data/sources)",
+            "enum": ["github", "gitlab", "gitlab-self", "perforce", "bitbucket", "gitea", "forgejo", "gogs", "codeberg", "sourceforge", "sourcehut", "rhodecode", "unity-vc", "aws-codecommit", "azure-repos", "beanstalk", "assembla", "codebase", "bonobo-git", "phabricator", "launchpad", "onedev", "diversion"],
+            "example": "github"
+          },
+          "vc_repo_name": {
+            "type": "string",
+            "description": "Repository name",
+            "example": "buildstash/example"
+          },
+          "vc_repo_url": {
+            "type": "string",
+            "description": "Repository URL",
+            "example": "https://github.com/buildstash/example"
+          },
+          "vc_branch": {
+            "type": "string",
+            "description": "Branch name",
+            "example": "main"
+          },
+          "vc_commit_sha": {
+            "type": "string",
+            "description": "Commit SHA",
+            "example": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+          },
+          "vc_commit_url": {
+            "type": "string",
+            "description": "Commit URL",
+            "example": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes",
+            "example": "Example build notes here."
+          }
+        }
+      },
+      "PrimaryFileInfo": {
+        "type": "object",
+        "required": ["filename", "size_bytes"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename with extension (excluding path)",
+            "example": "example.exe"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "description": "Size of the file in bytes",
+            "example": 52428800
+          }
+        }
+      },
+      "ExpansionFileInfo": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename with extension (excluding path)",
+            "example": "expansion.obb"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "description": "Size of the file in bytes",
+            "example": 1048576
+          }
+        }
+      },
+      "UploadResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success response message",
+            "example": "Upload request successful"
+          },
+          "pending_upload_id": {
+            "type": "string",
+            "description": "Unique identifier for the pending upload"
+          },
+          "primary_file": {
+            "$ref": "#/components/schemas/UploadFileInfo"
+          },
+          "expansion_files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UploadExpansionFileInfo"
+            }
+          }
+        }
+      },
+      "UploadFileInfo": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename this upload relates to",
+            "example": "example.exe"
+          },
+          "chunked_upload": {
+            "type": "boolean",
+            "description": "Whether this file requires multipart upload",
+            "example": true
+          },
+          "chunked_number_parts": {
+            "type": "integer",
+            "description": "Number of parts for multipart upload (if chunked only)",
+            "example": 14
+          },
+          "chunked_part_size_mb": {
+            "type": "integer",
+            "description": "Size of each part in MB (if chunked only)",
+            "example": 52428800
+          },
+          "presigned_data": {
+            "$ref": "#/components/schemas/PresignedData"
+          }
+        }
+      },
+      "UploadExpansionFileInfo": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Filename this upload relates to",
+            "example": "expansion.obb"
+          },
+          "chunked_upload": {
+            "type": "boolean",
+            "description": "Whether this file requires multipart upload",
+            "example": false
+          },
+          "chunked_number_parts": {
+            "type": "integer",
+            "description": "Number of parts for multipart upload (if chunked only)",
+            "example": ""
+          },
+          "chunked_part_size_mb": {
+            "type": "integer",
+            "description": "Size of each part in MB (if chunked only)",
+            "example": ""
+          },
+          "presigned_data": {
+            "$ref": "#/components/schemas/PresignedDataExpansion"
+          }
+        }
+      },
+      "PresignedData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Presigned URL for upload"
+          },
+          "headers": {
+            "type": "object",
+            "properties": {
+              "Content-Type": {
+                "type": "string",
+                "example": "application/x-msdownload"
+              },
+              "Content-Length": {
+                "type": "string",
+                "example": "734003200"
+              },
+              "Content-Disposition": {
+                "type": "string",
+                "example": "attachment; filename=\"example.exe\""
+              }
+            }
+          }
+        }
+      },
+      "PresignedDataExpansion": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Presigned URL for upload"
+          },
+          "headers": {
+            "type": "object",
+            "properties": {
+              "Content-Type": {
+                "type": "string",
+                "example": "application/octet-stream"
+              },
+              "Content-Length": {
+                "type": "string",
+                "example": "734003200"
+              },
+              "Content-Disposition": {
+                "type": "string",
+                "example": "attachment; filename=\"expansion.obb\""
+              }
+            }
+          }
+        }
+      },
+      "MultipartRequest": {
+        "type": "object",
+        "required": ["pending_upload_id", "part_number", "content_length"],
+        "properties": {
+          "pending_upload_id": {
+            "type": "string",
+            "description": "Pending upload ID from the initial request"
+          },
+          "part_number": {
+            "type": "integer",
+            "description": "Part number you want to upload",
+            "example": 1
+          },
+          "content_length": {
+            "type": "integer",
+            "description": "Size of this part in bytes",
+            "example": 52428800
+          }
+        }
+      },
+      "MultipartResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message for this request",
+            "example": "Generated pre-signed URL for part 1"
+          },
+          "part_number": {
+            "type": "integer",
+            "description": "Requested part number for this presigned upload URL",
+            "example": 1
+          },
+          "part_presigned_url": {
+            "type": "string",
+            "description": "Presigned URL for uploading this part"
+          }
+        }
+      },
+      "VerifyRequest": {
+        "type": "object",
+        "required": ["pending_upload_id"],
+        "properties": {
+          "pending_upload_id": {
+            "type": "string",
+            "description": "Pending upload ID from the initial request"
+          },
+          "multipart_chunks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MultipartChunk"
+            },
+            "description": "Array of uploaded parts (required for multipart uploads)"
+          }
+        }
+      },
+      "MultipartChunk": {
+        "type": "object",
+        "required": ["PartNumber", "ETag"],
+        "properties": {
+          "PartNumber": {
+            "type": "integer",
+            "description": "Part number (1-based)"
+          },
+          "ETag": {
+            "type": "string",
+            "description": "ETag returned from the upload of this part"
+          }
+        }
+      },
+      "VerifyResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Success message for this request",
+            "example": "Upload verified successfully"
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Unique identifier for the completed build"
+          },
+          "pending_processing": {
+            "type": "boolean",
+            "description": "Whether the build is still being processed. Applies to iOS or Android builds which will be prepared for adhoc distribution post-upload",
+            "example": false
+          },
+          "build_info_url": {
+            "type": "string",
+            "description": "URL to view build information"
+          },
+          "download_url": {
+            "type": "string",
+            "description": "URL to download the uploaded file"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "ErrorUnauthorized": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Unauthorized"
+          }
+        }
+      },
+      "ErrorUploadRequest": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Error message explaining why the upload failed"
+          }
+        }
+      },
+      "ErrorMultipartRequest": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Error generating pre-signed URL for part"
+          }
+        }
+      },
+      "ErrorVerify": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Error explaining why upload verification failed"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "App-specific auth token. Bearer authentication header of the form Bearer <token>, where <token> is your auth token."
+      }
+    }
+  }
+}

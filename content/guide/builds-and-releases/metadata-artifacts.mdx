@@ -1,0 +1,22 @@
+---
+title: Metadata artifacts
+description: Store related metadata files with your builds
+---
+
+## Introduction
+
+You can store additional metadata files with your builds, separate to the core binary files.
+
+These may include build logs, test results, SBOMs, or any other metadata files which are relevant to your workflow.
+
+## Supported metadata file formats
+
+Metadata artifact files can be uploaded in an [array of different formats](/api/data/metadata-filetypes), up to 5 MB in filesize.
+
+## Uploading metadata artifacts
+
+You can upload metadata artifacts via the web interface, by first uploading a build, and then opening the build info modal.
+
+![Upload metadata artifact](https://media.buildstash.com/docs/guide/metadata-artifacts/01_upload.png)
+
+You can also upload metadata artifacts [via CI/CD integrations](/builds-and-releases/connect-ci-cd), allowing you to upload files provided as part of your CI/CD pipeline.

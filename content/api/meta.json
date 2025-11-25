@@ -1,0 +1,20 @@
+{
+  "title": "API",
+  "description": "Buildstash API docs",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "---Guides---",
+    "guides/upload",
+    "---Endpoints---",
+    "endpoint/upload",
+    "---Data---",
+    "data/architectures",
+    "data/sources",
+    "data/filetypes",
+    "data/expansion-filetypes",
+    "data/metadata-filetypes",
+    "data/platforms"
+  ]
+}

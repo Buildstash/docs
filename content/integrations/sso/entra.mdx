@@ -1,0 +1,154 @@
+---
+title: 'Microsoft Entra'
+description: "Configure Microsoft Entra ID (Azure AD) single sign-on for your organization"
+icon: 'StashiconsBrand-BrandMicrosoftEntraIcon'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  This feature is available to users on our [Ultra and Enterprise plans](https://buildstash.com/pricing).
+</Callout>
+
+## Introduction
+
+Follow these instructions to allow your users to login to your Buildstash workspace using Microsoft Entra (formerly Azure Active Directory).
+
+## Create SSO Application in Entra admin center
+
+<Steps>
+
+  <Step title="Create new enterprise application">
+    <strong>Create new enterprise application</strong>
+
+    In your Entra admin center, navigate to Entra ID > App registrations, then select "New registration".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/01_create.png"
+      alt="Create new enterprise application"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Confirm application details">
+    <strong>Confirm application details</strong>
+
+    Enter "Buildstash" as the application name. To limit access to only users in your organization directory select "Single tenant". And under redirect URI select "Web" and enter your redirect URI. You can copy/paste your redirect URI from the Buildstash interface if helpful (see below).
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/02_register_application.png"
+      alt="Confirm application details"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    The redirect URI must use your workspace's custom subdomain. The format must be:
+    `https://{SUBDOMAIN}.buildstash.com/auth/entra/callback`
+
+  </Step>
+
+  <Step title="Note client ID and tenant ID">
+    <strong>Note client ID and tenant ID</strong>
+
+    In the "Overview" screen you're taken to for this app, note the "Application (client) ID" to provide as "Client ID" in Buildstash configuration, and also your Tenant ID for the later step.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/03_credentials.png"
+      alt="Get client secret"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+  </Step>
+
+  <Step title="Get client secret">
+    <strong>Get client secret</strong>
+
+    You'll also need to generate your client secret. Navigate to "Certificates & secrets". Then select "Client secrets", and "New client secret".
+
+    Select an expiry date for the secret - we highly recommend you take a note of this date in your calendar. Then the secret is created, you want to copy and take note of the "value" column to use for "Client secret" when setting up in Buildstash.
+
+  </Step>
+
+  <Step title="Remember and set user access">
+    <strong>Remember and set user access</strong>
+
+    Remember and assign the app to anyone you wish to have access in Entra.
+
+  </Step>
+
+</Steps>
+
+
+## Configure SSO in Buildstash
+
+<Steps>
+
+  <Step title="Enable SSO provider">
+    <strong>Enable SSO provider</strong>
+
+    Go to your workspace settings, and under "Enterprise SSO", select "Enable provider".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/04_enable.png"
+      alt="Enable SSO provider"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Input provider credentials">
+    <strong>Input provider credentials</strong>
+
+    Input the client ID, secret, and tenant ID for Entra you copied noted from the previous step. Your redirect URI to enter within Entra is also shown here.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/05_configure.png"
+      alt="Input provider credentials"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Confirm correctly configured">
+    <strong>Confirm correctly configured</strong>
+
+    Once details are entered and confirmed you'll see Microsoft Entra connected.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/06_success.png"
+      alt="Confirm correctly configured"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+    
+    Select "Manage" to update credentials in future, disable non-SSO login, or remove Entra as a login provider in future.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/microsoft-entra/07_manage.png"
+      alt="Manage SSO settings"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    You can optionally require users login via this SSO provider to access your workspace, and there's an option to auto-add users who login via this provider to your workspace if they're not already a member.
+
+  </Step>
+
+  <Step title="Login with SSO">
+    <strong>Login with SSO</strong>
+
+    You can now navigate to the login page on your workspace custom subdomain, and the Entra SSO option will be presented.
+
+  </Step>
+
+</Steps>

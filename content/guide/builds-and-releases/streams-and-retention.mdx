@@ -1,0 +1,65 @@
+---
+title: Streams & retention
+description: Configure build streams and retention policies
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+All builds in Buildstash exist within a single stream.
+
+Streams are fully customizable to fit your workflow, but default and suggested streams include _nightlies_, _stable_, and _tests_. You can also have a _default_ stream to fall back to, if you prefer.
+
+You specify which stream a build goes into when it's uploaded, and can move builds between streams as they make their way their your workflows.
+
+For example, you may wish to "promote" a build from a _beta_ stream to a _production_ stream if it's signed off for publishing.
+
+## Manage available build streams
+
+You can manage the streams available to your application in application settings > Streams.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/streams/01_manage.png"
+  alt="Manage application streams"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+## Retention policies
+
+Retention policies can be configured on a per-stream basis. By default, builds are kept forever.
+
+You may however wish to vary how long you keep builds by stream. Maybe it makes sense to keep production builds forever, but only keep your last 30 days of nightlies.
+
+You can fully customize these policies to suit your workflows and preferred retention.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/streams/02_retention.png"
+  alt="Manage retention policy"
+  width={500}
+  height={800}
+  sizes="(max-width: 500px) 100vw, 50vw"
+/>
+
+Note that the stream a build is in defines the base retention policy which will be applied to it, but it can also be overridden in a few different ways:
+
+- Even though a stream may have a retention policy of less than "Forever", you can toggle a specific build to be kept forever in the [build settings](/builds-and-releases#updating-build-data)
+- Builds with active [public share links](/builds-and-releases#sharing) will never be deleted while those links remain active
+- Builds [attached to a release](/using-releases) will never be deleted, unless later removed from that release or if the release is deleted
+
+## Move builds between streams
+
+When you upload a build you'll specify which stream to upload to, whether via [web uploader](/builds-and-releases/uploading-via-web), [CI/CD integration](/builds-and-releases/connect-ci-cd), or [API](/api/guides/upload).
+
+You can move a build to a different stream post-upload to suit your workflow.
+
+## Filter by stream
+
+You can [filter builds](/builds-and-releases#sorting-and-searching) in your application by stream.
+
+## Default streams for new applications
+
+Streams are customizable on a per-application basis, but to avoid having to define these every time you create a new application, you can define "default streams" which will be used for all new applications you create in your workspace settings.
+
+You can customize default stream name, description, and retention policy.

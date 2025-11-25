@@ -1,0 +1,65 @@
+---
+title: Labels
+description: Manage labels on builds and releases
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+Labels can be attached to both builds and releases. Labels are customizable to your workflow, and can be used to keep track of build variants, stages, or any other categorization that is helpful.
+
+Examples of labels which may be helpful could include: to-review, approved, issues-reported, sent-to-publisher, signed, etc.
+
+## Creating and editing labels
+
+You can define labels at both the Workspace level (to be accessible to all applications in the workspace) or Application level (to be used in only that application).
+
+If you create a label for an application, and then later want to share it across your workspace, you can also "promote" it later.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/labels/01_workspace.png"
+  alt="Manage workspace-level labels"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+To manage workspace labels, go to your workspace settings > Labels.
+
+For application labels, go to your application settings > Labels. Within your application label settings, you'll also see workspace level labels listed, which are accessible to this application.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/labels/02_application.png"
+  alt="Manage application-level labels"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+## Using labels
+
+You can attach labels to both builds and releases.
+
+To manage labels on a build:
+
+- Specify labels when uploading [via the web uploader](/builds-and-releases/uploading-via-web)
+- Automatically apply labels in [your CI/CD workflows](/builds-and-releases/connect-ci-cd)
+- Attach labels when uploading builds [via API](/api/guides/upload)
+- Update labels on an existing build [via web interface](/builds-and-releases#updating-build-data) or [via API](/api)
+
+To manage labels on a release:
+
+- Specify labels when creating the release either [via web interface](/using-releases) or [via API](/api)
+- Likewise labels can be updated on existing releases [via web](/using-releases) or [via API](/api)
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/labels/03_usage.png"
+  alt="Using labels"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+## Filtering by label
+
+Labels can be a powerful tool to quickly filter for [relevant builds](/builds-and-releases#sorting-and-searching) or [releases](/using-releases).

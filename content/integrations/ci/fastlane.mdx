@@ -1,0 +1,25 @@
+---
+title: 'fastlane'
+description: "Uploading build artifacts from your fastlane workflows"
+icon: 'StashiconsBrand-BrandFastlaneIcon'
+---
+## Introduction
+iOS and Android developers using fastlane in their build workflows for automating steps like code signing and deployment to stores, can now use a Buildstash plugin to upload .ipas, .apks, and .aabs direct to Buildstash.
+
+Teams can then take advantage of Buildstash features like distribution groups as an alternative faster method for sharing builds with testers and collaborators - with you in control.
+
+## Create API token
+
+To upload builds using fastlane you'll need to [create an application specific API token](/builds-and-releases/connect-ci-cd).
+
+## Install fastlane plugin
+
+You can simply install the Buildstash fastlane plugin with:
+
+```bash
+fastlane add_plugin buildstash
+```
+
+## Usage
+
+For full documentation on use of the plugin within your fastlane workflow, including a full list of inputs and outputs, go to the [GitHub repository and see the readme](https://github.com/buildstash/fastlane-plugin-buildstash).

@@ -1,0 +1,19 @@
+---
+title: "Request Multipart Upload Part"
+full: true
+description: "Request a presigned URL for a specific part of a multipart upload"
+openapi: "POST /upload/request/multipart"
+---
+<Callout>
+  This endpoint is only needed for multipart uploads, including any files larger than 5GB.
+</Callout>
+
+<APIPage document={"./openapi.json"} operations={[{"path":"/upload/request/multipart","method":"post"}]} webhooks={[]} hasHead={false} />
+
+### Notes
+
+- Part numbers must be sequential starting from 1
+- Each part must be uploaded exactly once
+- The ETag from each upload must be saved for the final verification step
+- Parts can be uploaded in parallel for better performance
+- If a part upload fails, you can retry uploading to the same presigned URL

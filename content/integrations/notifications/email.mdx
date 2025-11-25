@@ -1,0 +1,38 @@
+---
+title: 'Email'
+description: "Notify external services of app events"
+icon: 'Lucide-Mail'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+You can configure an email notification automation to notify members of your workspace, or an external email address, of application events.
+
+See the [automations overview](/automations) for more detail on events you can subscribe to.
+
+## Setup automated email notifications
+
+You can configure email notifications on a per-application basis. Go to your application _Settings > Automations_.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/email/01_email.png"
+  alt="Email notifications"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+Click "Manage" to list existing automations, and add new ones. You can configure up to 10 email automations per application.
+
+To configure a new email notification - select [the event](/automations) you'd like to subscribe to, and who you'd like to be notified.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/email/02_setup.png"
+  alt="Setup automation"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+You can either notify a list of workspace members (search for them by name or email), or an external email address (for example you may wish to inform a mailing list such as _developers@company.example_ or _testers@company.example_).

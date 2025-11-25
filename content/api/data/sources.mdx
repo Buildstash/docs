@@ -1,0 +1,116 @@
+---
+title: "Build & SCM Sources"
+description: "Options for specifying the source of a build"
+icon: "Devicons-Git"
+---
+
+## Build Sources
+
+When specifying the 'source' field when uploading a build via API or CI integrations, you should use the matching identifier.
+
+| Build Source                    | Identifier          |
+|---------------------------------|---------------------|
+| Web Upload                      | web-upload          |
+| CLI Upload                      | cli-upload          |
+| GitHub Actions                  | ghactions           |
+| Jenkins                         | jenkins             |
+| Unity Build Automation          | unity-build         |
+| GitLab CI                       | gitlab-ci           |
+| Azure DevOps                    | azure-devops        |
+| CircleCI                        | circleci            |
+| Travis CI                       | travisci            |
+| AppVeyor                        | appveyor            |
+| TeamCity                        | teamcity            |
+| Bitbucket Pipelines             | bitbucket-pipelines |
+| Bitrise                         | bitrise             |
+| Codemagic                       | codemagic           |
+| Buildkite                       | buildkite           |
+| Google Cloud Build              | google-cloud-build  |
+| Bamboo                          | bamboo              |
+| Semaphore                       | semaphore           |
+| AWS CodeBuild                   | aws-codebuild       |
+| Abstruse                        | abstruse            |
+| Cirrus CI                       | cirrus-ci           |
+| Drone                           | drone               |
+| Concourse                       | concourse           |
+| Cloudbees CodeShip              | codeship            |
+| GoCD                            | gocd                |
+| Buddy                           | buddy               |
+| Dagger Cloud                    | dagger-cloud        |
+| Agola                           | agola               |
+| Sourcehut Builds                | sourcehut-builds    |
+| CDS Continuous Delivery Service | cds                 |
+| Codefresh                       | codefresh           |
+| Woodpecker CI                   | woodpecker-ci       |
+| Flow CI                         | flow-ci             |
+| Hydra                           | hydra               |
+| Kraken CI                       | kraken-ci           |
+| Zuul                            | zuul                |
+| Harness                         | harness             |
+| Octopus Deploy                  | octopus-deploy      |
+| Inedo BuildMaster               | buildmaster         |
+| Tangled Pipelines               | tangled-pipelines   |
+
+## SCM Sources
+
+You can also specify where the source code is hosted in the 'scm_host' field.
+
+| Source Host            | Identifier       |
+|------------------------|------------------|
+| GitHub                 | github           |
+| GitLab                 | gitlab           |
+| GitLab Self-Hosted     | gitlab-self      |
+| Perforce               | perforce         |
+| Bitbucket              | bitbucket        |
+| Gitea                  | gitea            |
+| Forgejo                | forgejo          |
+| Gogs                   | gogs             |
+| Codeberg               | codeberg         |
+| SourceForge            | sourceforge      |
+| SourceHut              | sourcehut        |
+| RhodeCode              | rhodecode        |
+| Unity Version Control  | unity-vc         |
+| AWS CodeCommit         | aws-codecommit   |
+| Azure Repos            | azure-repos      |
+| Beanstalk              | beanstalk        |
+| Assembla               | assembla         |
+| Codebase               | codebase         |
+| Bonobo Git Server      | bonobo-git       |
+| Phabricator            | phabricator      |
+| Launchpad              | launchpad        |
+| OneDev                 | onedev           |
+| Diversion              | diversion        |
+| Tangled                | tangled          |
+| Gitee                  | gitee            |
+| Apache Allura          | allura           |
+| Tuleap                 | tuleap           |
+| Trac Self-Hosted       | trac             |
+| Fedora Pagure          | pagure           |
+| Savanah GNU            | savanah-gnu      |
+| Savanah Non-GNU        | savanah-non-gnu  |
+| Redmine Self-Hosted    | redmine          |
+| Kallithea              | kallithea        |
+| cgit                   | cgit             |
+| cgit-pink              | cgit-pink        |
+| RiouxSVN               | riouxsvn         |
+| SlikSVN                | sliksvn          |
+| ProjectLocker          | project-locker   |
+
+## SCM Host Types
+
+Additionally, you may specify the host type in the 'scm_host_type' field.
+
+| Source Host Type      | Identifier |
+|-----------------------|------------|
+| Git                   | git        |
+| SVN                   | svn        |
+| Mercurial             | hg         |
+| Perforce              | perforce   |
+| Bazaar                | bzr        |
+| Fossil                | fossil     |
+| Darcs                 | darcs      |
+| CVS                   | cvs        |
+| Monotone              | monotone   |
+| Diversion             | diversion  |
+| Unity Version Control | unity-vc   |
+

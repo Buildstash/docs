@@ -1,0 +1,32 @@
+---
+title: Your account
+description: Manage your personal Buildstash account settings
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+You can manage your personal account settings, via selecting your avatar in the bottom left corner of the web interface, and "Account settings".
+
+Under account settings you can manage your security settings, including updating your email address and password, and may configure two-factor authentication to secure your account.
+
+Under the "Security" tab you can see currently enabled SSO options. Selecting "Add enterprise SSO", if available, will list SSO connections available to you via workspaces you are a member of.
+
+## Appearance
+
+You can toggle between light and dark mode at your preference!
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/account/02_dark_mode.png"
+  alt="Light and dark mode"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+## Other key account controls
+
+<Cards>
+  <Card title="Security settings" href="/account/security-settings" />
+  <Card title="Switch between workspaces" href="/account/switching-workspaces" />
+</Cards>

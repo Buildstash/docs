@@ -1,0 +1,102 @@
+---
+title: Managing builds
+description: Learn how to manage your builds in Buildstash
+---
+import {Terminal, Upload, Workflow} from "lucide-react";
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Uploading builds
+
+Once you've [created your first application](/get-setup), you can get started uploading and managing builds.
+
+It's intended to be as easy as possible for you to get builds into Buildstash wherever you make them.
+
+<Cards>
+  <Card
+    title="Web uploader"
+    description="Upload builds via the web uploader"
+    href="/builds-and-releases/uploading-via-web"
+    icon={<Upload />}
+  />
+  <Card
+    title="Connect CI/CD"
+    description="Upload builds via CI/CD"
+    href="/builds-and-releases/connect-ci-cd"
+    icon={<Workflow />}
+  />
+  <Card
+    title="Uploading via API"
+    description="Use our API to upload and build your own integrations"
+    href="/api/guides/upload"
+    icon={<Terminal />}
+  />
+</Cards>
+
+## Build context and metadata
+
+Builds can be stored with a lot of helpful metadata, and context of where the build came from, or its stage within a workflow:
+- Semantic version, and a build number (in any custom format)
+- Platform, stream, labels, and supported architectures
+- For some platforms, including iOS and Android, build data automatically extracted from the package (such as such as signing key type, bundle identifier, etc)
+- Source context: SCM host, repository, branch, commit
+- CI/CD context: CI/CD source, job run, build duration, log
+
+![Build info modal](https://media.buildstash.com/docs/guide/manage-builds/01_metadata.png)
+
+Such metadata may be provided [via the web uploader](/builds-and-releases/uploading-via-web), passed in via [CI/CD integrations](/builds-and-releases/connect-ci-cd), via [the API](/api/guides/upload), or automatically extracted from the build package.
+
+## Organizing builds
+
+There are multiple ways of organizing your builds to fit your workflow.
+
+A build targets a specified platform. We have explicit support for [over 80 platforms](/api/data/platforms) to help you organize, but you can also fallback to the "Generic" platform for full flexibility, and/or use [custom targets](/builds-and-releases/custom-targets) to define your own.
+
+All builds are organized into a single [stream](/builds-and-releases/streams-and-retention). These are customizable as you prefer, but for example could include a streams like _nightlies_, _beta_, _stable_, _production_, etc.
+
+Builds can have multiple labels attached. Again labels are fully customizable, but could include things like _"pending-review"_, _"approved"_, _"rejected"_, _"staging"_, _"sent-to-client"_, etc.
+
+## Sorting and searching
+
+You may be sending builds into Buildstash via multiple sources, across multiple different streams, whether nightlies, test builds, etc.
+
+We want to make it as easy as possible to organize and retrieve specific builds.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/manage-builds/02_filters.png"
+  alt="Filter options"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+You can filter builds by a number of relations including:
+
+- Platform (or [custom target](/builds-and-releases/custom-targets))
+- Stream
+- Label
+
+You may also want to find a build via its [association with a release](/builds-and-releases/using-releases).
+
+And, it may be helpful to sort builds by fields including version, uploaded date, etc.
+
+## Updating build data
+
+It's easy to update many fields relating to a build post upload, including version, labels, etc. You can edit a build by selecting it in the builds table to open the build modal, and selecting "Edit".
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/manage-builds/03_edit_build.png"
+  alt="Edit build modal"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+## Deleting builds
+
+You can manually delete a build via the build modal. You can also setup [automated retention policies by stream](/builds-and-releases/streams-and-retention).
+
+![Delete build](https://media.buildstash.com/docs/guide/manage-builds/04_delete.png)
+
+## Attaching to releases
+
+To distribute your builds to users you can additionally [attach them to a release](/builds-and-releases/using-releases), allowing you to attach release notes, and publish via [distribution groups](/distribution-groups) or [portals](/portals).

@@ -1,0 +1,531 @@
+---
+title: Webhooks
+description: Configure webhooks to notify external services of application events
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+You can configure webhooks to automate notifying external services of application events - such as a new build being uploaded, a build moved into a specific stream, or a release being published.
+
+See the [automations overview](/automations) for more detail on events you can subscribe to.
+
+## Configure active webhooks
+
+You can configure webhooks on a per-application basis. Go to your application _Settings > Automations_.
+
+![Webhooks](https://media.buildstash.com/docs/integrations/webhooks/01_webhooks_table.png)
+
+You can view existing webhooks in the table, or create a new one here. Up to 10 active webhooks per application can be configured.
+
+Select [the event](/automations) you'd like to subscribe to, and the target URL to notify.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/webhooks/02_create.png"
+  alt="Create webhook"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+You can optionally provide or generate a secret. If you provide a secret, it will be used to sign the webhook payload using a HMAC SHA-256 signature. The signature will be provided in the _'x-webhook-signature'_ header.
+
+## Webhook format
+
+### Headers
+
+Some useful headers will be provided with each request:
+
+| Header Name           | Description                                                         |
+|-----------------------|---------------------------------------------------------------------|
+| `x-webhook-event`     | The event type, i.e. _release.created_, _build.created.stream_, etc |
+| `x-webhook-id`        | A unique id for this webhook request                                |
+| `x-webhook-timestamp` | The timestamp of the event                                          |
+| `x-webhook-signature` | HMAC SHA-256 signature of the payload, if a secret was provided     |
+
+### Example payloads
+
+All webhook payloads follow a consistent structure with an `id`, `event`, `created` timestamp, and `data` object containing the event-specific information.
+
+#### build.created
+
+Triggered when a new build is uploaded.
+
+```json
+{
+  "id": "019a933c-f7eb-71ec-b065-0bd60a12219d",
+  "event": "build.created",
+  "created": 1763406837,
+  "data": {
+    "build": {
+      "id": "mtvybu4",
+      "build_structure": "file",
+      "version": "1.0.0",
+      "version_short": "1.0.0",
+      "version_semantic_major": 1,
+      "version_semantic_minor": 0,
+      "version_semantic_patch": 0,
+      "version_semantic_extra": "",
+      "version_semantic_meta": "",
+      "build_number": "2025.11.17.001",
+      "platform": {
+        "name": "iOS",
+        "short_name": "iOS",
+        "identifier": "ios"
+      },
+      "stream": {
+        "id": "m7k3p9x",
+        "name": "Internal Testing",
+        "description": "Internal testing builds",
+        "retention_days": null,
+        "application_id": "a8k3m9p2n7x1",
+        "workspace_id": "x9k2m7p3n5z2",
+        "created_at": "2024-01-01T00:00:00.000000Z",
+        "updated_at": "2024-01-01T00:00:00.000000Z"
+      },
+      "labels": [
+        {
+          "id": "p9k2m7x",
+          "name": "to-review",
+          "description": "Builds ready for review",
+          "color": "#f59e0b",
+          "level": "application",
+          "application_id": "a8k3m9p2n7x1",
+          "workspace_id": "x9k2m7p3n5z2",
+          "created_at": "2025-11-08T23:05:53.000000Z",
+          "updated_at": "2025-11-08T23:05:53.000000Z"
+        }
+      ],
+      "architectures": [
+        {
+          "name": "ARM64v8",
+          "identifier": "arm64v8",
+          "description": "ARMv8-A 64-bit - Cortex-A34/35/53/57/72/73/55/65/75/76/77/78"
+        },
+        {
+          "name": "ARMv9-A",
+          "identifier": "armv9",
+          "description": "ARMv9-A - Cortex-A510/710/715/320/520/720/725"
+        }
+      ],
+      "notes": null,
+      "size_total_bytes": 3553340,
+      "size_total_string": "3.39 MB",
+      "metadata_total_bytes": null,
+      "primary_file": {
+        "id": "013a935c-f7eb-g1ec-b065-0bd60a8372a5",
+        "filename": "app.ipa",
+        "size_bytes": 3553340,
+        "size_string": "3.39 MB",
+        "checksum_md5": "a1b2c3d4e5f6789012345678901234ab",
+        "filetype": {
+          "name": "iOS App Store Package",
+          "extension": "ipa",
+          "description": "iOS application archive",
+          "mime_type": "application/octet-stream",
+          "supports_expansion": false
+        },
+        "build_id": "mtvybu4",
+        "application_id": "a8k3m9p2n7x1",
+        "workspace_id": "x9k2m7p3n5z2",
+        "created_at": "2025-11-17T19:10:53.000000Z",
+        "updated_at": "2025-11-17T19:10:53.000000Z"
+      },
+      "expansion_files": [],
+      "metadata_artifacts": [
+        {
+          "id": "013a935c-f7eb-g1ec-b065-0bd60a8372a7",
+          "filename": "buildlog.txt",
+          "size_bytes": 8192,
+          "size_string": "8.00 KB",
+          "checksum_md5": "c3d4e5f6a7b8901234567890123456cd",
+          "metadata_filetype": {
+            "name": "Plain Text",
+            "extension": "txt",
+            "description": "Plain text file",
+            "mime_type": "text/plain"
+          },
+          "build_id": "mtvybu4",
+          "application_id": "a8k3m9p2n7x1",
+          "workspace_id": "x9k2m7p3n5z2",
+          "created_at": "2025-11-17T19:10:53.000000Z",
+          "updated_at": "2025-11-17T19:10:53.000000Z"
+        }
+      ],
+      "ios_info": {
+        "build_id": "mtvybu4",
+        "bundle_id": "com.example.app",
+        "bundle_name": "Example App",
+        "key_type": "development",
+        "minimum_os": "15.0",
+        "bundle_version": "1",
+        "version_short_string": "1.0.0",
+        "provisioning_profile_uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "provisioning_profile_expiry": "2026-12-31T23:59:59.000000Z",
+        "team_name": "Example Team",
+        "team_identifier": "ABC123DEF4"
+      },
+      "android_info": null,
+      "build_source": "web-upload",
+      "ci_pipeline": {
+        "ci_pipeline_name": "Build iOS App",
+        "ci_pipeline_url": "https://github.com/example/my-app/actions/workflows/build.yml",
+        "ci_run_id": "1234567890",
+        "ci_run_url": "https://github.com/example/my-app/actions/runs/1234567890",
+        "ci_build_duration": "00:05:23"
+      },
+      "scm": {
+        "scm_host_type": "git",
+        "scm_host": "github.com",
+        "scm_repo_name": "example/my-app",
+        "scm_repo_url": "https://github.com/example/my-app",
+        "scm_branch": "main",
+        "scm_commit_sha": "abc123def456789012345678901234567890abcd",
+        "scm_commit_sha_short": "abc123d",
+        "scm_commit_url": "https://github.com/example/my-app/commit/abc123def456789012345678901234567890abcd"
+      },
+      "pending": false,
+      "modal_url": "https://app.buildstash.com/app/a8k3m9p2n7x1/build/mtvybu4",
+      "internal_download_url": "https://app.buildstash.com/download/build/mtvybu4",
+      "application_id": "a8k3m9p2n7x1",
+      "workspace_id": "x9k2m7p3n5z2",
+      "built_at": null,
+      "deleted_at": null,
+      "created_at": "2025-11-17T19:10:53.000000Z",
+      "updated_at": "2025-11-17T19:10:59.000000Z"
+    }
+  }
+}
+```
+
+#### build.moved.stream
+
+Triggered when a build is moved into a specific stream.
+
+```json
+{
+  "id": "019a933c-f7eb-71ec-b065-0bd60a12219e",
+  "event": "build.moved.stream",
+  "created": 1763406900,
+  "data": {
+    "build": {
+      "id": "k8xw2p9",
+      "build_structure": "file",
+      "version": "1.0.0",
+      "version_short": "1.0.0",
+      "version_semantic_major": 1,
+      "version_semantic_minor": 0,
+      "version_semantic_patch": 0,
+      "version_semantic_extra": "",
+      "version_semantic_meta": "",
+      "build_number": "456",
+      "platform": {
+        "name": "iOS",
+        "short_name": "iOS",
+        "identifier": "ios"
+      },
+      "stream": {
+        "id": "n8k4p2x",
+        "name": "Internal Testing",
+        "description": "Internal testing builds",
+        "retention_days": null,
+        "application_id": "b7j4k8m3p9n2",
+        "workspace_id": "y8j3k6m4p2n7",
+        "created_at": "2024-01-01T00:00:00.000000Z",
+        "updated_at": "2024-01-01T00:00:00.000000Z"
+      },
+      "labels": [],
+      "architectures": [
+        {
+          "name": "ARM64v8",
+          "identifier": "arm64v8",
+          "description": "ARMv8-A 64-bit - Cortex-A34/35/53/57/72/73/55/65/75/76/77/78"
+        },
+        {
+          "name": "ARMv9-A",
+          "identifier": "armv9",
+          "description": "ARMv9-A - Cortex-A510/710/715/320/520/720/725"
+        }
+      ],
+      "notes": null,
+      "size_total_bytes": 52428800,
+      "size_total_string": "50 MB",
+      "metadata_total_bytes": null,
+      "primary_file": {
+        "id": "013a935c-f7eb-g1ec-b065-0bd60a8372a6",
+        "filename": "app.ipa",
+        "size_bytes": 52428800,
+        "size_string": "50 MB",
+        "checksum_md5": "b2c3d4e5f6a7890123456789012345bc",
+        "filetype": {
+          "name": "iOS App Store Package",
+          "extension": "ipa",
+          "description": "iOS application archive",
+          "mime_type": "application/octet-stream",
+          "supports_expansion": false
+        },
+        "build_id": "k8xw2p9",
+        "application_id": "b7j4k8m3p9n2",
+        "workspace_id": "y8j3k6m4p2n7",
+        "created_at": "2025-11-17T19:10:53.000000Z",
+        "updated_at": "2025-11-17T19:10:53.000000Z"
+      },
+      "expansion_files": [],
+      "metadata_artifacts": [],
+      "ios_info": {
+        "build_id": "k8xw2p9",
+        "bundle_id": "com.example.app",
+        "bundle_name": "Example App",
+        "key_type": "distribution",
+        "minimum_os": "15.0",
+        "bundle_version": "1",
+        "version_short_string": "1.0.0",
+        "provisioning_profile_uuid": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "provisioning_profile_expiry": "2026-12-31T23:59:59.000000Z",
+        "team_name": "Example Team",
+        "team_identifier": "XYZ789GHI0"
+      },
+      "android_info": null,
+      "build_source": "web-upload",
+      "ci_pipeline": {
+        "ci_pipeline_name": "Build iOS App",
+        "ci_pipeline_url": "https://github.com/example/my-app/actions/workflows/build.yml",
+        "ci_run_id": "2345678901",
+        "ci_run_url": "https://github.com/example/my-app/actions/runs/2345678901",
+        "ci_build_duration": "00:06:15"
+      },
+      "scm": {
+        "scm_host_type": "git",
+        "scm_host": "github.com",
+        "scm_repo_name": "example/my-app",
+        "scm_repo_url": "https://github.com/example/my-app",
+        "scm_branch": "develop",
+        "scm_commit_sha": "def456abc789012345678901234567890abcdef12",
+        "scm_commit_sha_short": "def456a",
+        "scm_commit_url": "https://github.com/example/my-app/commit/def456abc789012345678901234567890abcdef12"
+      },
+      "pending": false,
+      "modal_url": "https://app.buildstash.com/app/b7j4k8m3p9n2/build/k8xw2p9",
+      "internal_download_url": "https://app.buildstash.com/download/build/k8xw2p9",
+      "application_id": "b7j4k8m3p9n2",
+      "workspace_id": "y8j3k6m4p2n7",
+      "built_at": null,
+      "deleted_at": null,
+      "created_at": "2025-11-17T19:10:53.000000Z",
+      "updated_at": "2025-11-17T19:10:59.000000Z"
+    },
+    "stream": {
+      "id": "n8k4p2x",
+      "name": "Internal Testing",
+      "description": "Internal testing builds",
+      "retention_days": null,
+      "application_id": "b7j4k8m3p9n2",
+      "workspace_id": "y8j3k6m4p2n7",
+      "created_at": "2024-01-01T00:00:00.000000Z",
+      "updated_at": "2024-01-01T00:00:00.000000Z"
+    }
+  }
+}
+```
+
+#### release.updated
+
+Triggered when a release is updated, with builds added or removed.
+
+```json
+{
+  "id": "019aa2b6-c835-7180-9b5b-d87082719c8e",
+  "event": "release.updated",
+  "created": 1763666479,
+  "data": {
+    "release": {
+      "id": "w9k3m2p",
+      "version": "0.0.1",
+      "version_short": "0.0.1",
+      "version_semantic_major": 0,
+      "version_semantic_minor": 0,
+      "version_semantic_patch": 1,
+      "version_semantic_extra": "",
+      "version_semantic_meta": "",
+      "title": "Name here",
+      "labels": [
+        {
+          "id": "t8p9k2m",
+          "name": "to-publisher",
+          "description": "Release ready to be published",
+          "color": "#10b981",
+          "level": "release",
+          "application_id": "d8k4m7p3n9x2",
+          "workspace_id": "w7j5k3m8p2n6",
+          "created_at": "2025-11-08T23:05:53.000000Z",
+          "updated_at": "2025-11-08T23:05:53.000000Z"
+        }
+      ],
+      "notes": "# Release Notes - Version 0.0.1\n\n**Release Date:** November 15, 2025\n\n## New Features\n\n- Advanced search functionality with intelligent filtering\n- Dark mode support\n- Real-time collaboration tools\n\n## Improvements\n\n- Reduced page load times by 40%\n- Improved mobile experience\n- Enhanced accessibility features\n\n## Bug Fixes\n\n- Fixed notification clearing issues\n- Resolved file upload crashes\n- Corrected timezone display inconsistencies",
+      "builds": [
+        {
+          "id": "n5mh7q3",
+          "build_structure": "file",
+          "version": "0.0.1",
+          "version_short": "0.0.1",
+          "version_semantic_major": 0,
+          "version_semantic_minor": 0,
+          "version_semantic_patch": 1,
+          "version_semantic_extra": "alpha",
+          "version_semantic_meta": "2025.01.01",
+          "build_number": "32345",
+          "platform": {
+            "name": "Windows",
+            "short_name": "Windows",
+            "identifier": "windows"
+          },
+          "stream": {
+            "id": "k2p9m4x",
+            "name": "nightlies",
+            "description": "Nightly builds.",
+            "retention_days": null,
+            "application_id": "d8k4m7p3n9x2",
+            "workspace_id": "w7j5k3m8p2n6",
+            "created_at": "2025-01-12T13:57:10.000000Z",
+            "updated_at": "2025-01-12T13:57:10.000000Z"
+          },
+          "labels": [
+            {
+              "id": "r4t8m2p",
+              "name": "to-review",
+              "description": null,
+              "color": "#f59e0b",
+              "level": "application",
+              "application_id": "d8k4m7p3n9x2",
+              "workspace_id": "w7j5k3m8p2n6",
+              "created_at": "2025-11-08T23:05:53.000000Z",
+              "updated_at": "2025-11-08T23:05:53.000000Z"
+            }
+          ],
+          "notes": null,
+          "size_total_bytes": 400,
+          "size_total_string": "400.00 B",
+          "metadata_total_bytes": 0,
+          "build_source": "web-upload",
+          "ci_pipeline": {
+            "ci_pipeline_name": "Build Windows App",
+            "ci_pipeline_url": "https://github.com/example/my-app/actions/workflows/build.yml",
+            "ci_run_id": "3456789012",
+            "ci_run_url": "https://github.com/example/my-app/actions/runs/3456789012",
+            "ci_build_duration": "00:04:15"
+          },
+          "scm": {
+            "scm_host_type": "git",
+            "scm_host": "github.com",
+            "scm_repo_name": "example/my-app",
+            "scm_repo_url": "https://github.com/example/my-app",
+            "scm_branch": "main",
+            "scm_commit_sha": "def456abc789012345678901234567890abcdef12",
+            "scm_commit_sha_short": "def456a",
+            "scm_commit_url": "https://github.com/example/my-app/commit/def456abc789012345678901234567890abcdef12"
+          },
+          "pending": false,
+          "modal_url": "https://app.buildstash.com/app/d8k4m7p3n9x2/build/n5mh7q3",
+          "internal_download_url": "https://app.buildstash.com/download/build/n5mh7q3",
+          "application_id": "d8k4m7p3n9x2",
+          "workspace_id": "w7j5k3m8p2n6",
+          "built_at": null,
+          "deleted_at": null,
+          "created_at": "2025-11-17T03:33:54.000000Z",
+          "updated_at": "2025-11-17T04:01:00.000000Z"
+        },
+        {
+          "id": "s8v2d5y",
+          "build_structure": "file",
+          "version": "2.5.1-stable+2024.12.17",
+          "version_short": "2.5.1",
+          "version_semantic_major": 2,
+          "version_semantic_minor": 5,
+          "version_semantic_patch": 1,
+          "version_semantic_extra": "stable",
+          "version_semantic_meta": "2024.12.17",
+          "build_number": "62-release",
+          "platform": {
+            "name": "Android",
+            "short_name": "Android",
+            "identifier": "android"
+          },
+          "stream": {
+            "id": "k2p9m4x",
+            "name": "nightlies",
+            "description": "Nightly builds.",
+            "retention_days": null,
+            "application_id": "d8k4m7p3n9x2",
+            "workspace_id": "w7j5k3m8p2n6",
+            "created_at": "2025-01-12T13:57:10.000000Z",
+            "updated_at": "2025-01-12T13:57:10.000000Z"
+          },
+          "labels": [
+            {
+              "id": "q9f4j2r",
+              "name": "production",
+              "description": null,
+              "color": "#a855f7",
+              "level": "application",
+              "application_id": "d8k4m7p3n9x2",
+              "workspace_id": "w7j5k3m8p2n6",
+              "created_at": "2025-11-08T23:41:01.000000Z",
+              "updated_at": "2025-11-08T23:41:01.000000Z"
+            },
+            {
+              "id": "d5y8f2v",
+              "name": "release",
+              "description": null,
+              "color": "#ec4899",
+              "level": "application",
+              "application_id": "d8k4m7p3n9x2",
+              "workspace_id": "w7j5k3m8p2n6",
+              "created_at": "2025-11-08T23:41:01.000000Z",
+              "updated_at": "2025-11-08T23:41:01.000000Z"
+            }
+          ],
+          "notes": null,
+          "size_total_bytes": 12688611,
+          "size_total_string": "12.10 MB",
+          "metadata_total_bytes": 0,
+          "build_source": "jenkins",
+          "ci_pipeline": {
+            "ci_pipeline_name": "Test pipeline",
+            "ci_pipeline_url": "http://localhost:8080/job/Test%20pipeline/",
+            "ci_run_id": "62",
+            "ci_run_url": "http://localhost:8080/job/Test%20pipeline/62/",
+            "ci_build_duration": "00:00:10"
+          },
+          "scm": {
+            "scm_host_type": "git",
+            "scm_host": "github.com",
+            "scm_repo_name": "example/my-app",
+            "scm_repo_url": "https://github.com/example/my-app",
+            "scm_branch": "develop",
+            "scm_commit_sha": "ghi789jkl0123456789012345678901234567890ab",
+            "scm_commit_sha_short": "ghi789j",
+            "scm_commit_url": "https://github.com/example/my-app/commit/ghi789jkl0123456789012345678901234567890ab"
+          },
+          "pending": false,
+          "modal_url": "https://app.buildstash.com/app/d8k4m7p3n9x2/build/s8v2d5y",
+          "internal_download_url": "https://app.buildstash.com/download/build/s8v2d5y",
+          "application_id": "d8k4m7p3n9x2",
+          "workspace_id": "w7j5k3m8p2n6",
+          "built_at": "2025-11-10T20:27:28.000000Z",
+          "deleted_at": null,
+          "created_at": "2025-11-10T20:27:28.000000Z",
+          "updated_at": "2025-11-16T16:49:37.000000Z"
+        }
+      ],
+      "application_id": "d8k4m7p3n9x2",
+      "workspace_id": "w7j5k3m8p2n6",
+      "created_at": "2025-11-17T16:17:01.000000Z",
+      "updated_at": "2025-11-17T16:20:51.000000Z"
+    }
+  }
+}
+```
+
+## More on data structures
+
+You can find further detail on data structures returned with webhook payloads in the [API reference documentation](/api).

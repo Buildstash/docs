@@ -1,0 +1,44 @@
+---
+title: 'Directory'
+description: "Connect Buildstash to the tools in your team's workflow"
+---
+
+import {Cloud, MailIcon, SquareTerminal, ToyBrickIcon, Webhook} from 'lucide-react';
+import { GithubactionsOriginal, AzuredevopsOriginal, JenkinsOriginal, UnityOriginal, SlackOriginal, AmazonwebservicesOriginalWordmark, CloudflareOriginal, GitlabOriginal, OktaOriginal } from 'devicons-react';
+import { BrandFastlaneIcon, BrandJumpcloudIcon, BrandMicrosoftEntraIcon, BrandOktaIcon, BrandAuth0Icon } from 'stashicons/react/brand';
+
+### CI / Build Tools
+
+<Cards>
+  <IntegrationCard title="GitHub Actions" icon={<GithubactionsOriginal />} href="/integrations/ci/github-actions" />
+  <IntegrationCard title="Azure DevOps Pipelines" icon={<AzuredevopsOriginal />} href="/integrations/ci/azure-devops-pipelines" />
+  <IntegrationCard title="Jenkins" icon={<JenkinsOriginal />} href="/integrations/ci/jenkins" />
+  <IntegrationCard title="GitLab CI/CD" icon={<GitlabOriginal />} href="/integrations/ci/gitlab" />
+  <IntegrationCard title="fastlane" icon={<BrandFastlaneIcon />} href="/integrations/ci/fastlane" />
+  <IntegrationCard title="Unity Build Automation" icon={<UnityOriginal />} href="/integrations/ci/unity-build-automation" />
+</Cards>
+
+### Notifications
+
+<Cards>
+  <IntegrationCard title="Webhooks" icon={<Webhook />} href="/integrations/notifications/webhooks" />
+  <IntegrationCard title="Email" icon={<MailIcon />} href="/integrations/notifications/email" />
+  <IntegrationCard title="Slack" icon={<SlackOriginal />} href="/integrations/notifications/slack" />
+</Cards>
+
+### Build Storage (S3 Compatible)
+
+<Cards>
+  <IntegrationCard title="AWS S3" icon={<AmazonwebservicesOriginalWordmark />} href="/integrations/storage/aws-s3" />
+  <IntegrationCard title="Cloudflare R2" icon={<CloudflareOriginal />} href="/integrations/storage/cloudflare-r2" />
+  <IntegrationCard title="Other Providers" icon={<Cloud />} href="/integrations/storage/other-providers" />
+</Cards>
+
+### Enterprise SSO
+
+<Cards>
+  <IntegrationCard title="Microsoft Entra" icon={<BrandMicrosoftEntraIcon />} href="/integrations/sso/entra" />
+  <IntegrationCard title="JumpCloud" icon={<BrandJumpcloudIcon />} href="/integrations/sso/jumpcloud" />
+  <IntegrationCard title="Okta" icon={<BrandOktaIcon />} href="/integrations/sso/okta" />
+  <IntegrationCard title="Auth0" icon={<BrandAuth0Icon />} href="/integrations/sso/auth0" />
+</Cards>

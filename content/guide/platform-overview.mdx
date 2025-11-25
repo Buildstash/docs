@@ -1,0 +1,107 @@
+---
+title: Platform overview
+description: A guide to Buildstash and some core concepts
+---
+
+## Introduction
+
+Buildstash is a platform for managing, sharing, and distributing software binaries.
+
+By connecting Buildstash to your [CI/CD pipeline](/connect-ci-cd), as well as capturing local builds, you can archive and organise all of your binary builds.
+
+Builds are stored while maintaining related context and metadata, whether regarding CI run and git context, related issues, review status, and so on.
+
+Builds can be grouped under releases, and distributed directly to users - whether workspace collaborators, external testers, or end users.
+
+Our vision for Buildstash is to be platform software teams use to capture all their binaries, and collaborate on steering through to release.
+
+<div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', maxWidth: '100%' }}>
+  <iframe
+    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+    src="https://www.youtube.com/embed/t4Fr6M_vIIc"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowFullScreen
+  />
+</div>
+
+## Core concepts
+
+Here's a quick overview of some of the key concepts and objects which make up the platform:
+
+_____
+
+### Applications
+
+The first step in adding your builds is to create an Application. Applications are used to organize all relevant builds and releases within.
+
+An Application can support multiple platforms - allowing you to for example capture both Android and iOS builds within the same Application, allowing you to group builds from different platforms together and distribute with ease, while also easily filtering to find builds from a specific platform.
+
+_____
+
+### Builds
+
+[Builds](/builds-and-releases) are the core objects within the platform, consisting of the relevant software binary, and related metadata.
+
+Each build will have at least a [primary file](/api/data/filetypes), and may have additional [expansion files](/api/data/expansion-filetypes).
+
+
+#### Platforms
+
+Buildstash is designed to be in one sense platform-agnostic - it can support archival and distribution of binaries of any kind.
+
+At the same, we have integrated support for over [80 platforms](/api/data/platforms), for organization, and providing many additional platform-specific capabilities, for example integrated iOS and Android beta distribution.
+
+
+#### Streams
+
+Each build is organized into a single [stream](/builds-and-releases/streams). You set which stream you wish the build to enter on upload, and the stream can be changed at any time.
+
+Streams are fully customizable to your workflow - you may for example have a stream for nightlies, and a stream for production builds, with the ability to "promote" a build upwards post-review.
+
+
+#### Labels
+
+Both builds and releases can have multiple [labels](/builds-and-releases/labels) attached. Again labels are fully customizable, and can be a powerful tool for organizing and filtering builds, as well as guiding through defined workflows.
+
+#### Metadata Artifacts
+
+[Metadata artifacts](/builds-and-releases/metadata-artifacts) are additional files which be attached to a build, as distinct from the core binaries. For example, these may include build logs, test results, SBOMs, or other relevant metadata.
+
+_____
+
+### Releases
+
+[Releases](/builds-and-releases/using-releases) are groups of builds from your application, which may include builds targeting any number of platforms. Releases can have detailed release notes attached, and be used for an improved distribution experience to users.
+
+_____
+
+### Distribution
+
+There are a number of ways of distributing builds and releases, whether to collaborators, testers, or users.
+
+Collaborators within your workspace can of course access the applications you [grant them access to](/workspace/permissions), with the ability to filter and search for builds and releases, and to see related context and metadata.
+
+There are a number of powerful ways to distribute to users who may not be within your workspace:
+
+#### Share links
+
+You can create both internal [share links](/builds-and-releases/sharing) (for fast download links for your team, which you may for example wish to output to a [Slack channel](/integrations/notifications/slack); or [public share links]](/builds-and-releases/sharing), which offer a quick and easy way of sending to an instant download link to anyone.
+
+#### Distribution groups
+
+You can create [distribution groups](/distribution-groups) to push releases out to groups of both internal workspace and external users. Distribution group members can be automatically notified of a release via email, with a quick link to download.
+
+When sharing releases with iOS or Android builds, this flow will also provide ad-hoc distribution capabilities, with a guided install flow on their mobile device.
+
+#### Portals
+
+- [Public portals](/portals) are branded spaces you can customise and even host on your own website, selectively distributing releases and/or build streams. Useful for open source projects, or anyone who wants to easily share binaries on their website
+- Private portals will be [launched soon](https://support.buildstash.com/roadmap?id=bc187855-0e66-401e-baa4-0248093e1cbd) - similar to public portals, but with the ability to restrict access to authorised users. Useful for teams such as client agencies
+
+_____
+
+### Automations
+
+You can create [automations](/automations) to trigger actions in response to [application events](/automations#supported-events). This could be used to automatically notify all of a QA team when a build is moved into a test stream, or to post to a Slack channel when a release is created, or a label applied, etc.

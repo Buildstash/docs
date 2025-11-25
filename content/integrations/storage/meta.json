@@ -1,0 +1,7 @@
+{
+  "title": "Build Storage",
+  "description": "Store your builds in S3-compatible storage",
+  "root": false
+}
+
+

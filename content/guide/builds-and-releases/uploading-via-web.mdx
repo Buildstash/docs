@@ -1,0 +1,41 @@
+---
+title: Uploading via web
+description: Upload builds via the web uploader
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Introduction
+
+Sometimes you might want to add a build to Buildstash which hasn't been fed in directly from [your CI/CD pipeline](/builds-and-releases/connect-ci-cd). Maybe you want to move over some legacy builds, or a manual build you made locally on your machine.
+
+One way you can do this quickly and easily is via the web uploader.
+
+## Using the web uploader
+
+In the "Builds" view for your application, select "New build", and then the platform this build targets.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/web-uploader/01_platform.png"
+  alt="Choose your build platform"
+  width={500}
+  height={800}
+  sizes="(max-width: 500px) 100vw, 50vw"
+/>
+
+Platform selection is important - as the upload flow will be tweaked to suit this problem. For example, Android builds will accept .apk or .aab primary builds, and optional .obb expansion files. For many platforms where applicable you may wish to define which target architectures this build supports. Of course, the "Generic" platform can always be used as a fallback, when you want the flexibility to upload whatever binary filetype you like!
+
+You can view a full list of platforms with [supported filetypes](/api/data/platforms) and [architectures](/api/data/architectures).
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/web-uploader/02_uploader.png"
+  alt="Drag and drop your build file"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+You can upload builds up with a primary file up to 5GB in size via the web uploader. For larger files, you'll need to upload via either [the API](/api/guides/upload) or a [CI/CD integration](/builds-and-releases/connect-ci-cd) for now.
+
+<Callout>
+  Improvements to the web uploader to allow files larger than 5GB are planned, keep an eye on our [roadmap](https://support.buildstash.com/roadmap).
+</Callout>

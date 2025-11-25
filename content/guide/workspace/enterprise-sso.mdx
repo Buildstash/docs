@@ -1,0 +1,46 @@
+---
+title: Enterprise SSO
+description: Configure enterprise Single Sign-On providers for your workspace
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { BrandJumpcloudIcon, BrandMicrosoftEntraIcon, BrandOktaIcon, BrandAuth0Icon } from 'stashicons/react/brand';
+
+<Callout>
+  This feature is available to users on our [Ultra plan](https://buildstash.com/pricing) and up.
+</Callout>
+
+## Overview
+
+You can configure enterprise Single Sign-On providers for your workspace.
+
+This is configured in your workspace settings under General > Enterprise SSO.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/microsoft-entra/04_enable.png"
+  alt="Enable SSO provider"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+When enabling a provider you have a number of options:
+
+- Require SSO login? You have the option of whether you would like only allow your workspace users to login via this SSO provider, or also retain access via their Buildstash username and password. If they're a member of multiple Buildstash workspaces, they will always have to confirm SSO access when switching to your workspace.
+- Whether SSO users should be auto-provisioned with a Buildstash account with workspace access, if they sign in via this SSO provider, but don't have an existing Buildstash account.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/microsoft-entra/07_manage.png"
+  alt="Manage SSO settings"
+  width={500}
+  height={800}
+  sizes="(max-width: 500px) 100vw, 50vw"
+/>
+
+For full steps on configuration an Enterprise SSO provider, see the documentation for the specific provider you're using.
+
+<Cards>
+  <IntegrationCard title="Microsoft Entra" icon={<BrandMicrosoftEntraIcon />} href="/integrations/sso/entra" />
+  <IntegrationCard title="JumpCloud" icon={<BrandJumpcloudIcon />} href="/integrations/sso/jumpcloud" />
+  <IntegrationCard title="Okta" icon={<BrandOktaIcon />} href="/integrations/sso/okta" />
+  <IntegrationCard title="Auth0" icon={<BrandAuth0Icon />} href="/integrations/sso/auth0" />
+</Cards>

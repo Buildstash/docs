@@ -1,0 +1,28 @@
+---
+title: Workspace settings
+description: Manage your Buildstash workspace settings
+---
+
+## Introduction
+
+You can manage a wide range of different settings relating to your workspace. This article provides some helpful tips on customizing some key settings.
+
+## Workspace subdomain
+
+You can optionally specify a custom subdomain for your workspace. This is advised, and means that your workspace can both be accessed via this custom URL, share links will include your custom subdomain, and is additionally required in order to setup [Enterprise SSO](/workspace/enterprise-sso) options.
+
+The subdomain will default to _'app.buildstash.com'_ if left empty.
+
+You can add a custom subdomain at any time. Please exercise extreme caution if changing it from one custom subdomain to another however - as you will break all existing share links.
+
+## Members
+
+For collaborators you wish to grant access to your workspace, as full [billed](https://buildstash.com/pricing) users, you can invite them, and customize their [access level](/workspace/permissions).
+
+## Connections
+
+You can setup connections to external services where applicable at a workspace level. This may be required for certain integrations to function. For example, in order to automate Slack notifications in any of your applications, you'll first need to [connect a Slack team](/integrations/notifications/slack) in your workspace settings.
+
+## Labels, Streams, Custom Targets
+
+For customizing workspace-level [labels](/builds-and-releases/labels), default [streams](/builds-and-releases/streams-and-retention), or [custom target platforms](/builds-and-releases/custom-targets), see the relevant guides.

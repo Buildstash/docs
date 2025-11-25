@@ -1,0 +1,27 @@
+---
+title: "Introduction"
+description: "Build custom integrations using our open API"
+icon: House
+---
+
+import { Upload } from 'lucide-react';
+
+<Callout>
+  Only upload endpoints of the API are currently available. A full platform API will be available later in Q4 2025.
+</Callout>
+
+## Authentication
+
+Upload API endpoints are authenticated using Bearer tokens. Include your application-specific API key in the Authorization header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+## Guides
+
+<Cards>
+  <Card title="Upload a Build" icon={<Upload />} href="/api/guides/upload">
+    Guides you through uploading a new build to Buildstash
+  </Card>
+</Cards>

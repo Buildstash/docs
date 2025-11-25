@@ -1,0 +1,64 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/solar.css';
+@import 'fumadocs-ui/css/preset.css';
+@import 'fumadocs-openapi/css/preset.css';
+
+/* Simple approach - only target direct children of prose containers */
+article .prose > p,
+article .prose > li {
+  color: hsl(0, 0%, 20%) !important;
+}
+
+.dark article .prose > p,
+.dark article .prose > li {
+  color: hsl(0, 0%, 80%) !important;
+}
+
+/* Make headings from h2 down smaller */
+.prose h2 {
+  font-size: 1.2em !important;
+}
+
+.prose h3 {
+  font-size: 1.1em !important;
+}
+
+.prose h4 {
+  font-size: 1.05em !important;
+}
+
+.prose h5 {
+  font-size: 0.95em !important;
+}
+
+.prose h6 {
+  font-size: 0.85em !important;
+}
+
+/* Add divider line under page header (title + description) */
+article > p.text-lg.text-fd-muted-foreground {
+  position: relative;
+}
+
+article > p.text-lg.text-fd-muted-foreground::after {
+  content: '';
+  position: absolute;
+  bottom: -1.5rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--color-fd-border);
+}
+
+/* Theme-aware icon colors for sidebar icons only */
+[data-sidebar] svg,
+[data-sidebar] svg path,
+[data-sidebar] svg circle,
+[data-sidebar] svg rect,
+[data-sidebar] svg polygon,
+[data-sidebar] svg line,
+[data-sidebar] svg g {
+  color: inherit !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}

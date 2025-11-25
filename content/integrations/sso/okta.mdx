@@ -1,0 +1,178 @@
+---
+title: 'Okta'
+description: "Configure Okta single sign-on for your organization"
+icon: 'StashiconsBrand-BrandOktaIcon'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  This feature is available to users on our [Ultra and Enterprise plans](https://buildstash.com/pricing).
+</Callout>
+
+## Introduction
+
+Follow these instructions to allow your users to login to your Buildstash workspace using Okta.
+
+## Create SSO app integration in Okta
+
+<Steps>
+
+  <Step title="Create new app integration">
+    <strong>Create new app integration</strong>
+
+    In your Okta Admin Console for your organization, navigate to Applications, and select "Create app integration". In the dialog select "OIDC - OpenID Connect", and "Web Application".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/01_create.png"
+      alt="Create new app integration"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Enter key integration details">
+    <strong>Enter key integration details</strong>
+
+    There are some key details to enter when setting up the integration.
+
+    The "Sign-in redirect URL" must be entered exactly match the "redirect URI" for your workspace. You can find this in the "Enable identity provider" dialog in Buildstash, covered below. The format will be:
+    `https://{SUBDOMAIN}.buildstash.com/auth/okta/callback`
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/02_web_integration.png"
+      alt="Enter key integration details"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    You must also setup access as preferred under Assignments.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/03_assignments.png"
+      alt="Setup access assignments"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Note client ID and secret">
+    <strong>Note client ID and secret</strong>
+
+    Once the application is created, you'll find the Client ID and Client Secret you'll need to input when setting up in Buildstash later.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/04_credentials.png"
+      alt="Note client ID and secret"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Setup access policy on Authorization Server">
+    <strong>Setup access policy on Authorization Server</strong>
+
+    If you've not already setup an access policy on the Authorization Server you wish to use you'll need to do this. Navigate to Security > API > Authorization Servers, then select to edit the Authorization Server you wish to use - this will be the "default" auth server if you've not setup more.
+
+    When editing the Authorization Server, go to the "Access Policies" tab, and create a new policy (if you don't already have one), then create a rule.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/05_policy.png"
+      alt="Setup access policy on Authorization Server"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    This is an example of a rule which will provide the necessary access for Buildstash to authenticate.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/06_rule.png"
+      alt="Example access rule"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+</Steps>
+
+
+## Configure SSO in Buildstash
+
+<Steps>
+
+  <Step title="Enable SSO provider">
+    <strong>Enable SSO provider</strong>
+
+    Go to your workspace settings, and under "Enterprise SSO", select "Enable provider".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/07_enable.png"
+      alt="Enable SSO provider"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Input provider credentials">
+    <strong>Input provider credentials</strong>
+
+    Input the client ID and secret you copied noted from the previous step. Your redirect URI to enter in Okta is also shown here.
+
+    You'll also need to provide the subdomain for your organization in Okta, and the name of your Authorization Server. You can find both the values needed in step 4 in the previous section.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/08_input.png"
+      alt="Input provider credentials"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Confirm correctly configured">
+    <strong>Confirm correctly configured</strong>
+
+    Once details are entered and confirmed you'll see Okta connected.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/09_success.png"
+      alt="Confirm correctly configured"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+    
+    Select "Manage" to update credentials in future, disable non-SSO login, or remove Okta as a login provider in future.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/okta/10_manage.png"
+      alt="Manage SSO settings"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    You can optionally require users login via this SSO provider to access your workspace, and there's an option to auto-add users who login via this provider to your workspace if they're not already a member.
+
+  </Step>
+
+  <Step title="Login with SSO">
+    <strong>Login with SSO</strong>
+
+    You can now navigate to the login page on your workspace custom subdomain, and the Okta SSO option will be presented.
+
+  </Step>
+
+</Steps>

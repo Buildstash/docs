@@ -1,0 +1,41 @@
+---
+title: Sharing builds and releases
+description: Share and distribute to collaborators, testers, and users
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Sharing with your team
+
+Workspace members can access builds and releases according to [their permissions](/workspace/permissions).
+
+Every build and release has an internal share link attached, which can found under the "Sharing" tab in your build or release summary, and used as a quick shortcut to download the build or release.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/sharing/01_release_share.png"
+  alt="View a release download page"
+  width={500}
+  height={800}
+  sizes="(max-width: 500px) 100vw, 50vw"
+/>
+
+## Public share links
+
+To quickly share a build or release with someone outside of your workspace, you can create a "public" share link.
+
+You can have multiple share links per build or release, and each link can optionally be password protected, or have an expiry date set.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/sharing/02_public_share.png"
+  alt="Create public share links"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+## Options for automated sharing and distribution
+
+There are numerous other options for automating sharing of your builds, or for wider distribution:
+
+- [Create an automation](/automations) to notify workspace members, a Slack channel, or webhook of new builds or releases
+- Use [distribution groups](/distribution-groups) to publish releases to an email list
+- Use [portals](/portals) to share build streams and/or releases via a branded interface you can host on your website

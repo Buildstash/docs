@@ -1,0 +1,57 @@
+---
+title: Setup your workspace
+description: "First steps to get your workspace ready, and start uploading builds"
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+## Basic setup, and custom subdomain
+
+On sign up you'll be prompted to give your workspace a name, and upload a logo. This will be used in various places through the app, including on views your users may see - such as share links and distribution groups.
+
+While it's optional, it's also advised to choose a workspace subdomain now. This will let you share download links with your custom subdomain.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/get-setup/01_subdomain.png"
+  alt="Choose a custom subdomain"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+## Create your first application
+
+You'll want to begin by creating your first _Application_. In Buildstash, all builds and releases are grouped under an application.
+
+Applications can contain builds targeting multiple platforms (up to 12 platforms per application, to provide plenty flexibility).
+
+![Create application](https://media.buildstash.com/docs/guide/get-setup/02_create_app.png)
+
+Once you've setup your first application, you can customize settings as preferred - including [streams](/builds-and-releases/streams) and [labels](/builds-and-releases/labels) for your workflow.
+
+While Buildstash provides integrated storage as [part of your plan](https://buildstash.com/pricing), if you prefer to self-hosted your build files, you'll want to [setup custom storage](/integrations/storage/aws-s3) now.
+
+## Upload your first build
+
+You're then ready to upload your first build!
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/get-setup/03_upload.png"
+  alt="Upload build"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+You can do this via the [web uploader](/builds-and-releases/uploading-via-web), but if you have a CI/CD pipeline - this would be a great time to [setup an integration](/builds-and-releases/connect-ci-cd), and automate sending in your builds.
+
+## Invite your team
+
+For internal collaborators - anyone you wish to have access to upload and manage builds - you'll want to invite them into your workspace.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/get-setup/04_invite.png"
+  alt="Invite your team"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>

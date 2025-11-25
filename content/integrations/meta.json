@@ -1,0 +1,12 @@
+{
+  "title": "Integrations",
+  "description": "Connect Buildstash to the other tools you use",
+  "root": true,
+  "pages": [
+    "index",
+    "ci",
+    "notifications",
+    "storage",
+    "sso"
+  ]
+}

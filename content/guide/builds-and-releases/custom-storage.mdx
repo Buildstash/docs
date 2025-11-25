@@ -1,0 +1,45 @@
+---
+title: Custom storage
+description: Configure a self-hosted storage bucket for your builds
+---
+import { Cloud } from 'lucide-react';
+import { AmazonwebservicesOriginalWordmark, CloudflareOriginal } from 'devicons-react';
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  This feature is available to users on our [Pro plan](https://buildstash.com/pricing) and up.
+</Callout>
+
+## Introduction
+
+When you create a new application, by default you can upload builds into our hosted cloud storage. The amount of hosted storage you are provided varies based on your [subscription plan](https://buildstash.com/pricing).
+
+If you prefer, you can instead connect self-hosted storage buckets to store your builds. Right now we support S3-compatible storage buckets, with documented support for [AWS S3](/integrations/storage/aws-s3) and [Cloudflare R2](/integrations/storage/cloudflare-r2).
+
+## Pre-requisites
+
+To use a self-hosted storage bucket for your application, you need to start with an application with no builds yet uploaded. So, it is recommended to set this up immediately after creating a new application, if you prefer to use custom storage. This option will also become available however for any application with no builds, including where any previous builds have been deleted.
+
+<Callout title="Migrate existing builds">
+  We don't yet have a migration tool to move existing application builds over from a hosted to self-hosted bucket. If you wish to move an application to self-hosted, it is advised to create a new application and begin storing new builds from that point onwards in your self-hosted bucket.
+</Callout>
+
+## Connecting custom storage
+
+To connect a custom storage bucket, go to your application settings > Storage > Configure storage.
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/guide/custom-storage/01_connect.png"
+  alt="Configure storage"
+  width={650}
+  height={800}
+  sizes="(max-width: 650px) 100vw, 50vw"
+/>
+
+Please find detailed instructions for configuring the connection to your custom storage bucket below.
+
+<Cards>
+  <IntegrationCard title="AWS S3" icon={<AmazonwebservicesOriginalWordmark />} href="/integrations/storage/aws-s3" />
+  <IntegrationCard title="Cloudflare R2" icon={<CloudflareOriginal />} href="/integrations/storage/cloudflare-r2" />
+  <IntegrationCard title="Other Providers" icon={<Cloud />} href="/integrations/storage/other-providers" />
+</Cards>

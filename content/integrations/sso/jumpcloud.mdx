@@ -1,0 +1,191 @@
+---
+title: 'JumpCloud'
+description: "Configure JumpCloud single sign-on for your organization"
+icon: 'StashiconsBrand-BrandJumpcloudIcon'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  This feature is available to users on our [Ultra and Enterprise plans](https://buildstash.com/pricing).
+</Callout>
+
+## Introduction
+
+Follow these instructions to allow your users to login to your Buildstash workspace using JumpCloud SSO.
+
+## Create SSO Application in JumpCloud
+
+<Steps>
+
+  <Step title="Create custom SSO application">
+    <strong>Create custom SSO application</strong>
+
+    In your JumpCloud admin portal, navigate to "SSO Applications", and select "Add New Application".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/01_custom.png"
+      alt="Create custom SSO application"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    Select "Custom Application".
+  </Step>
+
+  <Step title="Configure SSO with OIDC">
+    <strong>Configure SSO with OIDC</strong>
+
+    Then check "Manage Single Sign-On", and select "Configure SSO with OIDC".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/02_oidc.png"
+      alt="Configure SSO with OIDC"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Setup custom application name and info">
+    <strong>Setup custom application name and info</strong>
+
+    Add "Buildstash" as the display label, and add a logo or preferred color to display to users.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/03_general.png"
+      alt="Setup custom application name and info"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Setup SSO URLs">
+    <strong>Setup SSO URLs</strong>
+
+    Complete the "Redirect URI" and "Login URL" fields very carefully. They must exactly match.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/04_urls.png"
+      alt="Setup SSO URLs"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    The redirect URI must use your workspace's custom subdomain. The format must be:
+    `https://{SUBDOMAIN}.buildstash.com/auth/jumpcloud/callback`
+
+    You must set "Client Authentication Type" to "Client Secret Post".
+  </Step>
+
+  <Step title="Set scopes">
+    <strong>Set scopes</strong>
+
+    Select both "Email" and "Profile" user standard scopes.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/05_scopes.png"
+      alt="Set scopes"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    You can then click "Activate".
+
+  </Step>
+
+  <Step title="Copy client ID and secret">
+    <strong>Copy client ID and secret</strong>
+
+    Copy the credentials presented. The secret will not be displayed again - so copy and store it securely, such as in a password manager.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/06_ids.png"
+      alt="Copy client ID and secret"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+  </Step>
+
+  <Step title="Remember and set user access">
+    <strong>Remember and set user access</strong>
+
+    The final step in JumpCloud is to ensure you grant the users you wish to have SSO to Buildstash access.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/07_access.png"
+      alt="Remember and set user access"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+  </Step>
+
+</Steps>
+
+
+## Configure SSO in Buildstash
+
+<Steps>
+
+  <Step title="Enable SSO provider">
+    <strong>Enable SSO provider</strong>
+
+    Go to your workspace settings, and under "Enterprise SSO", select "Enable provider".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/08_enable.png"
+      alt="Enable SSO provider"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Input provider credentials">
+    <strong>Input provider credentials</strong>
+
+    Input the client ID and secret for JumpCloud you copied from a previous step.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/09_configure.png"
+      alt="Input provider credentials"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Confirm correctly configured">
+    <strong>Confirm correctly configured</strong>
+
+    Once details are entered and confirmed you'll see "SSO configured with provider: JumpCloud".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/jumpcloud/10_success.png"
+      alt="Confirm correctly configured"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+    
+    Select "Manage" to update credentials in future, disable non-SSO login, or remove JumpCloud as a login provider in future.
+
+  </Step>
+
+  <Step title="Login with SSO">
+    <strong>Login with SSO</strong>
+
+    You can now navigate to the login page on your workspace custom subdomain, and the JumpCloud SSO option will be presented.
+
+  </Step>
+
+</Steps>

@@ -1,0 +1,165 @@
+---
+title: 'Auth0'
+description: "Configure Auth0 single sign-on for your organization"
+icon: 'StashiconsBrand-BrandAuth0Icon'
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  This feature is available to users on our [Ultra and Enterprise plans](https://buildstash.com/pricing).
+</Callout>
+
+## Introduction
+
+Follow these instructions to allow your users to login to your Buildstash workspace using Auth0.
+
+## Create SSO Application in Auth0
+
+<Steps>
+
+  <Step title="Create new application">
+    <strong>Create new application</strong>
+
+    In your Auth0 dashboard, navigate to "Applications", and "Create new application".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/01_application_type.png"
+      alt="Create new application"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    Select "Regular Web Application".
+
+  </Step>
+
+  <Step title="Complete application details">
+    <strong>Complete application details</strong>
+
+    There are some key details to enter for your new application.
+
+    Under "Application URIs" you must enter your workspace-specific redirect URI under "Allowed Callback URIs". You can find this in the "Enable provider" dialog covered below, but it follows the format:
+    `https://{SUBDOMAIN}.buildstash.com/auth/auth0/callback`
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/02_details.png"
+      alt="Complete application details"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Set Login Experience to Individuals">
+    <strong>Set Login Experience to "Individuals"</strong>
+
+    Configure the login experience settings for your application.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/03_login_experience.png"
+      alt="Set Login Experience to Individuals"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Grant users access">
+    <strong>Grant users access</strong>
+
+    Remember and grant access to whatever users you'd like. In "User Management" select a user profile, and in "Authorized Applications" grant access to Buildstash.
+
+  </Step>
+
+  <Step title="Note client ID and secret">
+    <strong>Note client ID and secret</strong>
+
+    Now you're setup in Auth0. You'll need the client ID and secret from your application settings to enter into Buildstash.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/04_credentials.png"
+      alt="Note client ID and secret"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+</Steps>
+
+
+## Configure SSO in Buildstash
+
+<Steps>
+
+  <Step title="Enable SSO provider">
+    <strong>Enable SSO provider</strong>
+
+    Go to your workspace settings, and under "Enterprise SSO", select "Enable provider".
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/05_enable.png"
+      alt="Enable SSO provider"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Input provider credentials">
+    <strong>Input provider credentials</strong>
+
+    Input the client ID and secret you copied noted from the previous step. Your redirect URI to enter in Auth0 is also shown here.
+
+    You'll also need to input your Tenant Domain. This consists of the name of your Auth0 tenant, and for non-US locations will also include a region component (like 'eu' for European Union, or 'ca' for Canada).
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/06_configure.png"
+      alt="Input provider credentials"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+  </Step>
+
+  <Step title="Confirm correctly configured">
+    <strong>Confirm correctly configured</strong>
+
+    Once details are entered and confirmed you'll see Auth0 connected.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/07_sucess.png"
+      alt="Confirm correctly configured"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+    
+    Select "Manage" to update credentials in future, disable non-SSO login, or remove Auth0 as a login provider in future.
+
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/auth0/08_manage.png"
+      alt="Manage SSO settings"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
+
+    You can optionally require users login via this SSO provider to access your workspace, and there's an option to auto-add users who login via this provider to your workspace if they're not already a member.
+
+  </Step>
+
+  <Step title="Login with SSO">
+    <strong>Login with SSO</strong>
+
+    You can now navigate to the login page on your workspace custom subdomain, and the Auth0 SSO option will be presented.
+
+  </Step>
+
+</Steps>
