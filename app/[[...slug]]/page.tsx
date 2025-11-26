@@ -38,9 +38,9 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
       <DocsDescription>{page.data.description}</DocsDescription>
       <div className="relative h-0 pointer-events-none">
         <div className="absolute -top-20 right-0 flex flex-row gap-2 items-center pointer-events-auto">
-          <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
+          <LLMCopyButton markdownUrl={page.url === '/' ? '/index.mdx' : `${page.url}.mdx`} />
           <ViewOptions
-            markdownUrl={`${page.url}.mdx`}
+            markdownUrl={page.url === '/' ? '/index.mdx' : `${page.url}.mdx`}
             githubUrl={`https://github.com/buildstash/docs/blob/main/content/guide/${page.path}`}
           />
         </div>

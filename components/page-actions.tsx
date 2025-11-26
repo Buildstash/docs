@@ -35,16 +35,23 @@ export function LLMCopyButton({
     setLoading(true);
 
     try {
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          'text/plain': fetch(markdownUrl).then(async (res) => {
-            const content = await res.text();
-            cache.set(markdownUrl, content);
-
-            return content;
-          }),
-        }),
-      ]);
+      const res = await fetch(markdownUrl);
+      if (!res.ok) {
+        throw new Error(`Failed to fetch markdown: ${res.status} ${res.statusText}`);
+      }
+      const content = await res.text();
+      // Check to ensure it's not HTML (error page)
+      if (content.trim().startsWith('<!DOCTYPE') || content.trim().startsWith('<!doctype')) {
+        throw new Error('Received HTML instead of markdown');
+      }
+      cache.set(markdownUrl, content);
+      
+      // Use writeText instead of ClipboardItem for simplicity and reliability
+      await navigator.clipboard.writeText(content);
+    } catch (error) {
+      // If there's an error, show it to the user
+      console.error('Failed to copy markdown:', error);
+      alert(`Failed to copy markdown: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
