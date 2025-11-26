@@ -1,7 +1,9 @@
 import { getPageImage, guideDocs } from '@/lib/source';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
-import { generate as DefaultImage } from 'fumadocs-ui/og';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+import { OGImage } from '@/components/og-image';
 
 export const revalidate = false;
 
@@ -13,12 +15,18 @@ export async function GET(
   const page = guideDocs.getPage(slug.slice(0, -1));
   if (!page) notFound();
 
+  // Read the logo SVG file
+  const logoSvg = await readFile(
+    join(process.cwd(), 'public', 'logos', 'logo-dark.svg'),
+    'utf-8',
+  );
+
   return new ImageResponse(
     (
-      <DefaultImage
+      <OGImage
         title={page.data.title}
         description={page.data.description}
-        site="Buildstash"
+        logoSvg={logoSvg}
       />
     ),
     {
