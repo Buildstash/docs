@@ -37,7 +37,7 @@ export default async function Page(props: PageProps<'/[[...slug]]'>) {
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <div className="relative h-0 pointer-events-none">
-        <div className="absolute -top-20 right-0 flex flex-row gap-2 items-center pointer-events-auto">
+        <div className="absolute -top-20 right-0 flex flex-row gap-2 items-center pointer-events-auto max-md:hidden">
           <LLMCopyButton markdownUrl={page.url === '/' ? '/index.mdx' : `${page.url}.mdx`} />
           <ViewOptions
             markdownUrl={page.url === '/' ? '/index.mdx' : `${page.url}.mdx`}
