@@ -14,6 +14,7 @@
     "builds-and-releases/custom-storage",
     "builds-and-releases/labels",
     "builds-and-releases/streams-and-retention",
+    "builds-and-releases/custom-targets",
     "builds-and-releases/metadata-artifacts",
     "builds-and-releases/sharing",
     "builds-and-releases/installing-builds",
