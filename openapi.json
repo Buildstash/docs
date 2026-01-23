@@ -223,6 +223,12 @@
             ],
             "example": "windows"
           },
+          "custom_target": {
+            "type": "string",
+            "nullable": true,
+            "description": "Custom target for this build. Must exactly match the name of the target you've defined, and be accessible to this app.",
+            "example": "Galaxy Store"
+          },
           "stream": {
             "type": "string",
             "description": "Stream name. Must match exact name setup in your app",
