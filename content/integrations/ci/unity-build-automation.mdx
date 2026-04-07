@@ -4,6 +4,7 @@ description: "Automate uploading your builds from Unity"
 icon: 'Devicons-UnityOriginal'
 ---
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import {Callout} from "fumadocs-ui/components/callout";
 
 ## Introduction
 
@@ -50,7 +51,7 @@ Importantly, once a build is uploaded Buildstash maintains the link to the origi
     On the next screen you'll find the webhook URL and authorization secret you'll need to input into Unity (see step 4).
 
     <ImageZoom
-      src="https://media.buildstash.com/docs/integrations/unity-build/03a_setup.png"
+      src="https://media.buildstash.com/docs/integrations/unity-build/03a_setup.png?v=2"
       alt="Webhook"
       width={550}
       height={800}
@@ -82,11 +83,21 @@ Importantly, once a build is uploaded Buildstash maintains the link to the origi
 
     Here you want to add a new Webhook.
 
-    ![Add webhook](https://media.buildstash.com/docs/integrations/unity-build/04b_configurehook.png)
+    <ImageZoom
+      src="https://media.buildstash.com/docs/integrations/unity-build/04b_configurehook.png?v=2"
+      alt="Configure webhook"
+      width={550}
+      height={800}
+      sizes="(max-width: 550px) 100vw, 50vw"
+    />
 
     Enter the webhook URL, and authorization secret displayed in Buildstash from the previous step. For Authorization type select "HMAC-SHA256 Signature", and ensure Content type is set to "application/json".
 
-    The only events that should be selected are "Build Success" - which will ensure successful builds are uploaded to Buildstash, and you can also select "Uploaded Local Build" if you'd like to automatically upload builds you drag and drop Into Unity to Buildstash also.
+    ![Webhook events](https://media.buildstash.com/docs/integrations/unity-build/04c_webhook_events.png)
+
+    Further down the page, you need to select the "Devops" group, to inform Buildstash of all build events. We strongly recommend checking all of these "topics" to ensure functionality works as you expect, such as deeper integration and timeouts.
+
+    "Build Success" is essential at a minimum if you wish to auto-upload successful Unity builds to Buildstash.
 
   </Step>
   <br />
@@ -99,3 +110,43 @@ Importantly, once a build is uploaded Buildstash maintains the link to the origi
 
   </Step>
 </Steps>
+
+## More options
+
+### Timeout Unity builds
+
+One limitation of Unity Build Automation at present is that there is no way in the UI to specify a timeout for your builds.
+
+So, if a build unexpectedly stalls without failing, unless you notice and manually cancel it, you can wind up with it running for many hours unnecessarily, burning your build minutes, and costing you money!
+
+To help with this, we built a helpful utility to set timeouts for your Unity Cloud builds from Buildstash:
+
+<ImageZoom
+  src="https://media.buildstash.com/docs/integrations/unity-build/06_timeouts.png?v=2"
+  alt="Set timeouts"
+  width={550}
+  height={800}
+  sizes="(max-width: 550px) 100vw, 50vw"
+/>
+
+When creating or editing a Unity target, you can check "Enable timeout utility". This will show two additional fields.
+
+**"Timeout if queued after"** refers specifically to the time a Unity Cloud build is queued, but hasn't started building yet. When a build is in this state Unity should not bill it, so this is theoretically less harmful than it stalling while "building", but this can be inconsistent and frustrating nonetheless.
+
+When Buildstash receives a webhook event from Unity informing us that a build has been queued, the timer will start, and remain active until the build has left "queued" or "sent to runner" states, and started building.
+
+**"Timeout build after"** starts when Unity informs us the build has actually started building on the runner. The timeout will remain active until the build reaches any end state, whether failed, completed, or cancelled.
+
+When a build times out, Buildstash will instruct Unity to cancel it via API request. Please note, while this should reliably cancel the build, providing the Unity API key you provided is correct and webhook events setup correctly, this ultimately relies on Unity.
+
+<Callout>
+  You can browse timeout events, and all other build pipeline events Buildstash is aware of, in the ["Pipeline log"](/builds-and-releases/connect-ci-cd) view.
+</Callout>
+
+### Pause auto-uploads
+
+If you wish to temporarily stop auto-uploads of your builds from Unity to Buildstash, without having to delete the connection, you can simply toggle "pause auto-upload" on.
+
+![Pause uploads](https://media.buildstash.com/docs/integrations/unity-build/07_pause_upload.png)
+
+This ability may also be helpful if you wish to use our automated Unity Build Automation integration for features like auto-timeout, but perhaps use a different method of sending builds into Buildstash, such as the [fastlane plugin](/integrations/ci/fastlane).
