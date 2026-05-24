@@ -55,13 +55,13 @@ export function baseOptions(): BaseLayoutProps {
       },*/
       {
         text: 'Roadmap',
-        url: 'https://support.buildstash.com',
+        url: 'https://buildstash.com/roadmap',
         // secondary items will be displayed differently on navbar
         secondary: false,
       },
       {
         text: 'Changelog',
-        url: 'https://support.buildstash.com/changelog',
+        url: 'https://buildstash.com/changelog',
         // secondary items will be displayed differently on navbar
         secondary: false,
       },
@@ -81,7 +81,7 @@ export function baseOptions(): BaseLayoutProps {
           },
           {
             text: 'Blog',
-            url: 'https://blog.buildstash.com',
+            url: 'https://buildstash.com/blog',
             secondary: false,
           },
           {
