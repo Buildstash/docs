@@ -64,7 +64,10 @@ Application API keys are scoped to a single application and can only access a su
 | Scope | Description |
 |-------|-------------|
 | `application:read` | View the application's own details |
+| `application:write` | Update application details (name, description, and related settings) |
 | `members:read` | List members with access to this application |
+| `members:write` | Update application member roles |
+| `members:create` | Invite or add members to the application *(not yet available via API)* |
 | `builds:read` | List and view builds for this application |
 | `builds:create` | Upload new builds to this application |
 | `builds:write` | Update, delete builds and manage labels, stream, and architectures |
