@@ -9,6 +9,7 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://docs.buildstash.com'),
   alternates: {
     types: {
       'application/rss+xml': [

@@ -145,7 +145,7 @@ export function SidebarContent(props: ComponentProps<'aside'>) {
           width: collapsed
             ? 'var(--fd-sidebar-width)'
             : 'calc(var(--spacing) + var(--fd-sidebar-width) + var(--fd-layout-offset))',
-        } as object
+        } as React.CSSProperties
       }
       onPointerEnter={(e) => {
         if (
@@ -247,7 +247,7 @@ export function SidebarViewport(props: ScrollAreaProps) {
             '--sidebar-item-offset': 'calc(var(--spacing) * 2)',
             maskImage:
               'linear-gradient(to bottom, transparent, white 12px, white calc(100% - 12px), transparent)',
-          } as object
+          } as React.CSSProperties
         }
       >
         {props.children}
@@ -390,7 +390,7 @@ export function SidebarFolderContent(props: CollapsibleContentProps) {
         {
           '--sidebar-item-offset': `calc(var(--spacing) * ${(level + 1) * 3})`,
           ...props.style,
-        } as object
+        } as React.CSSProperties
       }
     >
       <Context.Provider
