@@ -1,27 +1,71 @@
 ---
 title: "Introduction"
-description: "Build custom integrations using our open API"
+description: "Build custom integrations using our API"
 icon: House
 ---
 
-import { Upload } from 'lucide-react';
+import { Upload, Key, Shield } from 'lucide-react';
 
 <Callout>
-  Our API supports build upload and creation flows. We'll be releasing further endpoints soon.
+  Our beta API is currently available in early access. We'll be releasing further endpoints in an upcoming release.
 </Callout>
 
 ## Authentication
 
-Upload API endpoints are authenticated using Bearer tokens. Include your application-specific API key in the Authorization header:
+All API endpoints are authenticated using Bearer tokens. Include your API key in the `Authorization` header of every request:
 
 ```bash
 Authorization: Bearer YOUR_API_KEY
 ```
+
+### API Key Types
+
+Buildstash supports two types of API keys, each designed for different use cases:
+
+**Workspace API Keys** provide access across your entire workspace. Use these for admin tooling, dashboards, or integrations that need to operate across multiple applications.
+
+**Application API Keys** are scoped to a single application. Use these for CI/CD pipelines, build automation, and any integration that only needs to interact with one specific application. Application keys cannot access other applications in the workspace.
+
+### Scopes
+
+Each API key is assigned scopes that control which resources it can access and what actions it can perform. Scopes follow a `resource:level` pattern (e.g. `builds:read`, `releases:write`).
+
+See the [Scopes reference](/api/scopes) for a full breakdown of available scopes and their access levels.
+
+### Base URL
+
+All API requests should be made to:
+
+```
+https://app.buildstash.com/api/v1
+```
+
+### Rate Limiting
+
+API requests are rate-limited. Download endpoints have stricter limits (30 requests per minute per application, 60 per minute per workspace). When rate-limited, the API returns a `429 Too Many Requests` response.
+
+### Errors
+
+The API returns standard HTTP status codes. Error responses include a `message` field with details:
+
+| Status | Meaning |
+|--------|---------|
+| `400` | Bad request — invalid parameters or business rule violation |
+| `401` | Unauthorized — missing or invalid API key |
+| `403` | Forbidden — insufficient scope or access denied |
+| `404` | Not found — resource does not exist or is not accessible |
+| `415` | Unsupported media type — `Content-Type` must be `application/json` for POST/PUT requests |
+| `422` | Validation error — request body failed validation |
+| `429` | Rate limited — too many requests |
+| `500` | Internal server error |
 
 ## Guides
 
 <Cards>
   <Card title="Upload a Build" icon={<Upload />} href="/api/guides/upload">
     Guides you through uploading a new build to Buildstash
+  </Card>
+  <Card title="Scopes Reference" icon={<Shield />} href="/api/scopes">
+    Full breakdown of API key scopes and access levels
   </Card>
 </Cards>

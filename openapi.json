@@ -1,16 +1,17 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.3",
   "info": {
-    "title": "Buildstash API",
-    "description": "Buildstash API for managing application builds and releases",
+    "title": "Buildstash API (Beta)",
+    "description": "Buildstash API beta release. Read-only endpoints for workspaces, applications, builds, releases, and webhooks, plus the full upload flow. Additional endpoints will be available in upcoming releases.",
+    "version": "1.2.0-beta",
     "license": {
       "name": "MIT"
-    },
-    "version": "1.0.0"
+    }
   },
   "servers": [
     {
-      "url": "https://app.buildstash.com/api/v1"
+      "url": "https://app.buildstash.com/api/v1",
+      "description": "Production"
     }
   ],
   "security": [
@@ -18,718 +19,3728 @@
       "bearerAuth": []
     }
   ],
+  "tags": [
+    {
+      "name": "Workspace",
+      "description": "Workspace information and members"
+    },
+    {
+      "name": "Users",
+      "description": "User lookup"
+    },
+    {
+      "name": "Applications",
+      "description": "Application CRUD and sub-resources (streams, labels, platforms, members)"
+    },
+    {
+      "name": "Builds",
+      "description": "Build listing, detail, download, and metadata updates"
+    },
+    {
+      "name": "Releases",
+      "description": "Release CRUD and build attachment"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Webhook CRUD, request history, and testing"
+    },
+    {
+      "name": "Uploads",
+      "description": "Build file upload flow (request, multipart, verify, abort, metadata)"
+    }
+  ],
   "paths": {
-    "/upload/request": {
-      "post": {
-        "summary": "Request Upload",
-        "description": "Initiate a file upload by requesting presigned URLs. For files larger than 5GB, this will return multipart upload information.",
-        "requestBody": {
-          "description": "Upload request details",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadRequest"
-              }
-            }
-          },
-          "required": true
-        },
+    "/workspace": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "Get workspace",
+        "description": "Retrieve information about the workspace associated with the API key. No scope required.",
+        "operationId": "getWorkspace",
         "responses": {
           "200": {
-            "description": "Upload request successful",
+            "description": "Workspace retrieved",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorUploadRequest"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Workspace retrieved successfully."
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Workspace"
+                    }
+                  }
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized",
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/workspace/members": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "List workspace members",
+        "description": "List all members of the workspace. Requires `members:read` scope. Only available with workspace-level API keys; application-level keys should use `/applications/{application_id}/members`.",
+        "operationId": "listWorkspaceMembers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SortBy"
+          },
+          {
+            "$ref": "#/components/parameters/SortDirection"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Members retrieved",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorUnauthorized"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Member"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/workspace/labels": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "List workspace labels",
+        "description": "List all workspace-level labels. These are shared across all applications in the workspace. Requires `workspace:read` scope.",
+        "operationId": "listWorkspaceLabels",
+        "responses": {
+          "200": {
+            "description": "Labels retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Workspace labels retrieved successfully."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WorkspaceLabel"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/workspace/labels/{label_identifier}": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "Get workspace label",
+        "description": "Get a single workspace-level label by ID or name. Requires `workspace:read` scope.",
+        "operationId": "getWorkspaceLabel",
+        "parameters": [
+          {
+            "name": "label_identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Label ID or name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Label retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Label"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Label not found"
+          }
+        }
+      }
+    },
+    "/workspace/default-streams": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "List workspace default streams",
+        "description": "List the workspace's default stream templates. These templates are copied into new applications when they are created. Requires `workspace:read` scope.",
+        "operationId": "listWorkspaceDefaultStreams",
+        "responses": {
+          "200": {
+            "description": "Default streams retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Workspace default streams retrieved successfully."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/DefaultStream"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/workspace/custom-targets": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "List workspace custom targets",
+        "description": "List all workspace-level custom targets. These are shared across all applications in the workspace that use the target's platform. Requires `workspace:read` scope.",
+        "operationId": "listWorkspaceCustomTargets",
+        "responses": {
+          "200": {
+            "description": "Custom targets retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Workspace custom targets retrieved successfully."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CustomTarget"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/workspace/custom-targets/{target_identifier}": {
+      "get": {
+        "tags": [
+          "Workspace"
+        ],
+        "summary": "Get workspace custom target",
+        "description": "Get a single workspace-level custom target by ID or name. Requires `workspace:read` scope.",
+        "operationId": "getWorkspaceCustomTarget",
+        "parameters": [
+          {
+            "name": "target_identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Custom target ID or name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom target retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CustomTarget"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Custom target not found"
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user",
+        "description": "Get basic information about a workspace member. No scope required. User must be in the same workspace.",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List applications",
+        "description": "List applications accessible by the API key. Workspace keys see all apps; Application keys see only their app. Requires `applications:read` scope.",
+        "operationId": "listApplications",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SortBy"
+          },
+          {
+            "$ref": "#/components/parameters/SortDirection"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "name": "platform",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by platform slug (e.g. `ios`, `android`, `windows`). Returns 422 if the platform does not exist.",
+            "example": "ios"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Applications retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Application"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "description": "Invalid platform filter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Platform identifier provided was invalid."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/{application_id}": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "Get application",
+        "description": "Retrieve a specific application. Requires `applications:read` scope for Workspace keys. Application keys can access their own app without scope.",
+        "operationId": "getApplication",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Application retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Application"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/members": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List application members",
+        "description": "List members with their resolved roles for the application. Requires `applications:read` (workspace key) or `members:read` (application key) scope.",
+        "operationId": "listApplicationMembers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/SortBy"
+          },
+          {
+            "$ref": "#/components/parameters/SortDirection"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Members retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ApplicationMember"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/streams": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List application streams",
+        "description": "List all active streams for an application. Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "listApplicationStreams",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Streams retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Stream"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/streams/{stream_identifier}": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "Get stream",
+        "description": "Get a single application stream by ID or name. Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "getStream",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "name": "stream_identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stream ID or name (name must be unique within the application)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stream retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Stream"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Stream not found"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/labels": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List application labels",
+        "description": "List all labels available to an application (both application-level and workspace-level). Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "listApplicationLabels",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Labels retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Label"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/labels/{label_identifier}": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "Get label",
+        "description": "Get a single label available to the application (workspace-level or application-level) by ID or name. Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "getApplicationLabel",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "name": "label_identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Label ID or name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Label retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Label"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Label not found for this application"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/platforms": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List application platforms",
+        "description": "List platforms attached to the application. Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "listApplicationPlatforms",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Platforms retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Platform"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/custom-targets": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "List application custom targets",
+        "description": "List all custom targets available for this application, including both workspace-level and application-level targets for platforms attached to the app. Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "listApplicationCustomTargets",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom targets retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Application custom targets retrieved successfully."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CustomTarget"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/custom-targets/{target_identifier}": {
+      "get": {
+        "tags": [
+          "Applications"
+        ],
+        "summary": "Get application custom target",
+        "description": "Get a single custom target available to the application by ID or name. Includes both workspace-level and application-level targets. Requires `applications:read` (workspace key) or `application:read` (application key) scope.",
+        "operationId": "getApplicationCustomTarget",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "name": "target_identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Custom target ID or name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Custom target retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CustomTarget"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Custom target not found for this application"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/builds": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "summary": "List builds",
+        "description": "List all non-pending builds for an application with filtering and sorting. Requires `builds:read` scope.",
+        "operationId": "listBuilds",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "version",
+                "version_short",
+                "size_total_bytes",
+                "built_at",
+                "created_at"
+              ],
+              "default": "created_at"
+            },
+            "description": "Sort by field. `version` sorts by full semantic version, `version_short` sorts by core version (major.minor.patch)."
+          },
+          {
+            "$ref": "#/components/parameters/SortDirection"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "name": "platforms",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by platform slugs. Accepts a single slug or comma-separated list (e.g. `ios`, `android,ios`). Returns 422 if any slug is invalid.",
+            "example": "android,ios"
+          },
+          {
+            "name": "streams",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by stream ID or name. Accepts a single value or comma-separated list. Returns 422 if any identifier is invalid for this application.",
+            "example": "production,staging"
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by label ID or name. Accepts a single value or comma-separated list. Returns 422 if any identifier is invalid for this application.",
+            "example": "rc,hotfix"
+          },
+          {
+            "name": "custom_targets",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by custom target ID or name. Accepts a single value or comma-separated list. Scoped to targets available to this application (workspace-level and application-level). If the workspace plan does not include custom target access, this filter is ignored and a note is included in the response message. Returns 422 if any identifier is invalid.",
+            "example": "Samsung Galaxy Store,Amazon Appstore"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Builds retrieved. Note: `application_id` and `workspace_id` are omitted from build objects in list responses.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Build"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "description": "Invalid filter value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "The platform identifier android2 is invalid."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/builds/{build_id}": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "summary": "Get build",
+        "description": "Get detailed information about a specific build. Includes `ios_info`, `android_info`, `primary_file`, `expansion_files`, and `metadata_artifacts` when available. Requires `builds:read` scope.",
+        "operationId": "getBuild",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/BuildId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Build retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Build"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/builds/{build_id}/download": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "summary": "Get build download URLs",
+        "description": "Get temporary presigned download URLs for a build's files. Includes expansion files and universal APK when available. Requires `builds:read` scope.",
+        "operationId": "downloadBuild",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/BuildId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download URLs generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "primary_file"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved temporary download URLs."
+                    },
+                    "primary_file": {
+                      "type": "object",
+                      "properties": {
+                        "temp_url": {
+                          "type": "string",
+                          "description": "Presigned download URL"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "size_bytes": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "expansion_files": {
+                      "type": "array",
+                      "description": "Present only when the build has expansion files.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "temp_url": {
+                            "type": "string"
+                          },
+                          "filename": {
+                            "type": "string"
+                          },
+                          "size_bytes": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "universal_apk": {
+                      "type": "object",
+                      "description": "Present only for Android builds that have a universal APK.",
+                      "properties": {
+                        "temp_url": {
+                          "type": "string"
+                        },
+                        "filename": {
+                          "type": "string"
+                        },
+                        "size_bytes": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Build has no downloadable file"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/builds/{build_id}/metadata": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "summary": "List metadata artifacts",
+        "description": "List all metadata artifacts attached to a build. Requires `builds:read` scope.",
+        "operationId": "listMetadataArtifacts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/BuildId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata artifacts retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Metadata artifacts retrieved successfully."
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MetadataArtifact"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/builds/{build_id}/metadata/{artifact_id}": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "summary": "Get metadata artifact",
+        "description": "Get details of a single metadata artifact attached to a build. Requires `builds:read` scope.",
+        "operationId": "getMetadataArtifact",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/BuildId"
+          },
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Metadata artifact ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Metadata artifact retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Metadata artifact retrieved successfully."
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/MetadataArtifact"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Metadata artifact not found"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/builds/{build_id}/metadata/{artifact_id}/download": {
+      "get": {
+        "tags": [
+          "Builds"
+        ],
+        "summary": "Download metadata artifact",
+        "description": "Get a temporary presigned download URL for a specific metadata artifact. Requires `builds:read` scope.",
+        "operationId": "downloadMetadataArtifact",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/BuildId"
+          },
+          {
+            "name": "artifact_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Metadata artifact ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download URL generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully retrieved temporary download URL for metadata artifact."
+                    },
+                    "temp_url": {
+                      "type": "string",
+                      "description": "Presigned download URL"
+                    },
+                    "filename": {
+                      "type": "string"
+                    },
+                    "size_bytes": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "description": "Metadata artifact not found"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/releases": {
+      "get": {
+        "tags": [
+          "Releases"
+        ],
+        "summary": "List releases",
+        "description": "List all releases for an application with filtering and sorting. Requires `releases:read` scope.",
+        "operationId": "listReleases",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "version",
+                "version_short",
+                "title",
+                "created_at"
+              ],
+              "default": "created_at"
+            },
+            "description": "Sort by field. `version` sorts by full semantic version, `version_short` sorts by core version (major.minor.patch)."
+          },
+          {
+            "$ref": "#/components/parameters/SortDirection"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          },
+          {
+            "$ref": "#/components/parameters/Search"
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by label ID or name. Accepts a single value or comma-separated list. Returns 422 if any identifier is invalid.",
+            "example": "rc,hotfix"
+          },
+          {
+            "name": "platforms",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by platform slugs. Accepts a single slug or comma-separated list. Returns releases containing builds on those platforms. Returns 422 if any slug is invalid.",
+            "example": "android,ios"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Releases retrieved. In list responses, `notes`, `application_id`, and `workspace_id` are omitted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Release"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "422": {
+            "description": "Invalid filter value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/releases/{release_id}": {
+      "get": {
+        "tags": [
+          "Releases"
+        ],
+        "summary": "Get release",
+        "description": "Get detailed information about a specific release. Requires `releases:read` scope.",
+        "operationId": "getRelease",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/ReleaseId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Release retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Release"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/webhooks": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "List webhooks",
+        "description": "List all webhooks for an application. Requires `webhooks:read` scope.",
+        "operationId": "listWebhooks",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/PerPage"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhooks retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Webhook"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/applications/{application_id}/webhooks/{webhook_id}": {
+      "get": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get webhook",
+        "operationId": "getWebhook",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ApplicationId"
+          },
+          {
+            "$ref": "#/components/parameters/WebhookId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Webhook retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Webhook"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/upload/request": {
+      "post": {
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Request upload",
+        "description": "Initiate a build file upload by requesting presigned URLs. Requires `builds:create` scope.",
+        "operationId": "requestUpload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Initiate a build file upload. At least one version component must be greater than zero.",
+                "required": [
+                  "structure",
+                  "primary_file",
+                  "version_component_1_major",
+                  "version_component_2_minor",
+                  "version_component_3_patch",
+                  "source",
+                  "platform",
+                  "stream"
+                ],
+                "properties": {
+                  "application_id": {
+                    "type": "string",
+                    "description": "Application ID. Required when using a Workspace API key."
+                  },
+                  "structure": {
+                    "type": "string",
+                    "enum": [
+                      "file",
+                      "file+expansion"
+                    ],
+                    "default": "file",
+                    "description": "Upload structure type. Use 'file' unless including an Android OBB expansion file."
+                  },
+                  "platform": {
+                    "type": "string",
+                    "description": "Platform identifier",
+                    "enum": [
+                      "generic",
+                      "windows",
+                      "macos",
+                      "android",
+                      "ios",
+                      "quest",
+                      "switch",
+                      "switch2",
+                      "ps5",
+                      "ps4",
+                      "xbox-series",
+                      "vision-pro",
+                      "pico",
+                      "wearos",
+                      "vive",
+                      "homepod",
+                      "apple-tv",
+                      "apple-watch",
+                      "freebsd",
+                      "openbsd",
+                      "linux",
+                      "debian",
+                      "redhat",
+                      "gentoo",
+                      "arch",
+                      "playdate",
+                      "magic-leap",
+                      "zephyr",
+                      "roblox",
+                      "opensuse",
+                      "alpine",
+                      "nixos",
+                      "slackware",
+                      "void",
+                      "mageia",
+                      "kaios"
+                    ],
+                    "example": "windows"
+                  },
+                  "custom_target": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 20,
+                    "description": "Custom target for this build. Must exactly match the name of the target you've defined."
+                  },
+                  "stream": {
+                    "type": "string",
+                    "maxLength": 12,
+                    "pattern": "^[\\w\\-\\+]+$",
+                    "description": "Stream name. Must match exact name setup in your app.",
+                    "example": "nightlies"
+                  },
+                  "source": {
+                    "type": "string",
+                    "description": "Source of the upload",
+                    "enum": [
+                      "web-upload",
+                      "cli-upload",
+                      "ghactions",
+                      "jenkins",
+                      "unity-build",
+                      "gitlab-ci",
+                      "azure-devops",
+                      "circleci",
+                      "travisci",
+                      "appveyor",
+                      "teamcity",
+                      "bitbucket-pipelines",
+                      "bitrise",
+                      "codemagic",
+                      "buildkite",
+                      "google-cloud-build",
+                      "bamboo",
+                      "semaphore",
+                      "aws-codebuild",
+                      "abstruse",
+                      "cirrus-ci",
+                      "drone",
+                      "concourse"
+                    ],
+                    "example": "ghactions"
+                  },
+                  "primary_file": {
+                    "type": "object",
+                    "required": [
+                      "filename",
+                      "size_bytes"
+                    ],
+                    "properties": {
+                      "filename": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "pattern": "^[^\\/\\0]+$",
+                        "description": "Filename with extension (excluding path)",
+                        "example": "example.exe"
+                      },
+                      "size_bytes": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 500000000000,
+                        "description": "Size of the file in bytes (max 50GB for primary file)",
+                        "example": 52428800
+                      }
+                    }
+                  },
+                  "expansion_files": {
+                    "type": "array",
+                    "maxItems": 1,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "filename": {
+                          "type": "string",
+                          "maxLength": 255,
+                          "pattern": "^[^\\/\\0]+$",
+                          "description": "Filename with extension (excluding path)",
+                          "example": "expansion.obb"
+                        },
+                        "size_bytes": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 500000000000,
+                          "description": "Size of the file in bytes (max 5GB for expansion file)",
+                          "example": 1048576
+                        }
+                      }
+                    },
+                    "description": "Expansion files (only include if structure is 'file+expansion')"
+                  },
+                  "version_component_1_major": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9999,
+                    "description": "Semantic versioning: Major version component",
+                    "example": 1
+                  },
+                  "version_component_2_minor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9999,
+                    "description": "Minor version component",
+                    "example": 0
+                  },
+                  "version_component_3_patch": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9999,
+                    "description": "Patch version component",
+                    "example": 1
+                  },
+                  "version_component_extra": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 25,
+                    "pattern": "^[a-zA-Z0-9\\-]+(\\.[a-zA-Z0-9\\-]+)*$",
+                    "description": "Optional pre-release label such as 'alpha', 'beta', 'rc'",
+                    "example": "alpha"
+                  },
+                  "version_component_meta": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 64,
+                    "pattern": "^[a-zA-Z0-9\\-]+(\\.[a-zA-Z0-9\\-]+)*$",
+                    "description": "Optional metadata such as build number or commit hash",
+                    "example": "2025.07.30"
+                  },
+                  "custom_build_number": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 100,
+                    "pattern": "^[a-zA-Z0-9._-]*$",
+                    "description": "Custom build number. Alphanumeric characters, dots, underscores, and hyphens only.",
+                    "example": "398"
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 10,
+                    "description": "Labels for the build (will be created if they don't already exist)",
+                    "example": [
+                      "signed",
+                      "to-test"
+                    ]
+                  },
+                  "architectures": {
+                    "type": "array",
+                    "maxItems": 15,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "x86",
+                        "x64",
+                        "u2b",
+                        "apple",
+                        "ppc",
+                        "ibmz",
+                        "mips64",
+                        "mips",
+                        "armv5",
+                        "armv6",
+                        "armv7",
+                        "armv8",
+                        "arm64v8",
+                        "armv9",
+                        "risc-v",
+                        "risc-v64",
+                        "msp430",
+                        "loongarch",
+                        "ppc64",
+                        "ia64",
+                        "sparc",
+                        "alpha",
+                        "vax",
+                        "pdp11",
+                        "sh1",
+                        "sh2",
+                        "sh3",
+                        "sh4",
+                        "680x0",
+                        "xtensa",
+                        "nios",
+                        "nios2",
+                        "niosv",
+                        "rx",
+                        "avr",
+                        "8051",
+                        "z80",
+                        "mipsx",
+                        "microblaze"
+                      ]
+                    },
+                    "description": "Architectures this build supports (the platform must also support the architecture)"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 1000,
+                    "description": "Additional notes",
+                    "example": "Example build notes here."
+                  },
+                  "ci_pipeline": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 100,
+                    "description": "CI pipeline name",
+                    "example": "Nightly Build"
+                  },
+                  "ci_run_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "CI run ID",
+                    "example": "38836019427"
+                  },
+                  "ci_run_url": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "CI run URL",
+                    "example": "https://github.com/buildstash/example/actions/runs/38836019427"
+                  },
+                  "ci_build_duration": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "CI build duration",
+                    "example": "00:05:00"
+                  },
+                  "vc_host_type": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "git",
+                      "svn",
+                      "hg",
+                      "perforce",
+                      "bzr",
+                      "fossil",
+                      "darcs",
+                      "cvs",
+                      "monotone",
+                      "diversion",
+                      "unity-vc",
+                      "lore"
+                    ],
+                    "description": "Version control host type"
+                  },
+                  "vc_host": {
+                    "type": "string",
+                    "nullable": true,
+                    "enum": [
+                      "github",
+                      "gitlab",
+                      "gitlab-self",
+                      "perforce",
+                      "bitbucket",
+                      "gitea",
+                      "forgejo",
+                      "gogs",
+                      "codeberg",
+                      "sourceforge",
+                      "sourcehut",
+                      "rhodecode",
+                      "unity-vc",
+                      "aws-codecommit",
+                      "azure-repos",
+                      "beanstalk",
+                      "assembla",
+                      "codebase",
+                      "bonobo-git",
+                      "phabricator",
+                      "launchpad",
+                      "onedev",
+                      "diversion",
+                      "tangled",
+                      "gitee",
+                      "allura",
+                      "tuleap",
+                      "trac",
+                      "pagure",
+                      "savanah-gnu",
+                      "savanah-non-gnu",
+                      "redmine",
+                      "kallithea",
+                      "cgit",
+                      "cgit-pink",
+                      "riouxsvn",
+                      "sliksvn",
+                      "project-locker"
+                    ],
+                    "description": "Version control host"
+                  },
+                  "vc_repo_name": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 200,
+                    "description": "Repository name",
+                    "example": "buildstash/example"
+                  },
+                  "vc_repo_url": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Repository URL",
+                    "example": "https://github.com/buildstash/example"
+                  },
+                  "vc_branch": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 100,
+                    "description": "Branch name",
+                    "example": "main"
+                  },
+                  "vc_commit_sha": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 40,
+                    "description": "Commit SHA",
+                    "example": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                  },
+                  "vc_commit_url": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Commit URL",
+                    "example": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upload request successful"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "415": {
+            "description": "Unsupported media type or file too large"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
     },
     "/upload/request/multipart": {
       "post": {
-        "summary": "Request Multipart Upload Part",
-        "description": "Request a presigned URL for a specific part of a multipart upload. Used for files larger than 5GB.",
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Request multipart upload part",
+        "description": "Request a presigned URL for the next chunk of a multipart upload. Requires `builds:create` scope.",
+        "operationId": "requestMultipartPart",
         "requestBody": {
-          "description": "Multipart upload part request",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MultipartRequest"
+                "type": "object",
+                "required": [
+                  "pending_upload_id",
+                  "part_number",
+                  "content_length"
+                ],
+                "properties": {
+                  "pending_upload_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "part_number": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "content_length": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "Multipart upload part request successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultipartResponse"
-                }
-              }
-            }
+            "description": "Presigned URL generated"
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMultipartRequest"
-                }
-              }
-            }
+            "description": "Invalid request"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorUnauthorized"
-                }
-              }
-            }
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
     },
     "/upload/verify": {
       "post": {
-        "summary": "Verify Upload",
-        "description": "Verify that all parts of an upload have been successfully uploaded and complete the upload process.",
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Verify upload",
+        "description": "Verify that an upload completed successfully and finalize the build. Requires `builds:create` scope.",
+        "operationId": "verifyUpload",
         "requestBody": {
-          "description": "Upload verification request",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VerifyRequest"
+                "type": "object",
+                "required": [
+                  "pending_upload_id"
+                ],
+                "properties": {
+                  "pending_upload_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "multipart_chunks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "PartNumber",
+                        "ETag"
+                      ],
+                      "properties": {
+                        "PartNumber": {
+                          "type": "integer"
+                        },
+                        "ETag": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
-            "description": "Upload verification successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerifyResponse"
-                }
-              }
-            }
+            "description": "Upload verified"
           },
           "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorVerify"
-                }
-              }
-            }
+            "description": "Verification failed"
           },
           "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorUnauthorized"
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/upload/abort": {
+      "post": {
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Abort upload",
+        "description": "Abort an in-progress upload. Requires `builds:create` scope.",
+        "operationId": "abortUpload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "pending_upload_id"
+                ],
+                "properties": {
+                  "pending_upload_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Upload cancelled"
+          },
+          "400": {
+            "description": "Unable to cancel"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/upload/metadata/request": {
+      "post": {
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Request metadata upload",
+        "description": "Request a presigned URL to upload a metadata artifact for a build. Requires `builds:create` scope.",
+        "operationId": "requestMetadataUpload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "filename",
+                  "size_bytes"
+                ],
+                "properties": {
+                  "build_id": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "primary_pending_upload_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "nullable": true
+                  },
+                  "filename": {
+                    "type": "string",
+                    "maxLength": 255
+                  },
+                  "size_bytes": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 20971520
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Presigned URL generated"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    },
+    "/upload/metadata/verify": {
+      "post": {
+        "tags": [
+          "Uploads"
+        ],
+        "summary": "Verify metadata upload",
+        "description": "Verify that a metadata artifact upload completed successfully. Requires `builds:create` scope.",
+        "operationId": "verifyMetadataUpload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "pending_upload_id"
+                ],
+                "properties": {
+                  "pending_upload_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "file_description": {
+                    "type": "string",
+                    "nullable": true,
+                    "maxLength": 255
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata upload verified"
+          },
+          "400": {
+            "description": "Verification failed"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
           }
         }
       }
     }
   },
   "components": {
+    "parameters": {
+      "ApplicationId": {
+        "name": "application_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Application ID"
+      },
+      "BuildId": {
+        "name": "build_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Build ID"
+      },
+      "ReleaseId": {
+        "name": "release_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Release ID"
+      },
+      "DistroGroupId": {
+        "name": "distro_group_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Distribution group ID"
+      },
+      "PortalId": {
+        "name": "portal_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Portal ID"
+      },
+      "WebhookId": {
+        "name": "webhook_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Webhook ID"
+      },
+      "SortBy": {
+        "name": "sort_by",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "default": "name"
+        },
+        "description": "Field to sort by"
+      },
+      "SortDirection": {
+        "name": "sort",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "default": "asc"
+        },
+        "description": "Sort direction"
+      },
+      "Search": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string"
+        },
+        "description": "Search query"
+      },
+      "PerPage": {
+        "name": "per_page",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 15,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "description": "Items per page"
+      }
+    },
     "schemas": {
-      "UploadRequest": {
+      "Workspace": {
         "type": "object",
-        "required": ["structure", "primary_file", "version_component_1_major", "version_component_2_minor", "version_component_3_patch", "source", "platform", "stream"],
         "properties": {
-          "structure": {
+          "id": {
             "type": "string",
-            "description": "Upload structure type. Should use 'file' unless you're including an Android OBB expansion file",
-            "enum": ["file", "file+expansion"],
-            "example": "file",
-            "default": "file"
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "subdomain": {
+            "type": "string"
+          },
+          "logo_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "profile_photo_url": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Member": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "profile_photo_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "admin",
+              "member"
+            ]
+          },
+          "added_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "ApplicationMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "profile_photo_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "developer",
+              "qa",
+              "readonly"
+            ]
+          }
+        }
+      },
+      "Application": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "icon_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "build_count": {
+            "type": "integer",
+            "description": "Only included when retrieving a single application, not in list views."
+          },
+          "custom_store_enabled": {
+            "type": "boolean"
+          },
+          "storage_usage": {
+            "type": "object",
+            "properties": {
+              "total_bytes": {
+                "type": "integer"
+              },
+              "total_string": {
+                "type": "string"
+              },
+              "hosted_bytes": {
+                "type": "integer"
+              },
+              "self_hosted_bytes": {
+                "type": "integer"
+              }
+            }
+          },
+          "workspace_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Build": {
+        "type": "object",
+        "description": "A build. In list responses, `application_id` and `workspace_id` are omitted. Sub-resources like `primary_file`, `expansion_files`, `metadata_artifacts`, `ios_info`, and `android_info` are only included when fetching a single build.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "build_structure": {
+            "type": "string",
+            "enum": [
+              "file",
+              "file+expansion"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "description": "Full semantic version string"
+          },
+          "version_short": {
+            "type": "string",
+            "description": "Core version (major.minor.patch)"
+          },
+          "version_semantic_major": {
+            "type": "integer"
+          },
+          "version_semantic_minor": {
+            "type": "integer"
+          },
+          "version_semantic_patch": {
+            "type": "integer"
+          },
+          "version_semantic_extra": {
+            "type": "string",
+            "nullable": true
+          },
+          "version_semantic_meta": {
+            "type": "string",
+            "nullable": true
+          },
+          "build_number": {
+            "type": "string",
+            "nullable": true
           },
           "platform": {
-            "type": "string",
-            "description": "Platform identifier. See [full list](/data/platforms)",
-            "enum": [
-              "generic",
-              "windows",
-              "macos",
-              "android",
-              "ios",
-              "quest",
-              "switch",
-              "switch2",
-              "ps5",
-              "ps4",
-              "xbox-series",
-              "vision-pro",
-              "pico",
-              "wearos",
-              "vive",
-              "homepod",
-              "apple-tv",
-              "apple-watch",
-              "freebsd",
-              "openbsd",
-              "linux",
-              "debian",
-              "redhat",
-              "gentoo",
-              "arch",
-              "playdate",
-              "magic-leap",
-              "zephyr",
-              "roblox",
-              "opensuse",
-              "alpine",
-              "nixos",
-              "slackware",
-              "void",
-              "mageia",
-              "kaios"
-            ],
-            "example": "windows"
-          },
-          "custom_target": {
-            "type": "string",
-            "nullable": true,
-            "description": "Custom target for this build. Must exactly match the name of the target you've defined, and be accessible to this app.",
-            "example": "Galaxy Store"
+            "$ref": "#/components/schemas/Platform"
           },
           "stream": {
-            "type": "string",
-            "description": "Stream name. Must match exact name setup in your app",
-            "example": "nightlies"
-          },
-          "source": {
-            "type": "string",
-            "description": "Source of the upload. See [full list](/data/sources)",
-            "enum": [
-              "web-upload",
-              "cli-upload",
-              "ghactions",
-              "jenkins",
-              "unity-build",
-              "gitlab-ci",
-              "azure-devops",
-              "circleci",
-              "travisci",
-              "appveyor",
-              "teamcity",
-              "bitbucket-pipelines",
-              "bitrise",
-              "codemagic",
-              "buildkite",
-              "google-cloud-build",
-              "bamboo",
-              "semaphore",
-              "aws-codebuild",
-              "abstruse",
-              "cirrus-ci",
-              "drone",
-              "concourse"
-            ],
-            "example": "ghactions"
-          },
-          "primary_file": {
-            "$ref": "#/components/schemas/PrimaryFileInfo"
-          },
-          "expansion_files": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExpansionFileInfo"
-            },
-            "description": "Expansion files (only include if structure is 'file+expansion')"
-          },
-          "version_component_1_major": {
-            "type": "integer",
-            "description": "Semantic versioning: Major version component",
-            "example": 1
-          },
-          "version_component_2_minor": {
-            "type": "integer",
-            "description": "Minor version component",
-            "example": 0
-          },
-          "version_component_3_patch": {
-            "type": "integer",
-            "description": "Patch version component",
-            "example": 1
-          },
-          "version_component_extra": {
-            "type": "string",
-            "description": "Extra version component. Optional pre-release label like such as 'alpha', 'beta', 'rc', etc",
-            "example": "alpha"
-          },
-          "version_component_meta": {
-            "type": "string",
-            "description": "Version metadata. Optional metadata like such as 'build number', 'commit hash', etc",
-            "example": "2025.07.30"
-          },
-          "custom_build_number": {
-            "type": "string",
-            "description": "Custom build number (any preferred format)",
-            "example": "398"
+            "$ref": "#/components/schemas/Stream"
           },
           "labels": {
             "type": "array",
             "items": {
-              "type": "string"
-            },
-            "description": "Labels for the build (will be created if they don't already exist)",
-            "example": ["signed", "to-test", "release"]
+              "$ref": "#/components/schemas/Label"
+            }
           },
           "architectures": {
             "type": "array",
             "items": {
-              "type": "string",
-              "enum": [
-                "x86",
-                "x64",
-                "u2b",
-                "apple",
-                "ppc",
-                "ibmz",
-                "mips64",
-                "mips",
-                "armv5",
-                "armv6",
-                "armv7",
-                "armv8",
-                "arm64v8",
-                "armv9",
-                "risc-v",
-                "risc-v64",
-                "msp430",
-                "loongarch",
-                "ppc64",
-                "ia64",
-                "sparc",
-                "alpha",
-                "vax",
-                "pdp11",
-                "sh1",
-                "sh2",
-                "sh3",
-                "sh4",
-                "680x0",
-                "xtensa",
-                "nios",
-                "nios2",
-                "niosv",
-                "rx",
-                "avr",
-                "8051",
-                "z80",
-                "mipsx",
-                "microblaze"
-              ]
-            },
-            "description": "Architectures this build supports (the platform must also support the architecture). See [full list](/data/architectures)",
-            "example": ["x86", "x64", "armv7"]
-          },
-          "ci_pipeline": {
-            "type": "string",
-            "description": "CI pipeline name",
-            "example": "Nightly Build"
-          },
-          "ci_run_id": {
-            "type": "string",
-            "description": "CI run ID",
-            "example": "38836019427"
-          },
-          "ci_run_url": {
-            "type": "string",
-            "description": "CI run URL",
-            "example": "https://github.com/buildstash/example/actions/runs/38836019427"
-          },
-          "ci_build_duration": {
-            "type": "string",
-            "description": "CI build duration",
-            "example": "00:05:00"
-          },
-          "vc_host_type": {
-            "type": "string",
-            "description": "Version control host type. See [full list](/data/sources)",
-            "enum": ["git", "svn", "hg", "perforce", "bzr", "fossil", "darcs", "cvs", "monotone", "diversion", "unity-vc"],
-            "example": "git"
-          },
-          "vc_host": {
-            "type": "string",
-            "description": "Version control host. See [full list](/data/sources)",
-            "enum": ["github", "gitlab", "gitlab-self", "perforce", "bitbucket", "gitea", "forgejo", "gogs", "codeberg", "sourceforge", "sourcehut", "rhodecode", "unity-vc", "aws-codecommit", "azure-repos", "beanstalk", "assembla", "codebase", "bonobo-git", "phabricator", "launchpad", "onedev", "diversion"],
-            "example": "github"
-          },
-          "vc_repo_name": {
-            "type": "string",
-            "description": "Repository name",
-            "example": "buildstash/example"
-          },
-          "vc_repo_url": {
-            "type": "string",
-            "description": "Repository URL",
-            "example": "https://github.com/buildstash/example"
-          },
-          "vc_branch": {
-            "type": "string",
-            "description": "Branch name",
-            "example": "main"
-          },
-          "vc_commit_sha": {
-            "type": "string",
-            "description": "Commit SHA",
-            "example": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
-          },
-          "vc_commit_url": {
-            "type": "string",
-            "description": "Commit URL",
-            "example": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+              "$ref": "#/components/schemas/Architecture"
+            }
           },
           "notes": {
             "type": "string",
-            "description": "Additional notes",
-            "example": "Example build notes here."
-          }
-        }
-      },
-      "PrimaryFileInfo": {
-        "type": "object",
-        "required": ["filename", "size_bytes"],
-        "properties": {
-          "filename": {
-            "type": "string",
-            "description": "Filename with extension (excluding path)",
-            "example": "example.exe"
+            "nullable": true
           },
-          "size_bytes": {
+          "size_total_bytes": {
+            "type": "integer"
+          },
+          "size_total_string": {
+            "type": "string"
+          },
+          "metadata_total_bytes": {
             "type": "integer",
-            "description": "Size of the file in bytes",
-            "example": 52428800
-          }
-        }
-      },
-      "ExpansionFileInfo": {
-        "type": "object",
-        "properties": {
-          "filename": {
-            "type": "string",
-            "description": "Filename with extension (excluding path)",
-            "example": "expansion.obb"
-          },
-          "size_bytes": {
-            "type": "integer",
-            "description": "Size of the file in bytes",
-            "example": 1048576
-          }
-        }
-      },
-      "UploadResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Success response message",
-            "example": "Upload request successful"
-          },
-          "pending_upload_id": {
-            "type": "string",
-            "description": "Unique identifier for the pending upload"
+            "nullable": true
           },
           "primary_file": {
-            "$ref": "#/components/schemas/UploadFileInfo"
+            "$ref": "#/components/schemas/PrimaryFile",
+            "description": "Only included when fetching a single build."
           },
           "expansion_files": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/UploadExpansionFileInfo"
-            }
-          }
-        }
-      },
-      "UploadFileInfo": {
-        "type": "object",
-        "properties": {
-          "filename": {
-            "type": "string",
-            "description": "Filename this upload relates to",
-            "example": "example.exe"
+              "$ref": "#/components/schemas/ExpansionFile"
+            },
+            "description": "Only included when fetching a single build."
           },
-          "chunked_upload": {
-            "type": "boolean",
-            "description": "Whether this file requires multipart upload",
-            "example": true
-          },
-          "chunked_number_parts": {
-            "type": "integer",
-            "description": "Number of parts for multipart upload (if chunked only)",
-            "example": 14
-          },
-          "chunked_part_size_mb": {
-            "type": "integer",
-            "description": "Size of each part in MB (if chunked only)",
-            "example": 52428800
-          },
-          "presigned_data": {
-            "$ref": "#/components/schemas/PresignedData"
-          }
-        }
-      },
-      "UploadExpansionFileInfo": {
-        "type": "object",
-        "properties": {
-          "filename": {
-            "type": "string",
-            "description": "Filename this upload relates to",
-            "example": "expansion.obb"
-          },
-          "chunked_upload": {
-            "type": "boolean",
-            "description": "Whether this file requires multipart upload",
-            "example": false
-          },
-          "chunked_number_parts": {
-            "type": "integer",
-            "description": "Number of parts for multipart upload (if chunked only)",
-            "example": ""
-          },
-          "chunked_part_size_mb": {
-            "type": "integer",
-            "description": "Size of each part in MB (if chunked only)",
-            "example": ""
-          },
-          "presigned_data": {
-            "$ref": "#/components/schemas/PresignedDataExpansion"
-          }
-        }
-      },
-      "PresignedData": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "Presigned URL for upload"
-          },
-          "headers": {
-            "type": "object",
-            "properties": {
-              "Content-Type": {
-                "type": "string",
-                "example": "application/x-msdownload"
-              },
-              "Content-Length": {
-                "type": "string",
-                "example": "734003200"
-              },
-              "Content-Disposition": {
-                "type": "string",
-                "example": "attachment; filename=\"example.exe\""
-              }
-            }
-          }
-        }
-      },
-      "PresignedDataExpansion": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "Presigned URL for upload"
-          },
-          "headers": {
-            "type": "object",
-            "properties": {
-              "Content-Type": {
-                "type": "string",
-                "example": "application/octet-stream"
-              },
-              "Content-Length": {
-                "type": "string",
-                "example": "734003200"
-              },
-              "Content-Disposition": {
-                "type": "string",
-                "example": "attachment; filename=\"expansion.obb\""
-              }
-            }
-          }
-        }
-      },
-      "MultipartRequest": {
-        "type": "object",
-        "required": ["pending_upload_id", "part_number", "content_length"],
-        "properties": {
-          "pending_upload_id": {
-            "type": "string",
-            "description": "Pending upload ID from the initial request"
-          },
-          "part_number": {
-            "type": "integer",
-            "description": "Part number you want to upload",
-            "example": 1
-          },
-          "content_length": {
-            "type": "integer",
-            "description": "Size of this part in bytes",
-            "example": 52428800
-          }
-        }
-      },
-      "MultipartResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Success message for this request",
-            "example": "Generated pre-signed URL for part 1"
-          },
-          "part_number": {
-            "type": "integer",
-            "description": "Requested part number for this presigned upload URL",
-            "example": 1
-          },
-          "part_presigned_url": {
-            "type": "string",
-            "description": "Presigned URL for uploading this part"
-          }
-        }
-      },
-      "VerifyRequest": {
-        "type": "object",
-        "required": ["pending_upload_id"],
-        "properties": {
-          "pending_upload_id": {
-            "type": "string",
-            "description": "Pending upload ID from the initial request"
-          },
-          "multipart_chunks": {
+          "metadata_artifacts": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/MultipartChunk"
+              "$ref": "#/components/schemas/MetadataArtifact"
             },
-            "description": "Array of uploaded parts (required for multipart uploads)"
-          }
-        }
-      },
-      "MultipartChunk": {
-        "type": "object",
-        "required": ["PartNumber", "ETag"],
-        "properties": {
-          "PartNumber": {
-            "type": "integer",
-            "description": "Part number (1-based)"
+            "description": "Only included when fetching a single build."
           },
-          "ETag": {
-            "type": "string",
-            "description": "ETag returned from the upload of this part"
-          }
-        }
-      },
-      "VerifyResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Success message for this request",
-            "example": "Upload verified successfully"
+          "ios_info": {
+            "$ref": "#/components/schemas/BuildIosInfo",
+            "nullable": true,
+            "description": "iOS-specific build info. Only included when fetching a single build."
           },
-          "build_id": {
-            "type": "string",
-            "description": "Unique identifier for the completed build"
+          "android_info": {
+            "$ref": "#/components/schemas/BuildAndroidInfo",
+            "nullable": true,
+            "description": "Android-specific build info. Only included when fetching a single build."
           },
-          "pending_processing": {
-            "type": "boolean",
-            "description": "Whether the build is still being processed. Applies to iOS or Android builds which will be prepared for adhoc distribution post-upload",
-            "example": false
+          "build_source": {
+            "type": "string"
           },
-          "build_info_url": {
+          "ci_pipeline": {
+            "type": "object",
+            "properties": {
+              "ci_pipeline_name": {
+                "type": "string",
+                "nullable": true
+              },
+              "ci_pipeline_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "ci_run_id": {
+                "type": "string",
+                "nullable": true
+              },
+              "ci_run_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "ci_build_duration": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          "scm": {
+            "type": "object",
+            "properties": {
+              "scm_host_type": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_host": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_repo_name": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_repo_url": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_branch": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_commit_sha": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_commit_sha_short": {
+                "type": "string",
+                "nullable": true
+              },
+              "scm_commit_url": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          "pending": {
+            "type": "boolean"
+          },
+          "modal_url": {
             "type": "string",
-            "description": "URL to view build information"
+            "nullable": true,
+            "description": "Direct URL to the build detail page in the web app."
           },
           "download_url": {
             "type": "string",
-            "description": "URL to download the uploaded file"
+            "nullable": true,
+            "description": "URL to initiate a build download via the web app."
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted in list responses."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted in list responses."
+          },
+          "built_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "Error": {
+      "Release": {
         "type": "object",
+        "description": "A release. In list responses, `notes`, `application_id`, and `workspace_id` are omitted.",
         "properties": {
-          "message": {
+          "id": {
             "type": "string",
-            "description": "Error message"
+            "description": "Unique identifier"
+          },
+          "version": {
+            "type": "string"
+          },
+          "version_short": {
+            "type": "string"
+          },
+          "version_semantic_major": {
+            "type": "integer"
+          },
+          "version_semantic_minor": {
+            "type": "integer"
+          },
+          "version_semantic_patch": {
+            "type": "integer"
+          },
+          "version_semantic_extra": {
+            "type": "string",
+            "nullable": true
+          },
+          "version_semantic_meta": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "description": "Markdown release notes. Only included when retrieving a single release, not in list views."
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Label"
+            }
+          },
+          "build_count": {
+            "type": "integer",
+            "description": "Included on list views where full builds are omitted."
+          },
+          "builds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Build"
+            },
+            "description": "Full build objects. Only included when retrieving a single release, not in list views."
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted in list responses."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted in list responses."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "ErrorUnauthorized": {
+      "Stream": {
         "type": "object",
+        "description": "An application stream. When returned in a list under an application, `application_id` and `workspace_id` are omitted.",
         "properties": {
-          "message": {
+          "id": {
             "type": "string",
-            "description": "Error message",
-            "example": "Unauthorized"
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "retention_days": {
+            "type": "integer",
+            "nullable": true
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted when listed under the parent application."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when listed under the parent workspace."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "ErrorUploadRequest": {
+      "Label": {
         "type": "object",
+        "description": "A build/release label. When returned in a list under an application or workspace, parent ID fields are omitted.",
         "properties": {
-          "message": {
+          "id": {
             "type": "string",
-            "description": "Error message",
-            "example": "Error message explaining why the upload failed"
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "application",
+              "workspace"
+            ]
+          },
+          "application_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Omitted when listed under the parent."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when listed under the parent."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "ErrorMultipartRequest": {
+      "WorkspaceLabel": {
         "type": "object",
+        "description": "A workspace-level label returned from the workspace labels endpoint (parent IDs omitted).",
         "properties": {
-          "message": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
             "type": "string",
-            "description": "Error message",
-            "example": "Error generating pre-signed URL for part"
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "workspace"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "ErrorVerify": {
+      "DefaultStream": {
+        "type": "object",
+        "description": "A workspace default stream template. Copied into new applications on creation.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "retention_days": {
+            "type": "integer",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CustomTarget": {
+        "type": "object",
+        "description": "A custom build target tied to a platform. When returned in a list under an application or workspace, parent ID fields are omitted.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "workspace",
+              "application"
+            ]
+          },
+          "platform": {
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "icon_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "application_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Omitted when listed under the parent."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when listed under the parent."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Platform": {
         "type": "object",
         "properties": {
-          "message": {
+          "identifier": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "short_name": {
+            "type": "string"
+          },
+          "upload_instruction": {
             "type": "string",
-            "description": "Error message",
-            "example": "Error explaining why upload verification failed"
+            "nullable": true
+          }
+        }
+      },
+      "Architecture": {
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ShareLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "url": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "password_protected": {
+            "type": "boolean"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "expired": {
+            "type": "boolean"
+          },
+          "shareable_type": {
+            "type": "string",
+            "enum": [
+              "build",
+              "release"
+            ]
+          },
+          "shareable_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "workspace_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ShareLinkCreateRequest": {
+        "type": "object",
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "default": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true,
+            "minLength": 3,
+            "maxLength": 72
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Must be in the future and within 1 year from now."
+          },
+          "should_notify": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "DistroGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "workspace",
+              "application"
+            ]
+          },
+          "icon_type": {
+            "type": "string",
+            "enum": [
+              "none",
+              "emoji",
+              "fa"
+            ]
+          },
+          "icon_emoji_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "icon_set_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_testers": {
+            "type": "boolean"
+          },
+          "tester_count": {
+            "type": "integer"
+          },
+          "workspace_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DistroGroupMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Null for external testers"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "profile_photo_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "added_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Portal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string"
+          },
+          "icon_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "portal_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "custom_domain_active": {
+            "type": "boolean"
+          },
+          "subdomain": {
+            "type": "string",
+            "nullable": true
+          },
+          "applications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Application"
+            }
+          },
+          "workspace_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "event": {
+            "type": "string"
+          },
+          "secret_configured": {
+            "type": "boolean"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json",
+              "form"
+            ]
+          },
+          "level": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "in_error_state": {
+            "type": "boolean"
+          },
+          "last_successful_request_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_failed_request_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "event_subscription": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "event": {
+                "type": "string"
+              },
+              "stream": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "label": {
+                "type": "object",
+                "nullable": true,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Unique identifier"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "latest_webhook_request": {
+            "$ref": "#/components/schemas/WebhookRequest",
+            "description": "Only included when fetching a single webhook, not in list views."
+          },
+          "application_id": {
+            "type": "string"
+          },
+          "workspace_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PrimaryFile": {
+        "type": "object",
+        "description": "The primary file of a build. Parent IDs are omitted when nested under a Build.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "size_string": {
+            "type": "string"
+          },
+          "checksum_md5": {
+            "type": "string",
+            "nullable": true
+          },
+          "filetype": {
+            "type": "object",
+            "nullable": true,
+            "description": "Loaded when available."
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ExpansionFile": {
+        "type": "object",
+        "description": "An expansion file attached to a build. Parent IDs are omitted when nested under a Build.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "size_string": {
+            "type": "string"
+          },
+          "checksum_md5": {
+            "type": "string",
+            "nullable": true
+          },
+          "expansion_filetype": {
+            "type": "object",
+            "nullable": true,
+            "description": "Loaded when available."
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MetadataArtifact": {
+        "type": "object",
+        "description": "A metadata artifact attached to a build. Parent IDs are omitted when nested under a Build.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "size_string": {
+            "type": "string"
+          },
+          "checksum_md5": {
+            "type": "string",
+            "nullable": true
+          },
+          "metadata_filetype": {
+            "type": "object",
+            "nullable": true,
+            "description": "Loaded when available."
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BuildIosInfo": {
+        "type": "object",
+        "description": "iOS-specific build information. `build_id` is omitted when nested under a Build.",
+        "properties": {
+          "bundle_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "bundle_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "key_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimum_os": {
+            "type": "string",
+            "nullable": true
+          },
+          "bundle_version": {
+            "type": "string",
+            "nullable": true
+          },
+          "version_short_string": {
+            "type": "string",
+            "nullable": true
+          },
+          "provisioning_profile_uuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "provisioning_profile_expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "ISO 8601 datetime."
+          },
+          "team_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "team_identifier": {
+            "type": "string",
+            "nullable": true
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          }
+        }
+      },
+      "BuildAndroidInfo": {
+        "type": "object",
+        "description": "Android-specific build information. `build_id` is omitted when nested under a Build.",
+        "properties": {
+          "package_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimum_api": {
+            "type": "integer",
+            "nullable": true
+          },
+          "target_api": {
+            "type": "integer",
+            "nullable": true
+          },
+          "version_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "version_code": {
+            "type": "integer",
+            "nullable": true
+          },
+          "is_debuggable": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "package_signed": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "build_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Build."
+          }
+        }
+      },
+      "WebhookRequest": {
+        "type": "object",
+        "description": "A webhook delivery attempt. Headers are filtered to safe allowlists and response payloads are truncated to 1 KB. Parent IDs are omitted when nested under a Webhook.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier"
+          },
+          "event": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "nullable": true
+          },
+          "request_headers": {
+            "type": "object",
+            "nullable": true,
+            "description": "Filtered to safe headers only (content-type, user-agent, etc.). Sensitive headers like X-Webhook-Signature are redacted."
+          },
+          "request_payload": {
+            "type": "object",
+            "nullable": true
+          },
+          "response_code": {
+            "type": "integer",
+            "nullable": true
+          },
+          "response_headers": {
+            "type": "object",
+            "nullable": true,
+            "description": "Filtered to safe headers only (content-type, date, content-length)."
+          },
+          "response_payload": {
+            "type": "string",
+            "nullable": true,
+            "description": "Truncated to 1 KB maximum."
+          },
+          "delivery_attempts": {
+            "type": "integer"
+          },
+          "webhook_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Webhook."
+          },
+          "workspace_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Webhook."
+          },
+          "application_id": {
+            "type": "string",
+            "description": "Omitted when nested under a Webhook."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "current_page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "last_page": {
+            "type": "integer"
+          },
+          "from": {
+            "type": "integer",
+            "nullable": true
+          },
+          "to": {
+            "type": "integer",
+            "nullable": true
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized - invalid or missing API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Unauthorized"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden - insufficient scope or access denied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "This action requires 'resource:action' scope."
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "errors": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -738,7 +3749,7 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "App-specific auth token. Bearer authentication header of the form Bearer <token>, where <token> is your auth token."
+        "description": "API key. Bearer authentication header of the form `Bearer <token>`, where `<token>` is your Workspace or Application API key."
       }
     }
   }

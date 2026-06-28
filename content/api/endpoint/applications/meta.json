@@ -1,0 +1,16 @@
+{
+  "title": "Applications",
+  "defaultOpen": false,
+  "pages": [
+    "list-applications",
+    "get-application",
+    "list-application-members",
+    "list-application-streams",
+    "get-stream",
+    "list-application-labels",
+    "get-application-label",
+    "list-application-platforms",
+    "list-application-custom-targets",
+    "get-application-custom-target"
+  ]
+}

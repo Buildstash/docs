@@ -1,0 +1,12 @@
+{
+  "title": "Builds",
+  "defaultOpen": false,
+  "pages": [
+    "list-builds",
+    "get-build",
+    "download-build",
+    "list-metadata-artifacts",
+    "get-metadata-artifact",
+    "download-metadata-artifact"
+  ]
+}

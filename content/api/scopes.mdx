@@ -1,0 +1,97 @@
+---
+title: "Scopes"
+description: "API key scopes and access levels"
+icon: Shield
+---
+
+## Overview
+
+API key scopes control which resources a key can access and what actions it can perform. Each scope follows a `resource:level` pattern.
+
+### Access Levels
+
+Scope levels are hierarchical — higher levels include the permissions of lower levels:
+
+| Level | Grants |
+|-------|--------|
+| `read` | View and list resources |
+| `create` | Everything in `read`, plus create new resources |
+| `write` | Everything in `create`, plus update and delete resources |
+
+For example, a key with `builds:write` can read, create, update, and delete builds.
+
+---
+
+## Workspace Key Scopes
+
+Workspace API keys can be assigned any combination of the following scopes:
+
+| Scope | Description |
+|-------|-------------|
+| `workspace:read` | Access workspace labels, default streams, and custom targets |
+| `members:read` | List workspace members |
+| `applications:read` | List and view all applications in the workspace |
+| `applications:create` | Create new applications |
+| `applications:write` | Update, delete applications and manage their streams, labels, and platforms |
+| `builds:read` | List and view builds, download build files and metadata |
+| `builds:create` | Upload new builds |
+| `builds:write` | Update, delete builds and manage build labels, stream, and architectures |
+| `releases:read` | List and view releases |
+| `releases:create` | Create new releases |
+| `releases:write` | Update, delete releases and manage release builds and labels |
+| `share_links:read` | List share links on builds and releases |
+| `share_links:create` | Create new share links |
+| `share_links:write` | Delete share links |
+| `distribution_groups:read` | List and view distribution groups |
+| `distribution_groups:create` | Create new distribution groups |
+| `distribution_groups:write` | Update, delete distribution groups and manage their releases |
+| `portals:read` | List and view portals and portal content |
+| `portals:write` | Update, delete portals and publish/remove releases |
+| `webhooks:read` | List and view webhooks and webhook request history |
+| `webhooks:create` | Create new webhooks |
+| `webhooks:write` | Update, delete, and test webhooks |
+
+<Callout>
+  The `workspace` and `members` scopes are only available on workspace-level API keys. Some endpoints like `GET /workspace` require no scope at all.
+</Callout>
+
+---
+
+## Application Key Scopes
+
+Application API keys are scoped to a single application and can only access a subset of resources:
+
+| Scope | Description |
+|-------|-------------|
+| `application:read` | View the application's own details |
+| `members:read` | List members with access to this application |
+| `builds:read` | List and view builds for this application |
+| `builds:create` | Upload new builds to this application |
+| `builds:write` | Update, delete builds and manage labels, stream, and architectures |
+| `releases:read` | List and view releases for this application |
+| `releases:create` | Create new releases |
+| `releases:write` | Update, delete releases and manage release builds and labels |
+| `share_links:read` | List share links on this application's builds and releases |
+| `share_links:create` | Create new share links |
+| `share_links:write` | Delete share links |
+| `webhooks:read` | List and view webhooks for this application |
+| `webhooks:create` | Create new webhooks |
+| `webhooks:write` | Update, delete, and test webhooks |
+
+<Callout>
+  Application keys cannot access workspace-level resources such as `applications` (listing all apps), `distribution_groups`, `portals`, or `workspace` settings. They also cannot access resources belonging to other applications.
+</Callout>
+
+---
+
+## Scope Errors
+
+If a request is made without the required scope, the API returns `403 Forbidden`:
+
+```json
+{
+  "message": "This action requires 'builds:read' scope."
+}
+```
+
+Each endpoint's documentation notes which scope is required.

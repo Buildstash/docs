@@ -1,9 +1,12 @@
 {
-  "title": "Upload",
+  "title": "Uploads",
   "defaultOpen": false,
   "pages": [
     "request",
     "request-multipart",
-    "verify"
+    "verify",
+    "abort-upload",
+    "request-metadata-upload",
+    "verify-metadata-upload"
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "title": "Releases",
+  "defaultOpen": false,
+  "pages": [
+    "list-releases",
+    "get-release"
+  ]
+}

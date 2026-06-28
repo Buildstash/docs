@@ -1,0 +1,13 @@
+{
+  "title": "Workspace",
+  "defaultOpen": false,
+  "pages": [
+    "get-workspace",
+    "list-workspace-members",
+    "list-workspace-labels",
+    "get-workspace-label",
+    "list-workspace-default-streams",
+    "list-workspace-custom-targets",
+    "get-workspace-custom-target"
+  ]
+}

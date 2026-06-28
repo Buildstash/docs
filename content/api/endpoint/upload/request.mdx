@@ -7,11 +7,15 @@ route: /upload/request
 openapi: "POST /upload/request"
 ---
 <Callout>
-  This endpoint initiates the build upload process by requesting presigned URLs. The response will indicate whether single-part or multipart upload is possible. Multipart is always required for files larger than 5GB.
+  This endpoint initiates the build upload process by requesting presigned URLs. Requires `builds:create` scope. The response will indicate whether single-part or multipart upload is possible. Multipart is always required for files larger than 5GB.
 </Callout>
 
 The upload request endpoint is the first step in uploading a new build.
 
 It provides all key build information, and returns a presigned URL for direct upload or multipart upload information for larger files.
+
+When using a **Workspace API key**, the `application_id` field is required to specify which application the build belongs to. Application-level keys target their app automatically.
+
+You can optionally attach labels, specify architectures, provide CI/CD pipeline metadata (pipeline name, run ID, URL, duration), and version control details (host, repo, branch, commit) to enrich the build record.
 
 <APIPage document={"./openapi.json"} operations={[{"path":"/upload/request","method":"post"}]} webhooks={[]} hasHead={false} />

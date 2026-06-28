@@ -5,8 +5,10 @@ description: "Request a presigned URL for a specific part of a multipart upload"
 openapi: "POST /upload/request/multipart"
 ---
 <Callout>
-  This endpoint is only needed for multipart uploads, including any files larger than 5GB.
+  This endpoint is only needed for multipart uploads, including any files larger than 5GB. Requires `builds:create` scope.
 </Callout>
+
+Each request requires the `pending_upload_id` returned from the initial upload request, the `part_number`, and the `content_length` of the chunk in bytes.
 
 <APIPage document={"./openapi.json"} operations={[{"path":"/upload/request/multipart","method":"post"}]} webhooks={[]} hasHead={false} />
 
@@ -14,6 +16,7 @@ openapi: "POST /upload/request/multipart"
 
 - Part numbers must be sequential starting from 1
 - Each part must be uploaded exactly once
+- The `content_length` field is required and must match the size of the chunk you intend to upload
 - The ETag from each upload must be saved for the final verification step
 - Parts can be uploaded in parallel for better performance
 - If a part upload fails, you can retry uploading to the same presigned URL

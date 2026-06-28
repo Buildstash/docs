@@ -1,0 +1,7 @@
+{
+  "title": "Users",
+  "defaultOpen": false,
+  "pages": [
+    "get-user"
+  ]
+}
