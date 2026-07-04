@@ -54,7 +54,8 @@ import {
   Navbar,
   NavbarSidebarTrigger,
 } from './client';
-import { NavProvider } from 'fumadocs-ui/contexts/layout';
+import { NavProvider } from 'fumadocs-ui/legacy/layout';
+import { SidebarProvider } from 'fumadocs-ui/legacy/sidebar';
 import { type Option, RootToggle } from '../../root-toggle';
 import { SidebarLogo } from '../../sidebar-logo';
 import Link from 'fumadocs-core/link';
@@ -62,7 +63,6 @@ import {
   LargeSearchToggle,
   SearchToggle,
 } from '../../search-toggle';
-import { HideIfEmpty } from 'fumadocs-core/hide-if-empty';
 import {
   getSidebarTabs,
   type GetSidebarTabsOptions,
@@ -178,7 +178,7 @@ export function DocsLayout(props: DocsLayoutProps) {
           rest.className,
         )}
       >
-        <HideIfEmpty as={SidebarHeader}>
+        <SidebarHeader>
           <div className="self-start" style={{ paddingTop: '3px' }}>
             <SidebarLogo />
           </div>
@@ -189,10 +189,9 @@ export function DocsLayout(props: DocsLayoutProps) {
           )}
           {nav.children}
           {banner}
-        </HideIfEmpty>
+        </SidebarHeader>
         {viewport}
-        <HideIfEmpty
-          as={SidebarFooter}
+        <SidebarFooter
           className="flex flex-row text-fd-muted-foreground items-center"
         >
           {iconLinks.map((item, i) => (
@@ -212,7 +211,7 @@ export function DocsLayout(props: DocsLayoutProps) {
             </BaseLinkItem>
           ))}
           {footer}
-        </HideIfEmpty>
+        </SidebarFooter>
       </SidebarContent>
     );
 
@@ -240,8 +239,7 @@ export function DocsLayout(props: DocsLayoutProps) {
           )}
         </SidebarHeader>
         {viewport}
-        <HideIfEmpty
-          as={SidebarFooter}
+        <SidebarFooter
           className="flex flex-row items-center justify-end"
         >
           {iconLinks.map((item, i) => (
@@ -271,7 +269,7 @@ export function DocsLayout(props: DocsLayoutProps) {
               <ThemeToggle />
             ))}
           {footer}
-        </HideIfEmpty>
+        </SidebarFooter>
       </SidebarContentMobile>
     );
 
@@ -287,24 +285,26 @@ export function DocsLayout(props: DocsLayoutProps) {
 
   return (
     <TreeContextProvider tree={props.tree}>
-      <NavProvider transparentMode={transparentMode}>
-        <LayoutBody
-          {...props.containerProps}
-          className={cn(
-            'md:[--fd-sidebar-width:286px] xl:[--fd-toc-width:286px]',
-            props.containerProps?.className,
-          )}
-        >
-          {sidebar()}
-          <DocsNavbar
-            {...props}
-            links={links}
-            tabs={tabs}
-            tabMode={tabMode}
-          />
-          {props.children}
-        </LayoutBody>
-      </NavProvider>
+      <SidebarProvider>
+        <NavProvider transparentMode={transparentMode}>
+          <LayoutBody
+            {...props.containerProps}
+            className={cn(
+              'md:[--fd-sidebar-width:286px] xl:[--fd-toc-width:286px]',
+              props.containerProps?.className,
+            )}
+          >
+            {sidebar()}
+            <DocsNavbar
+              {...props}
+              links={links}
+              tabs={tabs}
+              tabMode={tabMode}
+            />
+            {props.children}
+          </LayoutBody>
+        </NavProvider>
+      </SidebarProvider>
     </TreeContextProvider>
   );
 }
@@ -329,8 +329,8 @@ function DocsNavbar({
     <Navbar
       mode={navMode}
       className={cn(
-        'on-root:[--fd-nav-height:56px] md:on-root:[--fd-nav-height:64px]',
-        tabMode === 'navbar' && tabs.length > 0 && 'lg:on-root:[--fd-nav-height:104px]',
+        'layout:[--fd-nav-height:56px] md:layout:[--fd-nav-height:64px]',
+        tabMode === 'navbar' && tabs.length > 0 && 'lg:layout:[--fd-nav-height:104px]',
       )}
     >
       <div

@@ -5,7 +5,7 @@ import { cn } from '../../lib/cn';
 import { TocThumb } from './toc-thumb';
 import { useTOCItems } from './toc';
 import { mergeRefs } from '../../lib/merge-refs';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
+import { useTranslations } from '@fuma-translate/react';
 
 export default function ClerkTOCItems({
   ref,
@@ -14,7 +14,7 @@ export default function ClerkTOCItems({
 }: ComponentProps<'div'>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const items = useTOCItems();
-  const { text } = useI18n();
+  const t = useTranslations({ note: 'table of contents' });
 
   const [svg, setSvg] = useState<{
     path: string;
@@ -71,7 +71,7 @@ export default function ClerkTOCItems({
   if (items.length === 0)
     return (
       <div className="rounded-lg border bg-fd-card p-3 text-xs text-fd-muted-foreground">
-        {text.tocNoHeadings}
+        {t('No Headings')}
       </div>
     );
 

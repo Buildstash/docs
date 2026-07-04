@@ -14,7 +14,7 @@ import {
 import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'fumadocs-core/link';
 import { cn } from '../../../lib/cn';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
+import { useTranslations } from '@fuma-translate/react';
 import { useTreeContext, useTreePath } from 'fumadocs-ui/contexts/tree';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { usePathname } from 'fumadocs-core/framework';
@@ -22,14 +22,14 @@ import {
   type BreadcrumbOptions,
   getBreadcrumbItemsFromPath,
 } from 'fumadocs-core/breadcrumb';
-import { useNav } from 'fumadocs-ui/contexts/layout';
+import { useNav } from 'fumadocs-ui/legacy/layout';
 import { isActive } from '../../../lib/is-active';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '../../ui/collapsible';
-import { useSidebar } from 'fumadocs-ui/contexts/sidebar';
+import { useSidebar } from 'fumadocs-ui/legacy/sidebar';
 import { useTOCItems } from '../../ui/toc';
 import { useActiveAnchor } from 'fumadocs-core/toc';
 
@@ -39,7 +39,7 @@ const TocPopoverContext = createContext<{
 } | null>(null);
 
 export function PageTOCPopoverTrigger(props: ComponentProps<'button'>) {
-  const { text } = useI18n();
+  const t = useTranslations({ note: 'table of contents' });
   const { open } = use(TocPopoverContext)!;
   const items = useTOCItems();
   const active = useActiveAnchor();
@@ -71,7 +71,7 @@ export function PageTOCPopoverTrigger(props: ComponentProps<'button'>) {
             showItem && 'opacity-0 -translate-y-full pointer-events-none',
           )}
         >
-          {path?.name ?? text.toc}
+          {path?.name ?? t('On this page')}
         </span>
         <span
           className={cn(
@@ -199,7 +199,7 @@ export function PageTOCPopover(props: ComponentProps<'div'>) {
           id="nd-tocnav"
           {...props}
           className={cn(
-            'fixed pr-(--removed-body-scroll-bar-size,0) z-10 border-b backdrop-blur-sm transition-colors xl:hidden max-xl:on-root:[--fd-tocnav-height:40px]',
+            'fixed pr-(--removed-body-scroll-bar-size,0) z-10 border-b backdrop-blur-sm transition-colors xl:hidden max-xl:layout:[--fd-tocnav-height:40px]',
             (!isTransparent || open) && 'bg-fd-background/80',
             open && 'shadow-lg',
             props.className,
@@ -224,11 +224,10 @@ export function PageLastUpdate({
   date: value,
   ...props
 }: Omit<ComponentProps<'p'>, 'children'> & { date: Date | string }) {
-  const { text } = useI18n();
+  const t = useTranslations({ note: 'page footer' });
   const [date, setDate] = useState('');
 
   useEffect(() => {
-    // to the timezone of client
     setDate(new Date(value).toLocaleDateString());
   }, [value]);
 
@@ -237,7 +236,7 @@ export function PageLastUpdate({
       {...props}
       className={cn('text-sm text-fd-muted-foreground', props.className)}
     >
-      {text.lastUpdate} {date}
+      {t('Last updated on')} {date}
     </p>
   );
 }
@@ -279,6 +278,7 @@ const listCache = new Map<string, PageTree.Item[]>();
 export function PageFooter({ items, ...props }: FooterProps) {
   const { root } = useTreeContext();
   const pathname = usePathname();
+  const t = useTranslations({ note: 'pagination' });
 
   const { previous, next } = useMemo(() => {
     if (items) return items;
@@ -312,7 +312,7 @@ export function PageFooter({ items, ...props }: FooterProps) {
 }
 
 function FooterItem({ item, index }: { item: Item; index: 0 | 1 }) {
-  const { text } = useI18n();
+  const t = useTranslations({ note: 'pagination' });
   const Icon = index === 0 ? ChevronLeft : ChevronRight;
 
   return (
@@ -333,7 +333,7 @@ function FooterItem({ item, index }: { item: Item; index: 0 | 1 }) {
         <p>{item.name}</p>
       </div>
       <p className="text-fd-muted-foreground truncate">
-        {item.description ?? (index === 0 ? text.previousPage : text.nextPage)}
+        {item.description ?? (index === 0 ? t('Previous Page') : t('Next Page'))}
       </p>
     </Link>
   );
@@ -402,7 +402,7 @@ export function PageTOC(props: ComponentProps<'div'>) {
       id="nd-toc"
       {...props}
       className={cn(
-        'fixed bottom-0 pt-12 pb-2 pr-(--removed-body-scroll-bar-size,0) xl:on-root:[--fd-toc-width:286px] max-xl:hidden',
+        'fixed bottom-0 pt-12 pb-2 pr-(--removed-body-scroll-bar-size,0) xl:layout:[--fd-toc-width:286px] max-xl:hidden',
         props.className,
       )}
       style={{

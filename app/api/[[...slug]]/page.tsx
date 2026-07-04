@@ -4,13 +4,14 @@ import {
   DocsDescription,
   DocsPage,
   DocsTitle,
-} from 'fumadocs-ui/page';
+} from '@/components/layout/page';
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getGithubLastEdit } from 'fumadocs-core/content/github';
 import { APIPage } from '@/components/ui/api-page';
+import { openapi } from '@/lib/openapi';
 import { LLMCopyButton, ViewOptions } from '@/components/page-actions';
 
 export default async function Page(props: PageProps<'/api/[[...slug]]'>) {
@@ -49,9 +50,10 @@ export default async function Page(props: PageProps<'/api/[[...slug]]'>) {
       <DocsBody>
         <MDX
           components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
             a: createRelativeLink(apiDocs, page),
-            APIPage,
+            APIPage: async (props) => (
+              <APIPage {...await openapi.preloadOpenAPIPage(page)} {...props} />
+            ),
           })}
         />
       </DocsBody>

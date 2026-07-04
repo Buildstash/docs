@@ -5,6 +5,9 @@ full: true
 method: POST
 route: /upload/request
 openapi: "POST /upload/request"
+_openapi:
+  preload:
+    - ./openapi.json
 ---
 <Callout>
   This endpoint initiates the build upload process by requesting presigned URLs. Requires `builds:create` scope. The response will indicate whether single-part or multipart upload is possible. Multipart is always required for files larger than 5GB.

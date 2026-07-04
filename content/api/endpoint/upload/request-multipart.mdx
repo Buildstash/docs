@@ -3,6 +3,9 @@ title: "Request Multipart Upload Part"
 full: true
 description: "Request a presigned URL for a specific part of a multipart upload"
 openapi: "POST /upload/request/multipart"
+_openapi:
+  preload:
+    - ./openapi.json
 ---
 <Callout>
   This endpoint is only needed for multipart uploads, including any files larger than 5GB. Requires `builds:create` scope.

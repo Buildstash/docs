@@ -148,3 +148,16 @@ export function resolveIcon(iconName: ReactNode): ReactElement | null {
   return null;
 }
 
+/**
+ * Icon component that resolves icon names to React elements.
+ * Wraps output in suppressHydrationWarning to handle SVG differences between SSR and client.
+ */
+export function ResolvedIcon({ icon, className }: { icon: ReactNode; className?: string }) {
+  const resolved = resolveIcon(icon);
+  const element = resolved || (typeof icon === 'object' ? (icon as ReactElement) : null);
+
+  if (!element) return null;
+
+  return <span className={className} suppressHydrationWarning>{element}</span>;
+}
+

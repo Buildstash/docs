@@ -2,7 +2,6 @@ import { type ComponentProps, forwardRef, type ReactNode } from 'react';
 import { cn } from '../../lib/cn';
 import { buttonVariants } from '../ui/button';
 import { Edit } from 'lucide-react';
-import { I18nLabel } from 'fumadocs-ui/contexts/i18n';
 import {
   type BreadcrumbProps,
   type FooterProps,
@@ -219,7 +218,7 @@ export function EditOnGitHub(props: ComponentProps<'a'>) {
       {props.children ?? (
         <>
           <Edit className="size-3.5" />
-          <I18nLabel label="editOnGithub" />
+          Edit on GitHub
         </>
       )}
     </a>

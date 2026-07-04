@@ -1,8 +1,8 @@
 'use client';
 import { cn } from '../../../lib/cn';
 import { type ComponentProps, useMemo } from 'react';
-import { useSidebar } from 'fumadocs-ui/contexts/sidebar';
-import { useNav } from 'fumadocs-ui/contexts/layout';
+import { useSidebar } from 'fumadocs-ui/legacy/sidebar';
+import { useNav } from 'fumadocs-ui/legacy/layout';
 import { buttonVariants } from '../../ui/button';
 import { Sidebar as SidebarIcon } from 'lucide-react';
 import Link from 'fumadocs-core/link';
@@ -75,7 +75,7 @@ export function NavbarSidebarTrigger({
           className,
         }),
       )}
-      onClick={() => setOpen((prev) => !prev)}
+      onClick={() => setOpen((prev: boolean) => !prev)}
     >
       <SidebarIcon />
     </button>

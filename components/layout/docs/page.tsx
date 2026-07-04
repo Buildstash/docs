@@ -13,7 +13,7 @@ import {
 } from './page-client';
 import { TOCItems, TOCProvider, TOCScrollArea } from '../../ui/toc';
 import { Text } from 'lucide-react';
-import { I18nLabel } from 'fumadocs-ui/contexts/i18n';
+import { useTranslations } from '@fuma-translate/react';
 import ClerkTOCItems from '../../ui/toc-clerk';
 import type { AnchorProviderProps } from 'fumadocs-core/toc';
 
@@ -27,7 +27,7 @@ export function PageTOCTitle(props: ComponentProps<'h2'>) {
       )}
     >
       <Text className="size-4" />
-      <I18nLabel label="toc" />
+      On this page
     </h3>
   );
 }

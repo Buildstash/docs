@@ -2,7 +2,7 @@
 import * as Primitive from 'fumadocs-core/toc';
 import { type ComponentProps, createContext, useContext, useRef } from 'react';
 import { cn } from '../../lib/cn';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
+import { useTranslations } from '@fuma-translate/react';
 import { TocThumb } from './toc-thumb';
 import { mergeRefs } from '../../lib/merge-refs';
 
@@ -52,12 +52,12 @@ export function TOCScrollArea({
 export function TOCItems({ ref, className, ...props }: ComponentProps<'div'>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const items = useTOCItems();
-  const { text } = useI18n();
+  const t = useTranslations({ note: 'table of contents' });
 
   if (items.length === 0)
     return (
       <div className="rounded-lg border bg-fd-card p-3 text-xs text-fd-muted-foreground">
-        {text.tocNoHeadings}
+        {t('No Headings')}
       </div>
     );
 

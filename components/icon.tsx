@@ -22,8 +22,9 @@ export function Icon({ icon, className }: IconProps) {
   
   // Otherwise, try to resolve it (for prefixed icon names like "Devicons-AzuredevopsOriginal")
   const resolved = resolveIcon(icon);
-  if (resolved) return resolved;
+  if (resolved) {
+    return <span className={className} suppressHydrationWarning>{resolved}</span>;
+  }
   
   return null;
 }
-

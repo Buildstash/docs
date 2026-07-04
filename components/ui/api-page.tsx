@@ -1,7 +1,9 @@
-import { openapi } from '@/lib/openapi';
-import { createAPIPage } from 'fumadocs-openapi/ui';
+'use client';
+import { createOpenAPIPage } from 'fumadocs-openapi/ui';
+import { createApiCodeUsageRegistry } from '@/lib/api-code-samples';
 
-export const APIPage = createAPIPage(openapi, {
+export const APIPage = createOpenAPIPage({
+  codeUsages: createApiCodeUsageRegistry(),
   schemaUI: {
     showExample: true,
   },

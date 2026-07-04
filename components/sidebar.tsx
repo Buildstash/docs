@@ -1,6 +1,6 @@
 'use client';
 import { ChevronDown, ExternalLink } from 'lucide-react';
-import { resolveIcon } from './icon-resolver';
+import { ResolvedIcon } from './icon-resolver';
 import { usePathname } from 'fumadocs-core/framework';
 import {
   type ComponentProps,
@@ -24,7 +24,7 @@ import {
   CollapsibleTrigger,
 } from './ui/collapsible';
 import { type ScrollAreaProps } from '@radix-ui/react-scroll-area';
-import { useSidebar } from 'fumadocs-ui/contexts/sidebar';
+import { useSidebar } from 'fumadocs-ui/legacy/sidebar';
 import { cva } from 'class-variance-authority';
 import type {
   CollapsibleContentProps,
@@ -418,7 +418,7 @@ export function SidebarTrigger({
     <button
       {...props}
       aria-label="Open Sidebar"
-      onClick={() => setOpen((prev) => !prev)}
+      onClick={() => setOpen((prev: boolean) => !prev)}
     >
       {children}
     </button>
@@ -435,7 +435,7 @@ export function SidebarCollapseTrigger(props: ComponentProps<'button'>) {
       data-collapsed={collapsed}
       {...props}
       onClick={() => {
-        setCollapsed((prev) => !prev);
+        setCollapsed((prev: boolean) => !prev);
       }}
     >
       {props.children}
@@ -483,10 +483,7 @@ export function SidebarPageTree(props: {
           if (Separator) return <Separator key={i} item={item} />;
           return (
             <SidebarSeparator key={i} className={cn(i !== 0 && 'mt-6')}>
-              {(() => {
-                const resolved = resolveIcon(item.icon);
-                return resolved || (typeof item.icon === 'object' ? item.icon : null);
-              })()}
+              <ResolvedIcon icon={item.icon} />
               {item.name}
             </SidebarSeparator>
           );
@@ -514,10 +511,7 @@ export function SidebarPageTree(props: {
             key={item.url}
             href={item.url}
             external={item.external}
-            icon={(() => {
-              const resolved = resolveIcon(item.icon);
-              return resolved || (typeof item.icon === 'object' ? item.icon : undefined);
-            })()}
+            icon={<ResolvedIcon icon={item.icon} />}
           >
             {item.name}
           </SidebarItem>
@@ -553,18 +547,12 @@ function PageTreeFolder({
           external={item.index.external}
           {...props}
         >
-          {(() => {
-            const resolved = resolveIcon(item.icon);
-            return resolved || (typeof item.icon === 'object' ? item.icon : null);
-          })()}
+          <ResolvedIcon icon={item.icon} />
           {item.name}
         </SidebarFolderLink>
       ) : (
         <SidebarFolderTrigger {...props}>
-          {(() => {
-            const resolved = resolveIcon(item.icon);
-            return resolved || (typeof item.icon === 'object' ? item.icon : null);
-          })()}
+          <ResolvedIcon icon={item.icon} />
           {item.name}
         </SidebarFolderTrigger>
       )}

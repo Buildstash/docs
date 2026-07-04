@@ -1,4 +1,4 @@
-import { guide, api, integrations } from '@/.source';
+import { guide, api, integrations } from '@/.source/server';
 import {
   type InferMetaType,
   type InferPageType,
@@ -15,11 +15,11 @@ export const source = loader({
   source: {
     files: [
       ...guide.toFumadocsSource().files,
-      ...api.toFumadocsSource().files.map(file => ({
+      ...api.toFumadocsSource().files.map((file: any) => ({
         ...file,
         path: `api/${file.path}`,
       })),
-      ...integrations.toFumadocsSource().files.map(file => ({
+      ...integrations.toFumadocsSource().files.map((file: any) => ({
         ...file,
         path: `integrations/${file.path}`,
       })),
@@ -99,7 +99,7 @@ ${processed}`;
 
 // Generic version that works with combined source
 export async function getLLMTextFromPage(page: InferPageType<typeof source>) {
-  const processed = await page.data.getText('processed');
+  const processed = await (page.data as any).getText('processed');
 
   return `# ${page.data.title} (${page.url})
 

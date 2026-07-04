@@ -3,7 +3,7 @@ import { SidebarItem } from './sidebar';
 import { cn } from '@/lib/cn';
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { apiHttpMethods } from '@/lib/api-http-methods';
-import { resolveIcon } from './icon-resolver';
+import { ResolvedIcon } from './icon-resolver';
 
 interface ApiSidebarItemProps {
   item: PageTree.Item;
@@ -55,10 +55,7 @@ export function ApiSidebarItem({ item, className }: ApiSidebarItemProps) {
   return (
     <SidebarItem
       href={item.url}
-      icon={(() => {
-        const resolved = resolveIcon(item.icon);
-        return resolved || (typeof item.icon === 'object' ? item.icon : undefined);
-      })()}
+      icon={<ResolvedIcon icon={item.icon} />}
       external={item.external}
       className={className}
     >

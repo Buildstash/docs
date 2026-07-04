@@ -6,7 +6,7 @@ import Link from 'fumadocs-core/link';
 import { usePathname } from 'fumadocs-core/framework';
 import { cn } from '../lib/cn';
 import { isTabActive } from '../lib/is-active';
-import { useSidebar } from 'fumadocs-ui/contexts/sidebar';
+import { useSidebar } from 'fumadocs-ui/legacy/sidebar';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import type { SidebarTab } from 'fumadocs-ui/utils/get-sidebar-tabs';
 
@@ -37,7 +37,7 @@ export function RootToggle({
 
   const item = selected ? (
     <>
-      <div className="shrink-0 size-4 [&_svg]:size-4">
+      <div className="shrink-0 size-4 [&_svg]:size-4" suppressHydrationWarning>
         {(() => {
           const resolved = resolveIcon(selected.icon);
           return resolved || (typeof selected.icon === 'object' ? selected.icon : null);
@@ -58,6 +58,7 @@ export function RootToggle({
             'flex items-center gap-2 rounded-lg border bg-fd-secondary/50 p-2 text-start text-fd-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground data-[state=open]:bg-fd-accent data-[state=open]:text-fd-accent-foreground w-full',
             props.className,
           )}
+          suppressHydrationWarning
         >
           {item}
           <ChevronsUpDown className="shrink-0 ms-auto size-4 text-fd-muted-foreground" />
@@ -79,7 +80,7 @@ export function RootToggle({
                 item.props?.className,
               )}
             >
-              <div className="shrink-0 size-4 [&_svg]:size-4">
+              <div className="shrink-0 size-4 [&_svg]:size-4" suppressHydrationWarning>
                 {(() => {
                   const resolved = resolveIcon(item.icon);
                   return resolved || (typeof item.icon === 'object' ? item.icon : null);
