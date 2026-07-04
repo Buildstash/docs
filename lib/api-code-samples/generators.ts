@@ -8,75 +8,40 @@ import {
   type ApiCodeGenerator,
   type SampleRequestData,
 } from './utils';
+import { phpValueLines, prettyJson, pythonDictLines } from './values';
 
-function pythonLiteral(value: unknown): string {
-  if (value === null) return 'None';
-  if (typeof value === 'boolean') return value ? 'True' : 'False';
-  if (typeof value === 'number') return String(value);
-  if (typeof value === 'string') return doubleQuote(value);
-  if (Array.isArray(value)) {
-    return `[${value.map((item) => pythonLiteral(item)).join(', ')}]`;
+function pythonRequestMethod(method: string): string {
+  switch (method) {
+    case 'GET':
+      return 'get';
+    case 'POST':
+      return 'post';
+    case 'PUT':
+      return 'put';
+    case 'PATCH':
+      return 'patch';
+    case 'DELETE':
+      return 'delete';
+    default:
+      return 'request';
   }
-  if (typeof value === 'object') {
-    const entries = Object.entries(value as Record<string, unknown>).map(
-      ([key, item]) => `${doubleQuote(key)}: ${pythonLiteral(item)}`,
-    );
-    return `{${entries.join(', ')}}`;
-  }
-  return doubleQuote(String(value));
 }
 
-function phpQuote(value: string): string {
-  return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
-}
+function javaRequestMethod(method: string, hasBody: boolean): string {
+  const bodyArg = hasBody ? 'body' : 'HttpRequest.BodyPublishers.noBody()';
 
-function phpValueLines(value: unknown): string[] {
-  if (value === null) return ['null'];
-  if (typeof value === 'boolean') return [value ? 'true' : 'false'];
-  if (typeof value === 'number') return [String(value)];
-  if (typeof value === 'string') return [phpQuote(value)];
-
-  if (Array.isArray(value)) {
-    if (value.length === 0) return ['[]'];
-    const lines = ['['];
-    for (const item of value) {
-      appendPhpEntry(lines, 1, item);
-    }
-    lines.push(']');
-    return lines;
+  switch (method) {
+    case 'GET':
+      return '.GET()';
+    case 'DELETE':
+      return '.DELETE()';
+    case 'POST':
+      return `.POST(${bodyArg})`;
+    case 'PUT':
+      return `.PUT(${bodyArg})`;
+    default:
+      return `.method(${doubleQuote(method)}, ${bodyArg})`;
   }
-
-  const entries = Object.entries(value as Record<string, unknown>);
-  if (entries.length === 0) return ['[]'];
-
-  const lines = ['['];
-  for (const [key, item] of entries) {
-    appendPhpEntry(lines, 1, item, key);
-  }
-  lines.push(']');
-  return lines;
-}
-
-function appendPhpEntry(
-  lines: string[],
-  depth: number,
-  value: unknown,
-  key?: string,
-): void {
-  const pad = '  '.repeat(depth);
-  const itemLines = phpValueLines(value);
-  const prefix = key !== undefined ? `${phpQuote(key)} => ` : '';
-
-  if (itemLines.length === 1) {
-    lines.push(`${pad}${prefix}${itemLines[0]},`);
-    return;
-  }
-
-  lines.push(`${pad}${prefix}${itemLines[0]}`);
-  for (let i = 1; i < itemLines.length - 1; i++) {
-    lines.push(`${pad}${itemLines[i]}`);
-  }
-  lines.push(`${pad}${itemLines[itemLines.length - 1]},`);
 }
 
 const curl: ApiCodeGenerator = {
@@ -115,7 +80,7 @@ const curl: ApiCodeGenerator = {
 
     if (data.body && data.bodyMediaType === 'application/json') {
       lines.push(`-H ${doubleQuote('Content-Type: application/json')}`);
-      lines.push(`-d ${singleQuote(JSON.stringify(data.body))}`);
+      lines.push(`-d @- <<'EOF'`);
     }
 
     if (Object.keys(parts.cookies).length > 0) {
@@ -125,7 +90,13 @@ const curl: ApiCodeGenerator = {
       lines.push(`--cookie ${doubleQuote(cookie)}`);
     }
 
-    return lines.map((line, index) => indent(line, index > 0 ? 1 : 0)).join(' \\\n');
+    const main = lines.map((line, index) => indent(line, index > 0 ? 1 : 0)).join(' \\\n');
+
+    if (data.body && data.bodyMediaType === 'application/json') {
+      return [main, prettyJson(data.body), 'EOF'].join('\n');
+    }
+
+    return main;
   },
 };
 
@@ -210,22 +181,29 @@ const python: ApiCodeGenerator = {
       lines.push('}');
     }
 
-    const requestArgs = [doubleQuote(parts.method), 'f"{base_url}{path}"'];
-    if (parts.queryParams.length > 0) requestArgs.push('params=params');
-    if (Object.keys(parts.headers).length > 0) requestArgs.push('headers=headers');
-
     if (data.body && data.bodyMediaType === 'application/json') {
-      requestArgs.push(`json=${pythonLiteral(data.body)}`);
-    } else {
-      const body = generateBody(data, 'python');
-      if (body) {
-        lines.push('');
-        lines.push(body);
-        requestArgs.push('data=body');
+      const payloadLines = pythonDictLines(data.body);
+      lines.push('payload = ' + payloadLines[0]);
+      for (let i = 1; i < payloadLines.length; i++) {
+        lines.push(payloadLines[i]);
       }
     }
 
-    lines.push('', `response = requests.request(${requestArgs.join(', ')})`);
+    const requestMethod = pythonRequestMethod(parts.method);
+    const urlArg = 'f"{base_url}{path}"';
+    const requestArgs: string[] = [urlArg];
+    if (parts.queryParams.length > 0) requestArgs.push('params=params');
+    if (Object.keys(parts.headers).length > 0) requestArgs.push('headers=headers');
+    if (data.body && data.bodyMediaType === 'application/json') requestArgs.push('json=payload');
+
+    lines.push('');
+    if (requestMethod === 'request') {
+      lines.push(
+        `response = requests.request(${doubleQuote(parts.method)}, ${requestArgs.join(', ')})`,
+      );
+    } else {
+      lines.push(`response = requests.${requestMethod}(${requestArgs.join(', ')})`);
+    }
     lines.push('print(response.json())');
 
     return lines.join('\n');
@@ -445,7 +423,6 @@ const java: ApiCodeGenerator = {
     ];
 
     const body = generateBody(data, 'java');
-    if (body) lines.push(body, '');
 
     lines.push('HttpClient client = HttpClient.newBuilder()');
     lines.push(indent('.connectTimeout(Duration.ofSeconds(10))'));
@@ -468,6 +445,11 @@ const java: ApiCodeGenerator = {
     }
     lines.push(`String url = ${urlExpression};`);
     lines.push('');
+
+    if (body) {
+      lines.push(body, '');
+    }
+
     lines.push('HttpRequest request = HttpRequest.newBuilder()');
     lines.push(indent('.uri(URI.create(url))'));
 
@@ -479,7 +461,7 @@ const java: ApiCodeGenerator = {
       lines.push(indent(`.header("Content-Type", ${doubleQuote(data.bodyMediaType)})`));
     }
 
-    lines.push(indent(`.${parts.method}(${body ? 'body' : 'HttpRequest.BodyPublishers.noBody()'})`));
+    lines.push(indent(javaRequestMethod(parts.method, Boolean(body))));
     lines.push(indent('.build();'));
     lines.push('');
     lines.push(

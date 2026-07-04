@@ -74,6 +74,17 @@
                       "$ref": "#/components/schemas/Workspace"
                     }
                   }
+                },
+                "example": {
+                  "message": "Workspace retrieved successfully.",
+                  "data": {
+                    "id": "wSp1234",
+                    "name": "Acme Games",
+                    "subdomain": "acme",
+                    "logo_url": "https://uploads.buildstash.com/4azHhZGVFONU5s.png",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z"
+                  }
                 }
               }
             }
@@ -97,16 +108,16 @@
         "operationId": "listWorkspaceMembers",
         "parameters": [
           {
-            "$ref": "#/components/parameters/SortBy"
+            "$ref": "#/components/parameters/SortByWorkspaceMembers"
           },
           {
             "$ref": "#/components/parameters/SortDirection"
           },
           {
-            "$ref": "#/components/parameters/Search"
+            "$ref": "#/components/parameters/SearchWorkspaceMembers"
           },
           {
-            "$ref": "#/components/parameters/PerPage"
+            "$ref": "#/components/parameters/PerPageWorkspaceMembers"
           }
         ],
         "responses": {
@@ -118,7 +129,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Workspace members retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -129,6 +141,27 @@
                     "pagination": {
                       "$ref": "#/components/schemas/Pagination"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Workspace members retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "uSr1234",
+                      "name": "Jane Smith",
+                      "email": "jane@example.com",
+                      "profile_photo_url": "https://uploads.buildstash.com/B7kLmNpQrStUvWx.png",
+                      "role": "admin",
+                      "added_at": "2025-06-10T09:15:00.000000Z"
+                    }
+                  ],
+                  "pagination": {
+                    "current_page": 1,
+                    "per_page": 20,
+                    "total": 42,
+                    "last_page": 5,
+                    "from": 1,
+                    "to": 10
                   }
                 }
               }
@@ -170,6 +203,20 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Workspace labels retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "lbl1234",
+                      "name": "Production",
+                      "description": "Production-ready builds",
+                      "color": "#22c55e",
+                      "level": "workspace",
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -199,7 +246,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Label ID or name"
+            "description": "Label ID or name.",
+            "example": "Production"
           }
         ],
         "responses": {
@@ -211,11 +259,26 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Workspace label retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Label"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Workspace label retrieved successfully.",
+                  "data": {
+                    "id": "lbl1234",
+                    "name": "Production",
+                    "description": "Production-ready builds",
+                    "color": "#22c55e",
+                    "level": "workspace",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234"
                   }
                 }
               }
@@ -260,6 +323,19 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Workspace default streams retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "550e8400-e29b-41d4-a716-446655440012",
+                      "name": "nightlies",
+                      "description": "Default nightly stream template",
+                      "retention_days": 30,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -300,6 +376,24 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Workspace custom targets retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "550e8400-e29b-41d4-a716-446655440010",
+                      "name": "Samsung Galaxy Store",
+                      "description": "Builds distributed via Samsung Galaxy Store",
+                      "level": "workspace",
+                      "platform": {
+                        "identifier": "android",
+                        "name": "Android"
+                      },
+                      "icon_url": null,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -329,7 +423,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Custom target ID or name"
+            "description": "Custom target ID (UUID) or name.",
+            "example": "Samsung Galaxy Store"
           }
         ],
         "responses": {
@@ -341,11 +436,28 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Workspace custom target retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/CustomTarget"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Workspace custom target retrieved successfully.",
+                  "data": {
+                    "id": "550e8400-e29b-41d4-a716-446655440010",
+                    "name": "Samsung Galaxy Store",
+                    "description": "Builds distributed via Samsung Galaxy Store",
+                    "level": "workspace",
+                    "platform": {
+                      "identifier": "android",
+                      "name": "Android"
+                    },
+                    "icon_url": null,
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z"
                   }
                 }
               }
@@ -379,7 +491,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "User ID"
+            "description": "User ID.",
+            "example": "uSr1234"
           }
         ],
         "responses": {
@@ -391,11 +504,21 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "User retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/User"
                     }
+                  }
+                },
+                "example": {
+                  "message": "User retrieved successfully.",
+                  "data": {
+                    "id": "uSr1234",
+                    "name": "Jane Smith",
+                    "email": "jane@example.com",
+                    "profile_photo_url": "https://uploads.buildstash.com/B7kLmNpQrStUvWx.png"
                   }
                 }
               }
@@ -420,16 +543,16 @@
         "operationId": "listApplications",
         "parameters": [
           {
-            "$ref": "#/components/parameters/SortBy"
+            "$ref": "#/components/parameters/SortByApplications"
           },
           {
             "$ref": "#/components/parameters/SortDirection"
           },
           {
-            "$ref": "#/components/parameters/Search"
+            "$ref": "#/components/parameters/SearchApplications"
           },
           {
-            "$ref": "#/components/parameters/PerPage"
+            "$ref": "#/components/parameters/PerPageApplications"
           },
           {
             "name": "platform",
@@ -437,7 +560,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Filter by platform slug (e.g. `ios`, `android`, `windows`). Returns 422 if the platform does not exist.",
+            "description": "Filter by platform slug. Returns 422 if the platform does not exist. See [Platforms](/api/data/platforms) for valid identifiers.",
             "example": "ios"
           }
         ],
@@ -450,7 +573,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Applications retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -461,6 +585,35 @@
                     "pagination": {
                       "$ref": "#/components/schemas/Pagination"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Applications retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "aBc1234",
+                      "name": "Example Game",
+                      "description": "Cross-platform game demo application",
+                      "icon_url": "https://uploads.buildstash.com/C8mNoPqRsTuVwXyZ.png",
+                      "custom_store_enabled": true,
+                      "storage_usage": {
+                        "total_bytes": 5368709120,
+                        "total_string": "5.00 GB",
+                        "hosted_bytes": 4294967296,
+                        "self_hosted_bytes": 1073741824
+                      },
+                      "workspace_id": "wSp1234",
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ],
+                  "pagination": {
+                    "current_page": 1,
+                    "per_page": 10,
+                    "total": 42,
+                    "last_page": 5,
+                    "from": 1,
+                    "to": 10
                   }
                 }
               }
@@ -513,11 +666,32 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Application"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Application retrieved successfully.",
+                  "data": {
+                    "id": "aBc1234",
+                    "name": "Example Game",
+                    "description": "Cross-platform game demo application",
+                    "icon_url": "https://uploads.buildstash.com/C8mNoPqRsTuVwXyZ.png",
+                    "custom_store_enabled": true,
+                    "storage_usage": {
+                      "total_bytes": 5368709120,
+                      "total_string": "5.00 GB",
+                      "hosted_bytes": 4294967296,
+                      "self_hosted_bytes": 1073741824
+                    },
+                    "workspace_id": "wSp1234",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "build_count": 128
                   }
                 }
               }
@@ -545,13 +719,13 @@
             "$ref": "#/components/parameters/ApplicationId"
           },
           {
-            "$ref": "#/components/parameters/SortBy"
+            "$ref": "#/components/parameters/SortByApplicationMembers"
           },
           {
             "$ref": "#/components/parameters/SortDirection"
           },
           {
-            "$ref": "#/components/parameters/Search"
+            "$ref": "#/components/parameters/SearchApplicationMembers"
           },
           {
             "$ref": "#/components/parameters/PerPage"
@@ -566,7 +740,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application members retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -577,6 +752,26 @@
                     "pagination": {
                       "$ref": "#/components/schemas/Pagination"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Application members retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "uSr1234",
+                      "name": "Jane Smith",
+                      "email": "jane@example.com",
+                      "profile_photo_url": "https://uploads.buildstash.com/B7kLmNpQrStUvWx.png",
+                      "role": "developer"
+                    }
+                  ],
+                  "pagination": {
+                    "current_page": 1,
+                    "per_page": 20,
+                    "total": 42,
+                    "last_page": 5,
+                    "from": 1,
+                    "to": 10
                   }
                 }
               }
@@ -613,7 +808,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application streams retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -622,6 +818,19 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Application streams retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "stR4567",
+                      "name": "nightlies",
+                      "description": "Nightly development builds",
+                      "retention_days": 30,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -654,7 +863,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Stream ID or name (name must be unique within the application)"
+            "description": "Stream ID (UUID) or name.",
+            "example": "nightlies"
           }
         ],
         "responses": {
@@ -666,11 +876,25 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application stream retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Stream"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Application stream retrieved successfully.",
+                  "data": {
+                    "id": "stR4567",
+                    "name": "nightlies",
+                    "description": "Nightly development builds",
+                    "retention_days": 30,
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234"
                   }
                 }
               }
@@ -710,7 +934,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application labels retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -719,6 +944,20 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Application labels retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "lbl1234",
+                      "name": "Production",
+                      "description": "Production-ready builds",
+                      "color": "#22c55e",
+                      "level": "application",
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -751,7 +990,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Label ID or name"
+            "description": "Label ID or name.",
+            "example": "Production"
           }
         ],
         "responses": {
@@ -763,11 +1003,26 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application label retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Label"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Application label retrieved successfully.",
+                  "data": {
+                    "id": "lbl1234",
+                    "name": "Production",
+                    "description": "Production-ready builds",
+                    "color": "#22c55e",
+                    "level": "application",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234"
                   }
                 }
               }
@@ -807,7 +1062,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application platforms retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -816,6 +1072,23 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Application platforms retrieved successfully.",
+                  "data": [
+                    {
+                      "identifier": "windows",
+                      "name": "Windows",
+                      "short_name": "Windows",
+                      "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+                    },
+                    {
+                      "identifier": "ios",
+                      "name": "iOS",
+                      "short_name": "iOS",
+                      "upload_instruction": "Upload an .ipa file."
+                    }
+                  ]
                 }
               }
             }
@@ -861,6 +1134,24 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Application custom targets retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "550e8400-e29b-41d4-a716-446655440010",
+                      "name": "Samsung Galaxy Store",
+                      "description": "Builds distributed via Samsung Galaxy Store",
+                      "level": "workspace",
+                      "platform": {
+                        "identifier": "android",
+                        "name": "Android"
+                      },
+                      "icon_url": null,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -893,7 +1184,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Custom target ID or name"
+            "description": "Custom target ID (UUID) or name.",
+            "example": "Samsung Galaxy Store"
           }
         ],
         "responses": {
@@ -905,11 +1197,28 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Application custom target retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/CustomTarget"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Application custom target retrieved successfully.",
+                  "data": {
+                    "id": "550e8400-e29b-41d4-a716-446655440010",
+                    "name": "Samsung Galaxy Store",
+                    "description": "Builds distributed via Samsung Galaxy Store",
+                    "level": "workspace",
+                    "platform": {
+                      "identifier": "android",
+                      "name": "Android"
+                    },
+                    "icon_url": null,
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z"
                   }
                 }
               }
@@ -967,7 +1276,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Filter by platform slugs. Accepts a single slug or comma-separated list (e.g. `ios`, `android,ios`). Returns 422 if any slug is invalid.",
+            "description": "Filter by platform slugs. Accepts a single slug or comma-separated list (e.g. `ios`, `android,ios`). Returns 422 if any slug is invalid. See [Platforms](/api/data/platforms) for valid platform slugs.",
             "example": "android,ios"
           },
           {
@@ -1007,7 +1316,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Builds retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -1018,6 +1328,96 @@
                     "pagination": {
                       "$ref": "#/components/schemas/Pagination"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Builds retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "xYz9876",
+                      "build_structure": "file",
+                      "version": "1.0.1",
+                      "version_short": "1.0.1",
+                      "version_semantic_major": 1,
+                      "version_semantic_minor": 0,
+                      "version_semantic_patch": 1,
+                      "version_semantic_extra": null,
+                      "version_semantic_meta": null,
+                      "build_number": "398",
+                      "platform": {
+                        "identifier": "windows",
+                        "name": "Windows",
+                        "short_name": "Windows",
+                        "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+                      },
+                      "stream": {
+                        "id": "stR4567",
+                        "name": "nightlies",
+                        "description": "Nightly development builds",
+                        "retention_days": 30,
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      },
+                      "labels": [
+                        {
+                          "id": "lbl1234",
+                          "name": "Production",
+                          "description": "Production-ready builds",
+                          "color": "#22c55e",
+                          "level": "application",
+                          "created_at": "2025-06-10T09:15:00.000000Z",
+                          "updated_at": "2025-06-15T14:30:00.000000Z"
+                        }
+                      ],
+                      "architectures": [
+                        {
+                          "identifier": "x64",
+                          "name": "x64",
+                          "description": "64-bit x86 (AMD64 / Intel 64)"
+                        },
+                        {
+                          "identifier": "arm64v8",
+                          "name": "ARM64v8",
+                          "description": "ARMv8-A 64-bit"
+                        }
+                      ],
+                      "notes": "Example build notes here.",
+                      "size_total_bytes": 52428800,
+                      "size_total_string": "50.00 MB",
+                      "metadata_total_bytes": 4096,
+                      "build_source": "ghactions",
+                      "ci_pipeline": {
+                        "ci_pipeline_name": "Nightly Build",
+                        "ci_pipeline_url": "https://github.com/buildstash/example/actions/workflows/nightly.yml",
+                        "ci_run_id": "12345678901",
+                        "ci_run_url": "https://github.com/buildstash/example/actions/runs/12345678901",
+                        "ci_build_duration": "00:05:00"
+                      },
+                      "scm": {
+                        "scm_host_type": "git",
+                        "scm_host": "github",
+                        "scm_repo_name": "buildstash/example",
+                        "scm_repo_url": "https://github.com/buildstash/example",
+                        "scm_branch": "main",
+                        "scm_commit_sha": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+                        "scm_commit_sha_short": "1a2b3c4",
+                        "scm_commit_url": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                      },
+                      "pending": false,
+                      "modal_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+                      "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+                      "built_at": "2025-06-15T14:30:00.000000Z",
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ],
+                  "pagination": {
+                    "current_page": 1,
+                    "per_page": 10,
+                    "total": 42,
+                    "last_page": 5,
+                    "from": 1,
+                    "to": 10
                   }
                 }
               }
@@ -1073,11 +1473,127 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Build retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Build"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Build retrieved successfully.",
+                  "data": {
+                    "id": "xYz9876",
+                    "build_structure": "file",
+                    "version": "1.0.1",
+                    "version_short": "1.0.1",
+                    "version_semantic_major": 1,
+                    "version_semantic_minor": 0,
+                    "version_semantic_patch": 1,
+                    "version_semantic_extra": null,
+                    "version_semantic_meta": null,
+                    "build_number": "398",
+                    "platform": {
+                      "identifier": "windows",
+                      "name": "Windows",
+                      "short_name": "Windows",
+                      "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+                    },
+                    "stream": {
+                      "id": "stR4567",
+                      "name": "nightlies",
+                      "description": "Nightly development builds",
+                      "retention_days": 30,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    },
+                    "labels": [
+                      {
+                        "id": "lbl1234",
+                        "name": "Production",
+                        "description": "Production-ready builds",
+                        "color": "#22c55e",
+                        "level": "application",
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      }
+                    ],
+                    "architectures": [
+                      {
+                        "identifier": "x64",
+                        "name": "x64",
+                        "description": "64-bit x86 (AMD64 / Intel 64)"
+                      },
+                      {
+                        "identifier": "arm64v8",
+                        "name": "ARM64v8",
+                        "description": "ARMv8-A 64-bit"
+                      }
+                    ],
+                    "notes": "Example build notes here.",
+                    "size_total_bytes": 52428800,
+                    "size_total_string": "50.00 MB",
+                    "metadata_total_bytes": 4096,
+                    "build_source": "ghactions",
+                    "ci_pipeline": {
+                      "ci_pipeline_name": "Nightly Build",
+                      "ci_pipeline_url": "https://github.com/buildstash/example/actions/workflows/nightly.yml",
+                      "ci_run_id": "12345678901",
+                      "ci_run_url": "https://github.com/buildstash/example/actions/runs/12345678901",
+                      "ci_build_duration": "00:05:00"
+                    },
+                    "scm": {
+                      "scm_host_type": "git",
+                      "scm_host": "github",
+                      "scm_repo_name": "buildstash/example",
+                      "scm_repo_url": "https://github.com/buildstash/example",
+                      "scm_branch": "main",
+                      "scm_commit_sha": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+                      "scm_commit_sha_short": "1a2b3c4",
+                      "scm_commit_url": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                    },
+                    "pending": false,
+                    "modal_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+                    "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+                    "built_at": "2025-06-15T14:30:00.000000Z",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234",
+                    "primary_file": {
+                      "id": "550e8400-e29b-41d4-a716-446655440003",
+                      "filename": "example.exe",
+                      "size_bytes": 52428800,
+                      "size_string": "50.00 MB",
+                      "checksum_md5": "d41d8cd98f00b204e9800998ecf8427e",
+                      "filetype": {
+                        "identifier": "exe",
+                        "name": "Windows Executable",
+                        "extension": "exe"
+                      },
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    },
+                    "expansion_files": [],
+                    "metadata_artifacts": [
+                      {
+                        "id": "550e8400-e29b-41d4-a716-446655440002",
+                        "filename": "Info.plist",
+                        "size_bytes": 4096,
+                        "size_string": "4.00 KB",
+                        "checksum_md5": "098f6bcd4621d373cade4e832627b4f6",
+                        "metadata_filetype": {
+                          "identifier": "info-plist",
+                          "name": "Info.plist",
+                          "extension": "plist"
+                        },
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      }
+                    ],
+                    "ios_info": null,
+                    "android_info": null
                   }
                 }
               }
@@ -1129,13 +1645,16 @@
                       "properties": {
                         "temp_url": {
                           "type": "string",
-                          "description": "Presigned download URL"
+                          "description": "Presigned download URL",
+                          "example": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123"
                         },
                         "filename": {
-                          "type": "string"
+                          "type": "string",
+                          "example": "example.exe"
                         },
                         "size_bytes": {
-                          "type": "integer"
+                          "type": "integer",
+                          "example": 52428800
                         }
                       }
                     },
@@ -1172,6 +1691,14 @@
                         }
                       }
                     }
+                  }
+                },
+                "example": {
+                  "message": "Successfully retrieved temporary download URLs.",
+                  "primary_file": {
+                    "temp_url": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123",
+                    "filename": "example.exe",
+                    "size_bytes": 52428800
                   }
                 }
               }
@@ -1224,6 +1751,25 @@
                       }
                     }
                   }
+                },
+                "example": {
+                  "message": "Metadata artifacts retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "550e8400-e29b-41d4-a716-446655440002",
+                      "filename": "Info.plist",
+                      "size_bytes": 4096,
+                      "size_string": "4.00 KB",
+                      "checksum_md5": "098f6bcd4621d373cade4e832627b4f6",
+                      "metadata_filetype": {
+                        "identifier": "info-plist",
+                        "name": "Info.plist",
+                        "extension": "plist"
+                      },
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ]
                 }
               }
             }
@@ -1259,7 +1805,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Metadata artifact ID"
+            "description": "Metadata artifact ID (UUID).",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
           }
         ],
         "responses": {
@@ -1277,6 +1824,23 @@
                     "data": {
                       "$ref": "#/components/schemas/MetadataArtifact"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Metadata artifact retrieved successfully.",
+                  "data": {
+                    "id": "550e8400-e29b-41d4-a716-446655440002",
+                    "filename": "Info.plist",
+                    "size_bytes": 4096,
+                    "size_string": "4.00 KB",
+                    "checksum_md5": "098f6bcd4621d373cade4e832627b4f6",
+                    "metadata_filetype": {
+                      "identifier": "info-plist",
+                      "name": "Info.plist",
+                      "extension": "plist"
+                    },
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z"
                   }
                 }
               }
@@ -1316,7 +1880,8 @@
             "schema": {
               "type": "string"
             },
-            "description": "Metadata artifact ID"
+            "description": "Metadata artifact ID (UUID).",
+            "example": "550e8400-e29b-41d4-a716-446655440002"
           }
         ],
         "responses": {
@@ -1333,15 +1898,24 @@
                     },
                     "temp_url": {
                       "type": "string",
-                      "description": "Presigned download URL"
+                      "description": "Presigned download URL",
+                      "example": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123"
                     },
                     "filename": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Info.plist"
                     },
                     "size_bytes": {
-                      "type": "integer"
+                      "type": "integer",
+                      "example": 4096
                     }
                   }
+                },
+                "example": {
+                  "message": "Successfully retrieved temporary download URL for metadata artifact.",
+                  "temp_url": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123",
+                  "filename": "Info.plist",
+                  "size_bytes": 4096
                 }
               }
             }
@@ -1392,7 +1966,7 @@
             "$ref": "#/components/parameters/PerPage"
           },
           {
-            "$ref": "#/components/parameters/Search"
+            "$ref": "#/components/parameters/SearchReleases"
           },
           {
             "name": "labels",
@@ -1409,7 +1983,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Filter by platform slugs. Accepts a single slug or comma-separated list. Returns releases containing builds on those platforms. Returns 422 if any slug is invalid.",
+            "description": "Filter by platform slugs. Accepts a single slug or comma-separated list. Returns releases containing builds on those platforms. Returns 422 if any slug is invalid. See [Platforms](/api/data/platforms) for valid platform slugs.",
             "example": "android,ios"
           }
         ],
@@ -1422,7 +1996,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Releases retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -1433,6 +2008,44 @@
                     "pagination": {
                       "$ref": "#/components/schemas/Pagination"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Releases retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "rLs4567",
+                      "version": "1.0.0",
+                      "version_short": "1.0.0",
+                      "version_semantic_major": 1,
+                      "version_semantic_minor": 0,
+                      "version_semantic_patch": 0,
+                      "version_semantic_extra": null,
+                      "version_semantic_meta": null,
+                      "title": "Initial Release",
+                      "labels": [
+                        {
+                          "id": "lbl1234",
+                          "name": "Production",
+                          "description": "Production-ready builds",
+                          "color": "#22c55e",
+                          "level": "application",
+                          "created_at": "2025-06-10T09:15:00.000000Z",
+                          "updated_at": "2025-06-15T14:30:00.000000Z"
+                        }
+                      ],
+                      "build_count": 3,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ],
+                  "pagination": {
+                    "current_page": 1,
+                    "per_page": 10,
+                    "total": 42,
+                    "last_page": 5,
+                    "from": 1,
+                    "to": 10
                   }
                 }
               }
@@ -1487,11 +2100,122 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Release retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Release"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Release retrieved successfully.",
+                  "data": {
+                    "id": "rLs4567",
+                    "version": "1.0.0",
+                    "version_short": "1.0.0",
+                    "version_semantic_major": 1,
+                    "version_semantic_minor": 0,
+                    "version_semantic_patch": 0,
+                    "version_semantic_extra": null,
+                    "version_semantic_meta": null,
+                    "title": "Initial Release",
+                    "labels": [
+                      {
+                        "id": "lbl1234",
+                        "name": "Production",
+                        "description": "Production-ready builds",
+                        "color": "#22c55e",
+                        "level": "application",
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      }
+                    ],
+                    "build_count": 3,
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "notes": "## What's new\n\n- First public release\n- Bug fixes and improvements",
+                    "builds": [
+                      {
+                        "id": "xYz9876",
+                        "build_structure": "file",
+                        "version": "1.0.1",
+                        "version_short": "1.0.1",
+                        "version_semantic_major": 1,
+                        "version_semantic_minor": 0,
+                        "version_semantic_patch": 1,
+                        "version_semantic_extra": null,
+                        "version_semantic_meta": null,
+                        "build_number": "398",
+                        "platform": {
+                          "identifier": "windows",
+                          "name": "Windows",
+                          "short_name": "Windows",
+                          "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+                        },
+                        "stream": {
+                          "id": "stR4567",
+                          "name": "nightlies",
+                          "description": "Nightly development builds",
+                          "retention_days": 30,
+                          "created_at": "2025-06-10T09:15:00.000000Z",
+                          "updated_at": "2025-06-15T14:30:00.000000Z"
+                        },
+                        "labels": [
+                          {
+                            "id": "lbl1234",
+                            "name": "Production",
+                            "description": "Production-ready builds",
+                            "color": "#22c55e",
+                            "level": "application",
+                            "created_at": "2025-06-10T09:15:00.000000Z",
+                            "updated_at": "2025-06-15T14:30:00.000000Z"
+                          }
+                        ],
+                        "architectures": [
+                          {
+                            "identifier": "x64",
+                            "name": "x64",
+                            "description": "64-bit x86 (AMD64 / Intel 64)"
+                          },
+                          {
+                            "identifier": "arm64v8",
+                            "name": "ARM64v8",
+                            "description": "ARMv8-A 64-bit"
+                          }
+                        ],
+                        "notes": "Example build notes here.",
+                        "size_total_bytes": 52428800,
+                        "size_total_string": "50.00 MB",
+                        "metadata_total_bytes": 4096,
+                        "build_source": "ghactions",
+                        "ci_pipeline": {
+                          "ci_pipeline_name": "Nightly Build",
+                          "ci_pipeline_url": "https://github.com/buildstash/example/actions/workflows/nightly.yml",
+                          "ci_run_id": "12345678901",
+                          "ci_run_url": "https://github.com/buildstash/example/actions/runs/12345678901",
+                          "ci_build_duration": "00:05:00"
+                        },
+                        "scm": {
+                          "scm_host_type": "git",
+                          "scm_host": "github",
+                          "scm_repo_name": "buildstash/example",
+                          "scm_repo_url": "https://github.com/buildstash/example",
+                          "scm_branch": "main",
+                          "scm_commit_sha": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+                          "scm_commit_sha_short": "1a2b3c4",
+                          "scm_commit_url": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                        },
+                        "pending": false,
+                        "modal_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+                        "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+                        "built_at": "2025-06-15T14:30:00.000000Z",
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      }
+                    ],
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234"
                   }
                 }
               }
@@ -1531,7 +2255,8 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Webhooks retrieved successfully."
                     },
                     "data": {
                       "type": "array",
@@ -1542,6 +2267,48 @@
                     "pagination": {
                       "$ref": "#/components/schemas/Pagination"
                     }
+                  }
+                },
+                "example": {
+                  "message": "Webhooks retrieved successfully.",
+                  "data": [
+                    {
+                      "id": "550e8400-e29b-41d4-a716-446655440000",
+                      "description": "Notify CI on new builds",
+                      "url": "https://example.com/webhooks/buildstash",
+                      "event": "build.created",
+                      "secret_configured": true,
+                      "format": "json",
+                      "level": "application",
+                      "is_active": true,
+                      "in_error_state": false,
+                      "last_successful_request_at": "2025-06-15T14:30:00.000000Z",
+                      "last_failed_request_at": null,
+                      "event_subscription": {
+                        "event": "build.created",
+                        "stream": {
+                          "id": "stR4567",
+                          "name": "nightlies"
+                        },
+                        "label": {
+                          "id": "lbl1234",
+                          "name": "Production",
+                          "color": "#22c55e"
+                        }
+                      },
+                      "application_id": "aBc1234",
+                      "workspace_id": "wSp1234",
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    }
+                  ],
+                  "pagination": {
+                    "current_page": 1,
+                    "per_page": 10,
+                    "total": 42,
+                    "last_page": 5,
+                    "from": 1,
+                    "to": 10
                   }
                 }
               }
@@ -1580,10 +2347,71 @@
                   "type": "object",
                   "properties": {
                     "message": {
-                      "type": "string"
+                      "type": "string",
+                      "example": "Webhook retrieved successfully."
                     },
                     "data": {
                       "$ref": "#/components/schemas/Webhook"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Webhook retrieved successfully.",
+                  "data": {
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "description": "Notify CI on new builds",
+                    "url": "https://example.com/webhooks/buildstash",
+                    "event": "build.created",
+                    "secret_configured": true,
+                    "format": "json",
+                    "level": "application",
+                    "is_active": true,
+                    "in_error_state": false,
+                    "last_successful_request_at": "2025-06-15T14:30:00.000000Z",
+                    "last_failed_request_at": null,
+                    "event_subscription": {
+                      "event": "build.created",
+                      "stream": {
+                        "id": "stR4567",
+                        "name": "nightlies"
+                      },
+                      "label": {
+                        "id": "lbl1234",
+                        "name": "Production",
+                        "color": "#22c55e"
+                      }
+                    },
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "latest_webhook_request": {
+                      "id": "550e8400-e29b-41d4-a716-446655440011",
+                      "event": "build.created",
+                      "url": "https://example.com/webhooks/buildstash",
+                      "duration": 0.342,
+                      "request_headers": {
+                        "content-type": "application/json",
+                        "user-agent": "Buildstash-Webhooks/1.0"
+                      },
+                      "request_payload": {
+                        "id": "019b0000-0000-7000-8000-000000000001",
+                        "event": "build.created",
+                        "created": 1718452200,
+                        "data": {
+                          "build": {
+                            "id": "xYz9876"
+                          }
+                        }
+                      },
+                      "response_code": 200,
+                      "response_headers": {
+                        "content-type": "application/json",
+                        "date": "Sat, 15 Jun 2025 14:30:00 GMT"
+                      },
+                      "response_payload": "{\"ok\":true}",
+                      "delivery_attempts": 1,
+                      "created_at": "2025-06-15T14:30:00.000000Z"
                     }
                   }
                 }
@@ -1613,7 +2441,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "Initiate a build file upload. At least one version component must be greater than zero.",
+                "description": "Initiate a build file upload.",
                 "required": [
                   "structure",
                   "primary_file",
@@ -1627,7 +2455,8 @@
                 "properties": {
                   "application_id": {
                     "type": "string",
-                    "description": "Application ID. Required when using a Workspace API key."
+                    "description": "Application ID. Required when using a Workspace API key.",
+                    "example": "aBc1234"
                   },
                   "structure": {
                     "type": "string",
@@ -1640,52 +2469,15 @@
                   },
                   "platform": {
                     "type": "string",
-                    "description": "Platform identifier",
-                    "enum": [
-                      "generic",
-                      "windows",
-                      "macos",
-                      "android",
-                      "ios",
-                      "quest",
-                      "switch",
-                      "switch2",
-                      "ps5",
-                      "ps4",
-                      "xbox-series",
-                      "vision-pro",
-                      "pico",
-                      "wearos",
-                      "vive",
-                      "homepod",
-                      "apple-tv",
-                      "apple-watch",
-                      "freebsd",
-                      "openbsd",
-                      "linux",
-                      "debian",
-                      "redhat",
-                      "gentoo",
-                      "arch",
-                      "playdate",
-                      "magic-leap",
-                      "zephyr",
-                      "roblox",
-                      "opensuse",
-                      "alpine",
-                      "nixos",
-                      "slackware",
-                      "void",
-                      "mageia",
-                      "kaios"
-                    ],
+                    "description": "Platform identifier. Must match an enabled platform slug. See [Platforms](/api/data/platforms) for the full list.",
                     "example": "windows"
                   },
                   "custom_target": {
                     "type": "string",
                     "nullable": true,
                     "maxLength": 20,
-                    "description": "Custom target for this build. Must exactly match the name of the target you've defined."
+                    "description": "Custom target for this build. Must exactly match the name of a target you've defined.",
+                    "example": "Samsung Galaxy Store"
                   },
                   "stream": {
                     "type": "string",
@@ -1696,32 +2488,7 @@
                   },
                   "source": {
                     "type": "string",
-                    "description": "Source of the upload",
-                    "enum": [
-                      "web-upload",
-                      "cli-upload",
-                      "ghactions",
-                      "jenkins",
-                      "unity-build",
-                      "gitlab-ci",
-                      "azure-devops",
-                      "circleci",
-                      "travisci",
-                      "appveyor",
-                      "teamcity",
-                      "bitbucket-pipelines",
-                      "bitrise",
-                      "codemagic",
-                      "buildkite",
-                      "google-cloud-build",
-                      "bamboo",
-                      "semaphore",
-                      "aws-codebuild",
-                      "abstruse",
-                      "cirrus-ci",
-                      "drone",
-                      "concourse"
-                    ],
+                    "description": "Source of the upload. See [Build Sources](/api/data/sources#build-sources) for valid identifiers.",
                     "example": "ghactions"
                   },
                   "primary_file": {
@@ -1752,24 +2519,28 @@
                     "maxItems": 1,
                     "items": {
                       "type": "object",
+                      "required": [
+                        "filename",
+                        "size_bytes"
+                      ],
                       "properties": {
                         "filename": {
                           "type": "string",
                           "maxLength": 255,
                           "pattern": "^[^\\/\\0]+$",
-                          "description": "Filename with extension (excluding path)",
+                          "description": "Filename with extension (excluding path).",
                           "example": "expansion.obb"
                         },
                         "size_bytes": {
                           "type": "integer",
                           "minimum": 1,
-                          "maximum": 500000000000,
-                          "description": "Size of the file in bytes (max 5GB for expansion file)",
+                          "maximum": 5000000000,
+                          "description": "Size of the expansion file in bytes (max 5GB).",
                           "example": 1048576
                         }
                       }
                     },
-                    "description": "Expansion files (only include if structure is 'file+expansion')"
+                    "description": "Expansion files (only include if structure is 'file+expansion')."
                   },
                   "version_component_1_major": {
                     "type": "integer",
@@ -1789,7 +2560,7 @@
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 9999,
-                    "description": "Patch version component",
+                    "description": "Patch version component. At least one version component must be greater than zero.",
                     "example": 1
                   },
                   "version_component_extra": {
@@ -1819,10 +2590,12 @@
                   "labels": {
                     "type": "array",
                     "items": {
-                      "type": "string"
+                      "type": "string",
+                      "maxLength": 25,
+                      "pattern": "^[A-Za-z0-9\\s\\-_:\\/\\\\@#]+$"
                     },
                     "maxItems": 10,
-                    "description": "Labels for the build (will be created if they don't already exist)",
+                    "description": "Labels for the build (will be created if they do not already exist). Each label name may be up to 25 characters.",
                     "example": [
                       "signed",
                       "to-test"
@@ -1833,49 +2606,14 @@
                     "maxItems": 15,
                     "items": {
                       "type": "string",
-                      "enum": [
-                        "x86",
-                        "x64",
-                        "u2b",
-                        "apple",
-                        "ppc",
-                        "ibmz",
-                        "mips64",
-                        "mips",
-                        "armv5",
-                        "armv6",
-                        "armv7",
-                        "armv8",
-                        "arm64v8",
-                        "armv9",
-                        "risc-v",
-                        "risc-v64",
-                        "msp430",
-                        "loongarch",
-                        "ppc64",
-                        "ia64",
-                        "sparc",
-                        "alpha",
-                        "vax",
-                        "pdp11",
-                        "sh1",
-                        "sh2",
-                        "sh3",
-                        "sh4",
-                        "680x0",
-                        "xtensa",
-                        "nios",
-                        "nios2",
-                        "niosv",
-                        "rx",
-                        "avr",
-                        "8051",
-                        "z80",
-                        "mipsx",
-                        "microblaze"
-                      ]
+                      "description": "Architecture identifier. The platform must also support the architecture. See [Architectures](/api/data/architectures) for the full list.",
+                      "example": "x64"
                     },
-                    "description": "Architectures this build supports (the platform must also support the architecture)"
+                    "description": "Architectures this build supports (the platform must also support the architecture). See [Architectures](/api/data/architectures) for the full list.",
+                    "example": [
+                      "x64",
+                      "arm64v8"
+                    ]
                   },
                   "notes": {
                     "type": "string",
@@ -1894,84 +2632,36 @@
                   "ci_run_id": {
                     "type": "string",
                     "nullable": true,
-                    "description": "CI run ID",
-                    "example": "38836019427"
+                    "description": "CI run ID (numeric, up to 30 digits).",
+                    "example": "12345678901",
+                    "maxLength": 30,
+                    "pattern": "^[0-9]+$"
                   },
                   "ci_run_url": {
                     "type": "string",
                     "nullable": true,
                     "description": "CI run URL",
-                    "example": "https://github.com/buildstash/example/actions/runs/38836019427"
+                    "example": "https://github.com/buildstash/example/actions/runs/12345678901"
                   },
                   "ci_build_duration": {
                     "type": "string",
                     "nullable": true,
-                    "description": "CI build duration",
-                    "example": "00:05:00"
+                    "description": "CI build duration.",
+                    "example": "00:05:00",
+                    "maxLength": 30,
+                    "pattern": "^[a-zA-Z0-9.: -]+$"
                   },
                   "vc_host_type": {
                     "type": "string",
                     "nullable": true,
-                    "enum": [
-                      "git",
-                      "svn",
-                      "hg",
-                      "perforce",
-                      "bzr",
-                      "fossil",
-                      "darcs",
-                      "cvs",
-                      "monotone",
-                      "diversion",
-                      "unity-vc",
-                      "lore"
-                    ],
-                    "description": "Version control host type"
+                    "description": "Version control host type. `scm_host_type` is accepted as an alias. See [SCM Host Types](/api/data/sources#scm-host-types) for valid identifiers.",
+                    "example": "git"
                   },
                   "vc_host": {
                     "type": "string",
                     "nullable": true,
-                    "enum": [
-                      "github",
-                      "gitlab",
-                      "gitlab-self",
-                      "perforce",
-                      "bitbucket",
-                      "gitea",
-                      "forgejo",
-                      "gogs",
-                      "codeberg",
-                      "sourceforge",
-                      "sourcehut",
-                      "rhodecode",
-                      "unity-vc",
-                      "aws-codecommit",
-                      "azure-repos",
-                      "beanstalk",
-                      "assembla",
-                      "codebase",
-                      "bonobo-git",
-                      "phabricator",
-                      "launchpad",
-                      "onedev",
-                      "diversion",
-                      "tangled",
-                      "gitee",
-                      "allura",
-                      "tuleap",
-                      "trac",
-                      "pagure",
-                      "savanah-gnu",
-                      "savanah-non-gnu",
-                      "redmine",
-                      "kallithea",
-                      "cgit",
-                      "cgit-pink",
-                      "riouxsvn",
-                      "sliksvn",
-                      "project-locker"
-                    ],
-                    "description": "Version control host"
+                    "description": "Version control host. `scm_host` is accepted as an alias. See [SCM Sources](/api/data/sources#scm-sources) for valid identifiers.",
+                    "example": "github"
                   },
                   "vc_repo_name": {
                     "type": "string",
@@ -1997,14 +2687,21 @@
                     "type": "string",
                     "nullable": true,
                     "maxLength": 40,
-                    "description": "Commit SHA",
-                    "example": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                    "description": "Commit SHA (alphanumeric, up to 40 characters).",
+                    "example": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+                    "pattern": "^[a-zA-Z0-9]+$"
                   },
                   "vc_commit_url": {
                     "type": "string",
                     "nullable": true,
                     "description": "Commit URL",
                     "example": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                  },
+                  "ci_pipeline_url": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "CI pipeline URL.",
+                    "example": "https://github.com/buildstash/example/actions/workflows/nightly.yml"
                   }
                 }
               }
@@ -2013,7 +2710,31 @@
         },
         "responses": {
           "200": {
-            "description": "Upload request successful"
+            "description": "Upload request successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Upload request successful.",
+                  "pending_upload_id": "550e8400-e29b-41d4-a716-446655440000",
+                  "primary_file": {
+                    "filename": "example.exe",
+                    "presigned_data": {
+                      "url": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123",
+                      "headers": {
+                        "Content-Type": "application/octet-stream"
+                      }
+                    },
+                    "chunked_upload": false,
+                    "chunked_number_parts": null,
+                    "chunked_part_size_mb": null
+                  },
+                  "expansion_files": []
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
@@ -2049,15 +2770,22 @@
                 "properties": {
                   "pending_upload_id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Pending upload ID returned from `/upload/request`.",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
                   },
                   "part_number": {
                     "type": "integer",
-                    "minimum": 1
+                    "minimum": 1,
+                    "maximum": 10000,
+                    "description": "Multipart part number (1-based).",
+                    "example": 1
                   },
                   "content_length": {
                     "type": "integer",
-                    "minimum": 1
+                    "minimum": 1,
+                    "description": "Size in bytes of the part being uploaded.",
+                    "example": 8388608
                   }
                 }
               }
@@ -2066,7 +2794,19 @@
         },
         "responses": {
           "200": {
-            "description": "Presigned URL generated"
+            "description": "Presigned URL generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Generated pre-signed URL for part 1.",
+                  "part_presigned_url": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123",
+                  "part_number": 1
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid request"
@@ -2097,7 +2837,9 @@
                 "properties": {
                   "pending_upload_id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Pending upload ID returned from `/upload/request`.",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
                   },
                   "multipart_chunks": {
                     "type": "array",
@@ -2109,13 +2851,26 @@
                       ],
                       "properties": {
                         "PartNumber": {
-                          "type": "integer"
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 10000,
+                          "example": 1
                         },
                         "ETag": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 32,
+                          "maxLength": 40,
+                          "example": "d41d8cd98f00b204e9800998ecf8427e"
                         }
                       }
-                    }
+                    },
+                    "description": "Required for multipart uploads over 5GB, or when completing a multipart upload."
+                  },
+                  "x-amz-checksum-crc64nvme": {
+                    "type": "string",
+                    "nullable": true,
+                    "pattern": "^[A-Za-z0-9+/]{11}[A-Za-z0-9+/=]$",
+                    "description": "Optional CRC64NVME checksum header value from the S3 upload response."
                   }
                 }
               }
@@ -2124,7 +2879,133 @@
         },
         "responses": {
           "200": {
-            "description": "Upload verified"
+            "description": "Upload verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Upload verified successfully.",
+                  "pending_processing": false,
+                  "build_id": "xYz9876",
+                  "build_info_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+                  "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+                  "build": {
+                    "id": "xYz9876",
+                    "build_structure": "file",
+                    "version": "1.0.1",
+                    "version_short": "1.0.1",
+                    "version_semantic_major": 1,
+                    "version_semantic_minor": 0,
+                    "version_semantic_patch": 1,
+                    "version_semantic_extra": null,
+                    "version_semantic_meta": null,
+                    "build_number": "398",
+                    "platform": {
+                      "identifier": "windows",
+                      "name": "Windows",
+                      "short_name": "Windows",
+                      "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+                    },
+                    "stream": {
+                      "id": "stR4567",
+                      "name": "nightlies",
+                      "description": "Nightly development builds",
+                      "retention_days": 30,
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    },
+                    "labels": [
+                      {
+                        "id": "lbl1234",
+                        "name": "Production",
+                        "description": "Production-ready builds",
+                        "color": "#22c55e",
+                        "level": "application",
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      }
+                    ],
+                    "architectures": [
+                      {
+                        "identifier": "x64",
+                        "name": "x64",
+                        "description": "64-bit x86 (AMD64 / Intel 64)"
+                      },
+                      {
+                        "identifier": "arm64v8",
+                        "name": "ARM64v8",
+                        "description": "ARMv8-A 64-bit"
+                      }
+                    ],
+                    "notes": "Example build notes here.",
+                    "size_total_bytes": 52428800,
+                    "size_total_string": "50.00 MB",
+                    "metadata_total_bytes": 4096,
+                    "build_source": "ghactions",
+                    "ci_pipeline": {
+                      "ci_pipeline_name": "Nightly Build",
+                      "ci_pipeline_url": "https://github.com/buildstash/example/actions/workflows/nightly.yml",
+                      "ci_run_id": "12345678901",
+                      "ci_run_url": "https://github.com/buildstash/example/actions/runs/12345678901",
+                      "ci_build_duration": "00:05:00"
+                    },
+                    "scm": {
+                      "scm_host_type": "git",
+                      "scm_host": "github",
+                      "scm_repo_name": "buildstash/example",
+                      "scm_repo_url": "https://github.com/buildstash/example",
+                      "scm_branch": "main",
+                      "scm_commit_sha": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+                      "scm_commit_sha_short": "1a2b3c4",
+                      "scm_commit_url": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+                    },
+                    "pending": false,
+                    "modal_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+                    "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+                    "built_at": "2025-06-15T14:30:00.000000Z",
+                    "created_at": "2025-06-10T09:15:00.000000Z",
+                    "updated_at": "2025-06-15T14:30:00.000000Z",
+                    "application_id": "aBc1234",
+                    "workspace_id": "wSp1234",
+                    "primary_file": {
+                      "id": "550e8400-e29b-41d4-a716-446655440003",
+                      "filename": "example.exe",
+                      "size_bytes": 52428800,
+                      "size_string": "50.00 MB",
+                      "checksum_md5": "d41d8cd98f00b204e9800998ecf8427e",
+                      "filetype": {
+                        "identifier": "exe",
+                        "name": "Windows Executable",
+                        "extension": "exe"
+                      },
+                      "created_at": "2025-06-10T09:15:00.000000Z",
+                      "updated_at": "2025-06-15T14:30:00.000000Z"
+                    },
+                    "expansion_files": [],
+                    "metadata_artifacts": [
+                      {
+                        "id": "550e8400-e29b-41d4-a716-446655440002",
+                        "filename": "Info.plist",
+                        "size_bytes": 4096,
+                        "size_string": "4.00 KB",
+                        "checksum_md5": "098f6bcd4621d373cade4e832627b4f6",
+                        "metadata_filetype": {
+                          "identifier": "info-plist",
+                          "name": "Info.plist",
+                          "extension": "plist"
+                        },
+                        "created_at": "2025-06-10T09:15:00.000000Z",
+                        "updated_at": "2025-06-15T14:30:00.000000Z"
+                      }
+                    ],
+                    "ios_info": null,
+                    "android_info": null
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Verification failed"
@@ -2155,7 +3036,9 @@
                 "properties": {
                   "pending_upload_id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Pending upload ID to cancel.",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
                   }
                 }
               }
@@ -2164,7 +3047,17 @@
         },
         "responses": {
           "200": {
-            "description": "Upload cancelled"
+            "description": "Upload cancelled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Upload cancelled successfully."
+                }
+              }
+            }
           },
           "400": {
             "description": "Unable to cancel"
@@ -2196,30 +3089,62 @@
                 "properties": {
                   "build_id": {
                     "type": "string",
-                    "nullable": true
+                    "nullable": true,
+                    "minLength": 7,
+                    "maxLength": 7,
+                    "pattern": "^[a-zA-Z0-9]+$",
+                    "description": "Build ID. Required if `primary_pending_upload_id` is not provided.",
+                    "example": "xYz9876"
                   },
                   "primary_pending_upload_id": {
                     "type": "string",
                     "format": "uuid",
-                    "nullable": true
+                    "nullable": true,
+                    "description": "Pending upload ID from `/upload/request`. Required if `build_id` is not provided.",
+                    "example": "550e8400-e29b-41d4-a716-446655440000"
                   },
                   "filename": {
                     "type": "string",
-                    "maxLength": 255
+                    "maxLength": 255,
+                    "pattern": "^[^\\/\\0]+$",
+                    "description": "Metadata filename with extension. Filetype must be supported for the build platform. See [Metadata Filetypes](/api/data/metadata-filetypes).",
+                    "example": "Info.plist"
                   },
                   "size_bytes": {
                     "type": "integer",
                     "minimum": 1,
-                    "maximum": 20971520
+                    "maximum": 20971520,
+                    "description": "Size of the metadata file in bytes (max 20MB; lower limits may apply per filetype).",
+                    "example": 4096
                   }
-                }
+                },
+                "description": "Request a presigned URL for a metadata artifact. Provide either `build_id` or `primary_pending_upload_id`."
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Presigned URL generated"
+            "description": "Presigned URL generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Temporary presigned URL generated for metadata artifact upload.",
+                  "metadata_pending_upload_id": "550e8400-e29b-41d4-a716-446655440001",
+                  "metadata_identified_filetype": "Info.plist",
+                  "presigned_upload_data": {
+                    "url": "https://buildstash.s3.amazonaws.com/aBc1234/xYz9876/example.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAEXAMPLE%2F20250615%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250615T143000Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=abc123",
+                    "headers": {
+                      "Content-Type": "application/octet-stream",
+                      "Content-Length": 4096
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid request"
@@ -2250,12 +3175,16 @@
                 "properties": {
                   "pending_upload_id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Pending metadata upload ID returned from `/upload/metadata/request`.",
+                    "example": "550e8400-e29b-41d4-a716-446655440001"
                   },
                   "file_description": {
                     "type": "string",
                     "nullable": true,
-                    "maxLength": 255
+                    "maxLength": 255,
+                    "description": "Optional description for the metadata artifact.",
+                    "example": "iOS provisioning profile"
                   }
                 }
               }
@@ -2264,7 +3193,19 @@
         },
         "responses": {
           "200": {
-            "description": "Metadata upload verified"
+            "description": "Metadata upload verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "message": "Metadata artifact successfully uploaded.",
+                  "metadata_artifact_id": "550e8400-e29b-41d4-a716-446655440002",
+                  "build_id": "xYz9876"
+                }
+              }
+            }
           },
           "400": {
             "description": "Verification failed"
@@ -2285,7 +3226,8 @@
         "schema": {
           "type": "string"
         },
-        "description": "Application ID"
+        "description": "Application ID.",
+        "example": "aBc1234"
       },
       "BuildId": {
         "name": "build_id",
@@ -2294,7 +3236,8 @@
         "schema": {
           "type": "string"
         },
-        "description": "Build ID"
+        "description": "Build ID.",
+        "example": "xYz9876"
       },
       "ReleaseId": {
         "name": "release_id",
@@ -2303,7 +3246,8 @@
         "schema": {
           "type": "string"
         },
-        "description": "Release ID"
+        "description": "Release ID.",
+        "example": "rLs4567"
       },
       "DistroGroupId": {
         "name": "distro_group_id",
@@ -2330,7 +3274,8 @@
         "schema": {
           "type": "string"
         },
-        "description": "Webhook ID"
+        "description": "Webhook ID (UUID).",
+        "example": "550e8400-e29b-41d4-a716-446655440000"
       },
       "SortBy": {
         "name": "sort_by",
@@ -2352,15 +3297,17 @@
           ],
           "default": "asc"
         },
-        "description": "Sort direction"
+        "description": "Sort direction."
       },
       "Search": {
         "name": "search",
         "in": "query",
         "schema": {
-          "type": "string"
+          "type": "string",
+          "maxLength": 50
         },
-        "description": "Search query"
+        "description": "Search query (max 50 characters).",
+        "example": "my application"
       },
       "PerPage": {
         "name": "per_page",
@@ -2371,7 +3318,113 @@
           "minimum": 1,
           "maximum": 100
         },
-        "description": "Items per page"
+        "description": "Items per page (default varies by endpoint; max 100)."
+      },
+      "SortByApplications": {
+        "name": "sort_by",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "name",
+            "created_at",
+            "updated_at"
+          ],
+          "default": "name"
+        },
+        "description": "Field to sort by."
+      },
+      "SortByWorkspaceMembers": {
+        "name": "sort_by",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "name",
+            "email",
+            "role",
+            "added_at"
+          ],
+          "default": "name"
+        },
+        "description": "Field to sort by."
+      },
+      "SortByApplicationMembers": {
+        "name": "sort_by",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "name",
+            "email",
+            "role",
+            "resolved_role"
+          ],
+          "default": "name"
+        },
+        "description": "Field to sort by."
+      },
+      "PerPageApplications": {
+        "name": "per_page",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "description": "Items per page."
+      },
+      "PerPageWorkspaceMembers": {
+        "name": "per_page",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 20,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "description": "Items per page."
+      },
+      "SearchWorkspaceMembers": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "description": "Search query (max 50 characters). Searches member name and email.",
+        "example": "jane@example.com"
+      },
+      "SearchApplications": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "description": "Search query (max 50 characters). Searches application name, description, and ID (sqid).",
+        "example": "my application"
+      },
+      "SearchApplicationMembers": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "description": "Search query (max 50 characters). Searches member name and email.",
+        "example": "jane@example.com"
+      },
+      "SearchReleases": {
+        "name": "search",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "description": "Search query (max 50 characters). Searches release title, ID (sqid), and version.",
+        "example": "1.2.0"
       }
     },
     "schemas": {
@@ -2400,6 +3453,14 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "wSp1234",
+          "name": "Acme Games",
+          "subdomain": "acme",
+          "logo_url": "https://uploads.buildstash.com/4azHhZGVFONU5s.png",
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "User": {
@@ -2420,6 +3481,12 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+          "id": "uSr1234",
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "profile_photo_url": "https://uploads.buildstash.com/B7kLmNpQrStUvWx.png"
         }
       },
       "Member": {
@@ -2453,6 +3520,14 @@
             "format": "date-time",
             "nullable": true
           }
+        },
+        "example": {
+          "id": "uSr1234",
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "profile_photo_url": "https://uploads.buildstash.com/B7kLmNpQrStUvWx.png",
+          "role": "admin",
+          "added_at": "2025-06-10T09:15:00.000000Z"
         }
       },
       "ApplicationMember": {
@@ -2482,6 +3557,13 @@
               "readonly"
             ]
           }
+        },
+        "example": {
+          "id": "uSr1234",
+          "name": "Jane Smith",
+          "email": "jane@example.com",
+          "profile_photo_url": "https://uploads.buildstash.com/B7kLmNpQrStUvWx.png",
+          "role": "developer"
         }
       },
       "Application": {
@@ -2537,6 +3619,23 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "aBc1234",
+          "name": "Example Game",
+          "description": "Cross-platform game demo application",
+          "icon_url": "https://uploads.buildstash.com/C8mNoPqRsTuVwXyZ.png",
+          "custom_store_enabled": true,
+          "storage_usage": {
+            "total_bytes": 5368709120,
+            "total_string": "5.00 GB",
+            "hosted_bytes": 4294967296,
+            "self_hosted_bytes": 1073741824
+          },
+          "workspace_id": "wSp1234",
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z",
+          "build_count": 128
         }
       },
       "Build": {
@@ -2742,6 +3841,118 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "xYz9876",
+          "build_structure": "file",
+          "version": "1.0.1",
+          "version_short": "1.0.1",
+          "version_semantic_major": 1,
+          "version_semantic_minor": 0,
+          "version_semantic_patch": 1,
+          "version_semantic_extra": null,
+          "version_semantic_meta": null,
+          "build_number": "398",
+          "platform": {
+            "identifier": "windows",
+            "name": "Windows",
+            "short_name": "Windows",
+            "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+          },
+          "stream": {
+            "id": "stR4567",
+            "name": "nightlies",
+            "description": "Nightly development builds",
+            "retention_days": 30,
+            "created_at": "2025-06-10T09:15:00.000000Z",
+            "updated_at": "2025-06-15T14:30:00.000000Z"
+          },
+          "labels": [
+            {
+              "id": "lbl1234",
+              "name": "Production",
+              "description": "Production-ready builds",
+              "color": "#22c55e",
+              "level": "application",
+              "created_at": "2025-06-10T09:15:00.000000Z",
+              "updated_at": "2025-06-15T14:30:00.000000Z"
+            }
+          ],
+          "architectures": [
+            {
+              "identifier": "x64",
+              "name": "x64",
+              "description": "64-bit x86 (AMD64 / Intel 64)"
+            },
+            {
+              "identifier": "arm64v8",
+              "name": "ARM64v8",
+              "description": "ARMv8-A 64-bit"
+            }
+          ],
+          "notes": "Example build notes here.",
+          "size_total_bytes": 52428800,
+          "size_total_string": "50.00 MB",
+          "metadata_total_bytes": 4096,
+          "build_source": "ghactions",
+          "ci_pipeline": {
+            "ci_pipeline_name": "Nightly Build",
+            "ci_pipeline_url": "https://github.com/buildstash/example/actions/workflows/nightly.yml",
+            "ci_run_id": "12345678901",
+            "ci_run_url": "https://github.com/buildstash/example/actions/runs/12345678901",
+            "ci_build_duration": "00:05:00"
+          },
+          "scm": {
+            "scm_host_type": "git",
+            "scm_host": "github",
+            "scm_repo_name": "buildstash/example",
+            "scm_repo_url": "https://github.com/buildstash/example",
+            "scm_branch": "main",
+            "scm_commit_sha": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+            "scm_commit_sha_short": "1a2b3c4",
+            "scm_commit_url": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+          },
+          "pending": false,
+          "modal_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+          "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+          "built_at": "2025-06-15T14:30:00.000000Z",
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z",
+          "application_id": "aBc1234",
+          "workspace_id": "wSp1234",
+          "primary_file": {
+            "id": "550e8400-e29b-41d4-a716-446655440003",
+            "filename": "example.exe",
+            "size_bytes": 52428800,
+            "size_string": "50.00 MB",
+            "checksum_md5": "d41d8cd98f00b204e9800998ecf8427e",
+            "filetype": {
+              "identifier": "exe",
+              "name": "Windows Executable",
+              "extension": "exe"
+            },
+            "created_at": "2025-06-10T09:15:00.000000Z",
+            "updated_at": "2025-06-15T14:30:00.000000Z"
+          },
+          "expansion_files": [],
+          "metadata_artifacts": [
+            {
+              "id": "550e8400-e29b-41d4-a716-446655440002",
+              "filename": "Info.plist",
+              "size_bytes": 4096,
+              "size_string": "4.00 KB",
+              "checksum_md5": "098f6bcd4621d373cade4e832627b4f6",
+              "metadata_filetype": {
+                "identifier": "info-plist",
+                "name": "Info.plist",
+                "extension": "plist"
+              },
+              "created_at": "2025-06-10T09:15:00.000000Z",
+              "updated_at": "2025-06-15T14:30:00.000000Z"
+            }
+          ],
+          "ios_info": null,
+          "android_info": null
         }
       },
       "Release": {
@@ -2817,6 +4028,113 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "rLs4567",
+          "version": "1.0.0",
+          "version_short": "1.0.0",
+          "version_semantic_major": 1,
+          "version_semantic_minor": 0,
+          "version_semantic_patch": 0,
+          "version_semantic_extra": null,
+          "version_semantic_meta": null,
+          "title": "Initial Release",
+          "labels": [
+            {
+              "id": "lbl1234",
+              "name": "Production",
+              "description": "Production-ready builds",
+              "color": "#22c55e",
+              "level": "application",
+              "created_at": "2025-06-10T09:15:00.000000Z",
+              "updated_at": "2025-06-15T14:30:00.000000Z"
+            }
+          ],
+          "build_count": 3,
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z",
+          "notes": "## What's new\n\n- First public release\n- Bug fixes and improvements",
+          "builds": [
+            {
+              "id": "xYz9876",
+              "build_structure": "file",
+              "version": "1.0.1",
+              "version_short": "1.0.1",
+              "version_semantic_major": 1,
+              "version_semantic_minor": 0,
+              "version_semantic_patch": 1,
+              "version_semantic_extra": null,
+              "version_semantic_meta": null,
+              "build_number": "398",
+              "platform": {
+                "identifier": "windows",
+                "name": "Windows",
+                "short_name": "Windows",
+                "upload_instruction": "Upload a .exe, .msi, or .zip installer."
+              },
+              "stream": {
+                "id": "stR4567",
+                "name": "nightlies",
+                "description": "Nightly development builds",
+                "retention_days": 30,
+                "created_at": "2025-06-10T09:15:00.000000Z",
+                "updated_at": "2025-06-15T14:30:00.000000Z"
+              },
+              "labels": [
+                {
+                  "id": "lbl1234",
+                  "name": "Production",
+                  "description": "Production-ready builds",
+                  "color": "#22c55e",
+                  "level": "application",
+                  "created_at": "2025-06-10T09:15:00.000000Z",
+                  "updated_at": "2025-06-15T14:30:00.000000Z"
+                }
+              ],
+              "architectures": [
+                {
+                  "identifier": "x64",
+                  "name": "x64",
+                  "description": "64-bit x86 (AMD64 / Intel 64)"
+                },
+                {
+                  "identifier": "arm64v8",
+                  "name": "ARM64v8",
+                  "description": "ARMv8-A 64-bit"
+                }
+              ],
+              "notes": "Example build notes here.",
+              "size_total_bytes": 52428800,
+              "size_total_string": "50.00 MB",
+              "metadata_total_bytes": 4096,
+              "build_source": "ghactions",
+              "ci_pipeline": {
+                "ci_pipeline_name": "Nightly Build",
+                "ci_pipeline_url": "https://github.com/buildstash/example/actions/workflows/nightly.yml",
+                "ci_run_id": "12345678901",
+                "ci_run_url": "https://github.com/buildstash/example/actions/runs/12345678901",
+                "ci_build_duration": "00:05:00"
+              },
+              "scm": {
+                "scm_host_type": "git",
+                "scm_host": "github",
+                "scm_repo_name": "buildstash/example",
+                "scm_repo_url": "https://github.com/buildstash/example",
+                "scm_branch": "main",
+                "scm_commit_sha": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6",
+                "scm_commit_sha_short": "1a2b3c4",
+                "scm_commit_url": "https://github.com/buildstash/example/commit/1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6"
+              },
+              "pending": false,
+              "modal_url": "https://acme.buildstash.com/applications/aBc1234/builds/xYz9876",
+              "download_url": "https://acme.buildstash.com/builds/xYz9876/download",
+              "built_at": "2025-06-15T14:30:00.000000Z",
+              "created_at": "2025-06-10T09:15:00.000000Z",
+              "updated_at": "2025-06-15T14:30:00.000000Z"
+            }
+          ],
+          "application_id": "aBc1234",
+          "workspace_id": "wSp1234"
         }
       },
       "Stream": {
@@ -2854,6 +4172,16 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "stR4567",
+          "name": "nightlies",
+          "description": "Nightly development builds",
+          "retention_days": 30,
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z",
+          "application_id": "aBc1234",
+          "workspace_id": "wSp1234"
         }
       },
       "Label": {
@@ -2899,6 +4227,17 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "lbl1234",
+          "name": "Production",
+          "description": "Production-ready builds",
+          "color": "#22c55e",
+          "level": "application",
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z",
+          "application_id": "aBc1234",
+          "workspace_id": "wSp1234"
         }
       },
       "WorkspaceLabel": {
@@ -2933,6 +4272,15 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "lbl1234",
+          "name": "Production",
+          "description": "Production-ready builds",
+          "color": "#22c55e",
+          "level": "workspace",
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "DefaultStream": {
@@ -2962,6 +4310,14 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440012",
+          "name": "nightlies",
+          "description": "Default nightly stream template",
+          "retention_days": 30,
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "CustomTarget": {
@@ -3018,6 +4374,19 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440010",
+          "name": "Samsung Galaxy Store",
+          "description": "Builds distributed via Samsung Galaxy Store",
+          "level": "workspace",
+          "platform": {
+            "identifier": "android",
+            "name": "Android"
+          },
+          "icon_url": null,
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "Platform": {
@@ -3036,6 +4405,12 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+          "identifier": "windows",
+          "name": "Windows",
+          "short_name": "Windows",
+          "upload_instruction": "Upload a .exe, .msi, or .zip installer."
         }
       },
       "Architecture": {
@@ -3051,6 +4426,11 @@
             "type": "string",
             "nullable": true
           }
+        },
+        "example": {
+          "identifier": "x64",
+          "name": "x64",
+          "description": "64-bit x86 (AMD64 / Intel 64)"
         }
       },
       "ShareLink": {
@@ -3363,6 +4743,63 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "description": "Notify CI on new builds",
+          "url": "https://example.com/webhooks/buildstash",
+          "event": "build.created",
+          "secret_configured": true,
+          "format": "json",
+          "level": "application",
+          "is_active": true,
+          "in_error_state": false,
+          "last_successful_request_at": "2025-06-15T14:30:00.000000Z",
+          "last_failed_request_at": null,
+          "event_subscription": {
+            "event": "build.created",
+            "stream": {
+              "id": "stR4567",
+              "name": "nightlies"
+            },
+            "label": {
+              "id": "lbl1234",
+              "name": "Production",
+              "color": "#22c55e"
+            }
+          },
+          "application_id": "aBc1234",
+          "workspace_id": "wSp1234",
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z",
+          "latest_webhook_request": {
+            "id": "550e8400-e29b-41d4-a716-446655440011",
+            "event": "build.created",
+            "url": "https://example.com/webhooks/buildstash",
+            "duration": 0.342,
+            "request_headers": {
+              "content-type": "application/json",
+              "user-agent": "Buildstash-Webhooks/1.0"
+            },
+            "request_payload": {
+              "id": "019b0000-0000-7000-8000-000000000001",
+              "event": "build.created",
+              "created": 1718452200,
+              "data": {
+                "build": {
+                  "id": "xYz9876"
+                }
+              }
+            },
+            "response_code": 200,
+            "response_headers": {
+              "content-type": "application/json",
+              "date": "Sat, 15 Jun 2025 14:30:00 GMT"
+            },
+            "response_payload": "{\"ok\":true}",
+            "delivery_attempts": 1,
+            "created_at": "2025-06-15T14:30:00.000000Z"
+          }
         }
       },
       "PrimaryFile": {
@@ -3411,6 +4848,20 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440003",
+          "filename": "example.exe",
+          "size_bytes": 52428800,
+          "size_string": "50.00 MB",
+          "checksum_md5": "d41d8cd98f00b204e9800998ecf8427e",
+          "filetype": {
+            "identifier": "exe",
+            "name": "Windows Executable",
+            "extension": "exe"
+          },
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "ExpansionFile": {
@@ -3459,6 +4910,20 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440004",
+          "filename": "expansion.obb",
+          "size_bytes": 1048576,
+          "size_string": "1.00 MB",
+          "checksum_md5": "d41d8cd98f00b204e9800998ecf8427e",
+          "expansion_filetype": {
+            "identifier": "obb",
+            "name": "OBB Expansion",
+            "extension": "obb"
+          },
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "MetadataArtifact": {
@@ -3507,6 +4972,20 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440002",
+          "filename": "Info.plist",
+          "size_bytes": 4096,
+          "size_string": "4.00 KB",
+          "checksum_md5": "098f6bcd4621d373cade4e832627b4f6",
+          "metadata_filetype": {
+            "identifier": "info-plist",
+            "name": "Info.plist",
+            "extension": "plist"
+          },
+          "created_at": "2025-06-10T09:15:00.000000Z",
+          "updated_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "BuildIosInfo": {
@@ -3559,6 +5038,18 @@
             "type": "string",
             "description": "Omitted when nested under a Build."
           }
+        },
+        "example": {
+          "bundle_id": "com.example.game",
+          "bundle_name": "Example Game",
+          "key_type": "development",
+          "minimum_os": "15.0",
+          "bundle_version": "398",
+          "version_short_string": "1.0.1",
+          "provisioning_profile_uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "provisioning_profile_expiry": "2026-01-01T00:00:00.000000Z",
+          "team_name": "Acme Games Inc.",
+          "team_identifier": "ABCD123456"
         }
       },
       "BuildAndroidInfo": {
@@ -3597,6 +5088,15 @@
             "type": "string",
             "description": "Omitted when nested under a Build."
           }
+        },
+        "example": {
+          "package_name": "com.example.game",
+          "minimum_api": 26,
+          "target_api": 34,
+          "version_name": "1.0.1",
+          "version_code": 398,
+          "is_debuggable": false,
+          "package_signed": true
         }
       },
       "WebhookRequest": {
@@ -3659,6 +5159,34 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "example": {
+          "id": "550e8400-e29b-41d4-a716-446655440011",
+          "event": "build.created",
+          "url": "https://example.com/webhooks/buildstash",
+          "duration": 0.342,
+          "request_headers": {
+            "content-type": "application/json",
+            "user-agent": "Buildstash-Webhooks/1.0"
+          },
+          "request_payload": {
+            "id": "019b0000-0000-7000-8000-000000000001",
+            "event": "build.created",
+            "created": 1718452200,
+            "data": {
+              "build": {
+                "id": "xYz9876"
+              }
+            }
+          },
+          "response_code": 200,
+          "response_headers": {
+            "content-type": "application/json",
+            "date": "Sat, 15 Jun 2025 14:30:00 GMT"
+          },
+          "response_payload": "{\"ok\":true}",
+          "delivery_attempts": 1,
+          "created_at": "2025-06-15T14:30:00.000000Z"
         }
       },
       "Pagination": {
@@ -3684,6 +5212,14 @@
             "type": "integer",
             "nullable": true
           }
+        },
+        "example": {
+          "current_page": 1,
+          "per_page": 10,
+          "total": 42,
+          "last_page": 5,
+          "from": 1,
+          "to": 10
         }
       }
     },

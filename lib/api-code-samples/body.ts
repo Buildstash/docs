@@ -1,11 +1,7 @@
 import type { SampleRequestData } from './utils';
-import { doubleQuote } from './utils';
+import { prettyJson } from './values';
 
-type BodyLang = 'js' | 'python' | 'csharp' | 'go' | 'java';
-
-function jsonLiteral(value: unknown): string {
-  return JSON.stringify(value, null, 2);
-}
+type BodyLang = 'js' | 'csharp' | 'go' | 'java';
 
 export function generateBody(data: SampleRequestData, lang: BodyLang): string | undefined {
   if (!data.body || !data.bodyMediaType) {
@@ -16,16 +12,18 @@ export function generateBody(data: SampleRequestData, lang: BodyLang): string | 
     return undefined;
   }
 
+  const json = prettyJson(data.body);
+
   switch (lang) {
     case 'js':
-      return `const body = JSON.stringify(${jsonLiteral(data.body)});`;
-    case 'python':
-      return undefined;
+      return `const body = JSON.stringify(${json});`;
     case 'csharp':
-      return `var body = new StringContent(${doubleQuote(JSON.stringify(data.body))}, Encoding.UTF8, "application/json");`;
+      return ['var json = """', json, '""";', 'var body = new StringContent(json, Encoding.UTF8, "application/json");'].join(
+        '\n',
+      );
     case 'go':
-      return `body := strings.NewReader(${doubleQuote(JSON.stringify(data.body))})`;
+      return `body := strings.NewReader(\`${json}\`)`;
     case 'java':
-      return `var body = HttpRequest.BodyPublishers.ofString(${doubleQuote(JSON.stringify(data.body))});`;
+      return ['String json = """', json, '""";', 'var body = HttpRequest.BodyPublishers.ofString(json);'].join('\n');
   }
 }
