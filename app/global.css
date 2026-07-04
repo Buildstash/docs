@@ -106,14 +106,35 @@ article > p.text-lg.text-fd-muted-foreground::after {
 }
 
 /* Theme-aware icon colors for sidebar icons only */
-[data-sidebar] svg,
-[data-sidebar] svg path,
-[data-sidebar] svg circle,
-[data-sidebar] svg rect,
-[data-sidebar] svg polygon,
-[data-sidebar] svg line,
-[data-sidebar] svg g {
+[data-sidebar] svg {
   color: inherit !important;
+}
+
+/* Lucide / stroke icons — never fill chevron-style paths (e.g. Code) */
+[data-sidebar] svg[fill='none'],
+[data-sidebar] .root-toggle-icon svg,
+[data-sidebar] svg[fill='none'] path,
+[data-sidebar] svg[fill='none'] line,
+[data-sidebar] svg[fill='none'] circle,
+[data-sidebar] svg[fill='none'] rect,
+[data-sidebar] svg[fill='none'] polyline,
+[data-sidebar] svg[fill='none'] polygon,
+[data-sidebar] .root-toggle-icon svg path {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+/* Filled icon sets (devicons, stashicons, etc.) */
+[data-sidebar] svg:not([fill='none']) path,
+[data-sidebar] svg:not([fill='none']) circle,
+[data-sidebar] svg:not([fill='none']) rect,
+[data-sidebar] svg:not([fill='none']) polygon,
+[data-sidebar] svg:not([fill='none']) g {
   fill: currentColor !important;
+}
+
+.root-toggle-icon svg,
+.root-toggle-icon svg path {
+  fill: none !important;
   stroke: currentColor !important;
 }

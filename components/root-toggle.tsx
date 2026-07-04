@@ -14,6 +14,9 @@ export interface Option extends SidebarTab {
   props?: ComponentProps<'a'>;
 }
 
+const rootToggleIconClassName =
+  'root-toggle-icon shrink-0 size-4 [&_svg]:size-4 [&_svg]:fill-none [&_svg_path]:fill-none [&_svg]:stroke-current [&_svg_path]:stroke-current';
+
 export function RootToggle({
   options,
   placeholder,
@@ -37,7 +40,7 @@ export function RootToggle({
 
   const item = selected ? (
     <>
-      <div className="shrink-0 size-4 [&_svg]:size-4" suppressHydrationWarning>
+      <div className={rootToggleIconClassName} suppressHydrationWarning>
         {(() => {
           const resolved = resolveIcon(selected.icon);
           return resolved || (typeof selected.icon === 'object' ? selected.icon : null);
@@ -80,7 +83,7 @@ export function RootToggle({
                 item.props?.className,
               )}
             >
-              <div className="shrink-0 size-4 [&_svg]:size-4" suppressHydrationWarning>
+              <div className={rootToggleIconClassName} suppressHydrationWarning>
                 {(() => {
                   const resolved = resolveIcon(item.icon);
                   return resolved || (typeof item.icon === 'object' ? item.icon : null);
