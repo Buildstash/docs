@@ -3403,7 +3403,7 @@
           "type": "string",
           "maxLength": 50
         },
-        "description": "Search query (max 50 characters). Searches application name, description, and ID (sqid).",
+        "description": "Search query (max 50 characters). Searches application name, description, and ID.",
         "example": "my application"
       },
       "SearchApplicationMembers": {

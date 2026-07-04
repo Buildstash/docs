@@ -1,4 +1,4 @@
-import { getLLMText } from '@/lib/source';
+import { getPageLLMText } from '@/lib/source';
 import { guideDocs, apiDocs, integrationsDocs } from '@/lib/source';
 
 export async function GET() {
@@ -9,7 +9,7 @@ export async function GET() {
     ...integrationsDocs.getPages(),
   ];
 
-  const scan = allPages.map(getLLMText);
+  const scan = allPages.map(getPageLLMText);
   const scanned = await Promise.all(scan);
 
   return new Response(scanned.join('\n\n'));

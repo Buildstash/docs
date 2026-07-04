@@ -1,4 +1,4 @@
-import { getLLMTextFromPage, getLLMText } from '@/lib/source';
+import { getPageLLMText } from '@/lib/source';
 import { source, guideDocs } from '@/lib/source';
 import { notFound } from 'next/navigation';
 
@@ -19,10 +19,7 @@ export async function GET(
   }
   if (!page) notFound();
   
-  // Use getLLMText for root page (from guideDocs), getLLMTextFromPage for others
-  const text = isRootPage 
-    ? await getLLMText(page as any)
-    : await getLLMTextFromPage(page as any);
+  const text = await getPageLLMText(page as any);
 
   return new Response(text, {
     headers: {

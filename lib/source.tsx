@@ -7,6 +7,10 @@ import {
   multiple,
 } from 'fumadocs-core/source';
 import { customIconsPlugin } from './icons-plugin';
+import {
+  generateApiEndpointLLMMarkdown,
+  isApiEndpointPage,
+} from './api-llm-markdown';
 import { openapiPlugin, openapiSource } from 'fumadocs-openapi/server';
 
 // Single combined source with all content
@@ -89,21 +93,41 @@ function pageTreeCodeTitles(): LoaderPlugin {
   };
 }
 
-export async function getLLMText(page: InferPageType<typeof guideDocs>) {
+export async function getPageLLMText(page: {
+  url: string;
+  data: {
+    title?: string;
+    getText: (type: 'processed' | 'raw') => Promise<string>;
+  };
+}) {
+  if (isApiEndpointPage(page.url)) {
+    const [raw, processed] = await Promise.all([
+      page.data.getText('raw'),
+      page.data.getText('processed'),
+    ]);
+
+    return generateApiEndpointLLMMarkdown({
+      title: page.data.title ?? 'Untitled',
+      url: page.url,
+      raw,
+      processed,
+    });
+  }
+
   const processed = await page.data.getText('processed');
 
-  return `# ${page.data.title} (${page.url})
+  return `# ${page.data.title ?? 'Untitled'} (${page.url})
 
 ${processed}`;
 }
 
+export async function getLLMText(page: InferPageType<typeof guideDocs>) {
+  return getPageLLMText(page);
+}
+
 // Generic version that works with combined source
 export async function getLLMTextFromPage(page: InferPageType<typeof source>) {
-  const processed = await (page.data as any).getText('processed');
-
-  return `# ${page.data.title} (${page.url})
-
-${processed}`;
+  return getPageLLMText(page);
 }
 
 export type Page = InferPageType<typeof source>;
