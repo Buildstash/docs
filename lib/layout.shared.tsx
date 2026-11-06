@@ -67,7 +67,7 @@ export function baseOptions(): BaseLayoutProps {
       },
       {
         text: 'Support',
-        url: 'https://support.buildstash.com/requests',
+        url: 'https://support.buildstash.com',
         secondary: false,
       },
       {
