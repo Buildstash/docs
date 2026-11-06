@@ -3,14 +3,27 @@
   "defaultOpen": false,
   "pages": [
     "list-applications",
+    "create-application",
     "get-application",
+    "update-application",
+    "delete-application",
     "list-application-members",
+    "set-application-member-role",
     "list-application-streams",
+    "create-stream",
     "get-stream",
+    "update-stream",
+    "delete-stream",
     "list-application-labels",
+    "create-application-label",
     "get-application-label",
+    "update-application-label",
+    "delete-application-label",
     "list-application-platforms",
+    "add-application-platforms",
+    "remove-application-platform",
     "list-application-custom-targets",
+    "create-application-custom-target",
     "get-application-custom-target"
   ]
 }

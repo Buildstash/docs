@@ -1,0 +1,40 @@
+---
+title: API access
+description: Manage workspace and application API keys
+---
+
+## Introduction
+
+Buildstash provides a REST API for automating uploads, managing builds and releases, and integrating with external tools. API access is controlled through API keys, which you can create and manage from your workspace settings.
+
+For full API documentation, including available endpoints, authentication, and scopes, see the [API reference](/api).
+
+## Workspace API keys
+
+Workspace API keys provide access across your entire workspace. Use these for admin tooling, dashboards, or integrations that need to operate across multiple applications.
+
+To manage workspace API keys, go to **Workspace settings** > **API keys**.
+
+From here you can:
+
+- Create new keys with a descriptive label
+- Configure scopes for each resource (such as builds, releases, portals, and webhooks)
+- Edit, roll, or delete existing keys
+
+Each key is assigned scopes that control what it can access. Scope levels are hierarchical: `read`, `create`, and `write`. See the [scopes reference](/api/scopes) for a full breakdown.
+
+When you create or roll a key, the full token is shown once. Copy and store it securely — it cannot be retrieved again.
+
+Workspaces can have up to 50 active workspace API keys.
+
+## Application API keys
+
+Application API keys are scoped to a single application. Use these for CI/CD pipelines, build automation, and any integration that only needs to interact with one specific application.
+
+Application keys are managed per application, under **Application settings** > **Pipeline**. From the workspace **API keys** page, you can also see which applications have keys configured and jump directly to manage them.
+
+Application keys cannot access other applications in the workspace, or workspace-level resources such as distribution groups and portals. See [Connect CI/CD](/builds-and-releases/connect-ci-cd) for steps to generate an application key for your pipeline.
+
+## Permissions
+
+Managing workspace API keys requires workspace **Owner** or **Admin** access. Application API keys can be managed by users with appropriate access to the application.

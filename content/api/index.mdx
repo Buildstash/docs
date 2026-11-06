@@ -6,10 +6,6 @@ icon: House
 
 import { Upload, Key, Shield } from 'lucide-react';
 
-<Callout>
-  Our beta API is currently available in early access. We'll be releasing further endpoints in an upcoming release.
-</Callout>
-
 ## Authentication
 
 All API endpoints are authenticated using Bearer tokens. Include your API key in the `Authorization` header of every request:
@@ -42,7 +38,44 @@ https://app.buildstash.com/api/v1
 
 ### Rate Limiting
 
-API requests are rate-limited. Download endpoints have stricter limits (30 requests per minute per application, 60 per minute per workspace). When rate-limited, the API returns a `429 Too Many Requests` response.
+Requests are limited per API key, per workspace, and per IP address. Short bursts are allowed, with lower sustained limits per hour and day:
+
+| Limited by | Per minute | Per hour | Per day |
+|------------|------------|----------|---------|
+| API key | 120 | 5,000 | 30,000 |
+| Workspace (across all its keys) | 600 | 20,000 | 120,000 |
+| IP address | 300 | 10,000 | 60,000 |
+
+Requests for multipart upload part URLs ([`/upload/request/multipart`](/api/endpoint/upload/request-multipart)) are counted separately, with higher limits sized to the largest build your plan allows, so a large upload's parts aren't held back.
+
+Some endpoints also have their own limits. Per application limits apply to requests made with application API keys, and per workspace limits to all requests:
+
+| Endpoints | Per application | Per workspace |
+|-----------|-----------------|---------------|
+| Build and metadata artifact downloads | 30 per minute | 300 per minute |
+| `/upload/request`, `/upload/verify`, `/upload/abort` | 30 per minute | 60 per minute |
+| `/upload/metadata/request`, `/upload/metadata/verify` | 60 per minute | 120 per minute |
+| `/upload/status` | 120 per minute | 360 per minute |
+| Webhook test | 5 per minute | 5 per minute |
+
+When rate-limited, the API returns a `429 Too Many Requests` response.
+
+If you need higher limits, [contact support](https://support.buildstash.com).
+
+### Identifiers
+
+Resources are identified in URLs by the `id` returned in API responses. Some endpoints also accept a name in place of the ID where noted - for example streams, labels and custom targets can be referenced by ID or name, and platforms and architectures by their identifier (see [Data](/api/data/platforms)).
+
+### Creating and Updating
+
+- `POST` creates resources, and performs actions like attaching builds to a release.
+- `PATCH` updates a resource. Only the fields you send are changed - send a field as `null` to clear it, and leave out fields you don't want to change. `PUT` is also accepted for these updates, and behaves the same way.
+- `PUT` on a sub-resource sets that state to exactly what you send, e.g. [setting a build's labels](/api/endpoint/builds/set-build-labels) replaces all of its labels.
+- `DELETE` deletes a resource.
+
+### Pagination
+
+List endpoints are paginated. Use `per_page` (up to 100) and `page` query parameters, and the `pagination` object in the response (`current_page`, `per_page`, `total`, `last_page`, `from` and `to`) to page through results.
 
 ### Errors
 
@@ -54,7 +87,8 @@ The API returns standard HTTP status codes. Error responses include a `message` 
 | `401` | Unauthorized — missing or invalid API key |
 | `403` | Forbidden — insufficient scope or access denied |
 | `404` | Not found — resource does not exist or is not accessible |
-| `415` | Unsupported media type — `Content-Type` must be `application/json` for POST/PUT requests |
+| `409` | Conflict — a resource with this name already exists |
+| `415` | Unsupported media type — `Content-Type` must be `application/json` for POST/PUT requests. Uploads also return it when a file's filetype isn't supported on the platform, or a build is too big for your plan |
 | `422` | Validation error — request body failed validation |
 | `429` | Rate limited — too many requests |
 | `500` | Internal server error |

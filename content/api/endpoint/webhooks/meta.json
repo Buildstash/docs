@@ -3,6 +3,12 @@
   "defaultOpen": false,
   "pages": [
     "list-webhooks",
-    "get-webhook"
+    "create-webhook",
+    "get-webhook",
+    "update-webhook",
+    "delete-webhook",
+    "list-webhook-requests",
+    "get-latest-webhook-request",
+    "test-webhook"
   ]
 }

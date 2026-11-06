@@ -6,6 +6,7 @@
     "request-multipart",
     "verify",
     "abort-upload",
+    "get-upload-status",
     "request-metadata-upload",
     "verify-metadata-upload"
   ]

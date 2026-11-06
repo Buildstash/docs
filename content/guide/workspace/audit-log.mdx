@@ -1,0 +1,43 @@
+---
+title: Audit log
+description: Review workspace activity and changes
+---
+
+## Introduction
+
+The audit log (shown in the app as **Activity log**) provides a record of changes made within your workspace. This helps workspace owners and admins track who did what, and when — whether changes were made through the web interface or via the API.
+
+To view the audit log, go to **Workspace settings** > **Activity log**.
+
+## What is logged
+
+The audit log captures actions performed by workspace members, including changes to:
+
+- Applications, builds, and releases
+- Portals and distribution groups
+- Workspace settings, labels, streams, and custom targets
+- API keys, connections, and webhooks
+- Workspace members and roles
+
+Each entry shows a description of the action, the member who performed it, when it occurred, and the affected resource.
+
+## Filtering
+
+You can filter the audit log by:
+
+- **Member** — show activity for a specific workspace member
+- **Application** — limit to actions within a particular application
+- **Target** — filter by resource type (such as Build, Release, or Portal)
+- **Action** — filter by event type (such as created, updated, or deleted)
+
+Use **Reset filters** to clear all active filters.
+
+## Retention
+
+How far back you can view activity depends on your [subscription plan](https://buildstash.com/pricing). Each plan includes a defined log history window — for example, 7 days on Pro and 30 days on Ultra.
+
+Entries outside your plan's retention window are not accessible. Upgrading your plan extends the available history.
+
+## Permissions
+
+The audit log is available to workspace **Owners** and **Admins** only.

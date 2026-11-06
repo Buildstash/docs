@@ -5,9 +5,11 @@
     "get-workspace",
     "list-workspace-members",
     "list-workspace-labels",
+    "create-workspace-label",
     "get-workspace-label",
     "list-workspace-default-streams",
     "list-workspace-custom-targets",
+    "create-workspace-custom-target",
     "get-workspace-custom-target"
   ]
 }

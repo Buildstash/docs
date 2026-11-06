@@ -1,0 +1,17 @@
+{
+  "title": "Portals",
+  "defaultOpen": false,
+  "pages": [
+    "list-portals",
+    "get-portal",
+    "update-portal",
+    "delete-portal",
+    "list-portal-applications",
+    "list-portal-builds",
+    "get-portal-build",
+    "list-portal-releases",
+    "get-portal-release",
+    "publish-portal-release",
+    "remove-portal-release"
+  ]
+}

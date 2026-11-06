@@ -28,11 +28,13 @@ Workspace API keys can be assigned any combination of the following scopes:
 
 | Scope | Description |
 |-------|-------------|
-| `workspace:read` | Access workspace labels, default streams, and custom targets |
-| `members:read` | List workspace members |
-| `applications:read` | List and view all applications in the workspace |
+| `workspace:read` | Access workspace labels, default streams, and custom targets, and read any application's labels |
+| `workspace:create` | Create workspace labels and custom targets |
+| `members:read` | List workspace members, and get a member's details |
+| `members:write` | Update application member roles |
+| `applications:read` | List and view all applications in the workspace, and their streams, labels, platforms, and custom targets |
 | `applications:create` | Create new applications |
-| `applications:write` | Update, delete applications and manage their streams, labels, and platforms |
+| `applications:write` | Update, delete applications and manage their streams, labels, platforms, custom targets, and member roles |
 | `builds:read` | List and view builds, download build files and metadata |
 | `builds:create` | Upload new builds |
 | `builds:write` | Update, delete builds and manage build labels, stream, and architectures |
@@ -46,13 +48,13 @@ Workspace API keys can be assigned any combination of the following scopes:
 | `distribution_groups:create` | Create new distribution groups |
 | `distribution_groups:write` | Update, delete distribution groups and manage their releases |
 | `portals:read` | List and view portals and portal content |
-| `portals:write` | Update, delete portals and publish/remove releases |
+| `portals:write` | Update, delete portals and publish/remove releases (publishing also requires `releases:write`) |
 | `webhooks:read` | List and view webhooks and webhook request history |
 | `webhooks:create` | Create new webhooks |
 | `webhooks:write` | Update, delete, and test webhooks |
 
 <Callout>
-  The `workspace` and `members` scopes are only available on workspace-level API keys. Some endpoints like `GET /workspace` require no scope at all.
+  The `workspace` scope is only available on workspace-level API keys. Some endpoints like `GET /workspace` require no scope at all.
 </Callout>
 
 ---
@@ -63,9 +65,9 @@ Application API keys are scoped to a single application and can only access a su
 
 | Scope | Description |
 |-------|-------------|
-| `application:read` | View the application's own details |
-| `application:write` | Update application details (name, description, and related settings) |
-| `members:read` | List members with access to this application |
+| `application:read` | View the application, and its streams, labels, platforms, and custom targets |
+| `application:write` | Update the application, and manage its streams, labels, platforms, and custom targets |
+| `members:read` | List members with access to this application, and get a workspace member's details |
 | `members:write` | Update application member roles |
 | `members:create` | Invite or add members to the application *(not yet available via API)* |
 | `builds:read` | List and view builds for this application |
@@ -82,7 +84,7 @@ Application API keys are scoped to a single application and can only access a su
 | `webhooks:write` | Update, delete, and test webhooks |
 
 <Callout>
-  Application keys cannot access workspace-level resources such as `applications` (listing all apps), `distribution_groups`, `portals`, or `workspace` settings. They also cannot access resources belonging to other applications.
+  Application keys cannot access workspace-level resources such as `applications` (listing, creating, updating or deleting apps), `distribution_groups`, `portals`, or `workspace` settings. They also cannot access resources belonging to other applications.
 </Callout>
 
 ---

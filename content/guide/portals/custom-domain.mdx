@@ -1,0 +1,56 @@
+---
+title: Setup custom domain
+description: Host a portal on your own domain
+---
+import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+
+<Callout>
+  Custom portal domains are available on our [Pro plan](https://buildstash.com/pricing) and up.
+</Callout>
+
+## Introduction
+
+By default, each portal is hosted on a Buildstash subdomain (for example, `https://your-portal.builds.download`). On Pro and higher plans, you can instead serve a portal from your own domain — for example `https://downloads.yourcompany.com` or `https://portal.yourcompany.com`.
+
+This is useful when you want distribution links to match your brand, or when embedding a portal on your website without redirecting users to a third-party domain.
+
+## Configure a custom domain
+
+Open the portal you want to configure, then go to **Portal settings**. In the **Custom Domain** section, enter the domain you want to use and select **Add Domain**.
+
+Typically this will be a subdomain of a domain you control, such as `portal.yourdomain.com` or `downloads.yourdomain.com`. Apex domains (such as `yourdomain.com`) are also supported.
+
+Each portal can have one custom domain configured at a time.
+
+## Add your DNS record
+
+After adding your domain, you'll need to create a CNAME record at your DNS provider pointing to `custom.builds.download`.
+
+The exact **Name / Host** value depends on the domain you entered:
+
+- For `portal.yourdomain.com`, create a CNAME record with name `portal`
+- For `yourdomain.com` (an apex domain), create a CNAME record with name `@`
+
+The **Target / Value** for the CNAME should always be:
+
+```
+custom.builds.download
+```
+
+DNS changes can take up to 24–48 hours to propagate. Use **Check Status** in the portal settings to refresh verification status after updating your DNS.
+
+## Activate your domain
+
+Once the domain status shows as verified, select **Activate Custom Domain**. Your portal will then be accessible at `https://your-custom-domain.com`.
+
+If you remove the custom domain, the portal will remain available via its Buildstash subdomain.
+
+## Troubleshooting
+
+If setup fails, check that:
+
+- The CNAME record is configured correctly and has had time to propagate
+- The domain is not already in use by another service or portal
+- Your workspace is on a plan that includes custom portal domains
+
+If verification fails, remove the domain from portal settings and try again. If you downgrade from a plan that included custom domains, any domain already configured will continue to work for now, but you will need to upgrade again to add new domains or reactivate an existing one.

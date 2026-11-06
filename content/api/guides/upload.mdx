@@ -8,11 +8,11 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { SquareTerminal, ToyBrickIcon } from 'lucide-react';
 import { BashPlain, JavascriptPlain, JavaPlain, CsharpPlain, PythonPlain, PhpPlain, GoPlain, RubyPlain } from 'devicons-react';
 
-This guide covers uploading via single or multipart upload flows. Multipart is required for build files above 5GB, and optional for files smaller than this.
+This guide covers uploading via single or multipart upload flows. Multipart is recommended for build files over 60MB, and required for build files of 5GB or more.
 
 ### Authorization
 
-Note, a Buildstash [application-level API key](/builds-and-releases/connect-ci-cd#generate-an-application-api-token) is required for uploading builds.
+Uploading builds needs an API key with the `builds:create` scope. Use an [application-level API key](/builds-and-releases/connect-ci-cd#generate-an-application-api-token), or a workspace-level key and pass the `application_id` of the application you're uploading to. See [Scopes](/api/scopes).
 
 ---
 
@@ -33,7 +33,7 @@ Note, a Buildstash [application-level API key](/builds-and-releases/connect-ci-c
 
 ### Upload - Single part
 
-If your primary build file is smaller than 5GB you have the option to upload as a single part.
+If your primary build file is smaller than 5GB you have the option to upload as a single part, using the presigned URL and headers returned in `primary_file.presigned_data`.
 
 <Steps>
   <Step title="Upload file to presigned URL" icon="chevron-right" stepNumber={2}>
@@ -228,7 +228,11 @@ If your primary build file is smaller than 5GB you have the option to upload as 
 
 ### Upload - Multipart
 
-Alternatively, if your primary build file is larger than 5GB, you must upload as multiple parts. Your original upload request will also return a chunked_upload boolean indicating whether multipart upload is advised and available for this build.
+Alternatively, upload as multiple parts. This is required if your primary build file is 5GB or more, as no single part presigned URL is returned for these. Your original upload request also returns a `chunked_upload` boolean, which is `true` for files over 60MB where multipart upload is advised, along with `chunked_number_parts` and `chunked_part_size_mb` for splitting the file.
+
+<Callout type="warn">
+  Each part must be uploaded with a `Content-Length` header matching the part's size (the same `content_length` you requested its URL with). Storage rejects parts sent without one, such as with chunked transfer encoding, with a `411 MissingContentLength` error. Some HTTP clients only set it for you when the body's length is known up front, for example a byte array rather than a stream.
+</Callout>
 
   <Steps>
     <Step title="Request to start upload" icon="chevron-right" stepNumber={1}>
@@ -246,7 +250,7 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
   # Set vars
   FILE="yourfile.bin"
   SIZE=$(stat -c %s "$FILE")
-  CHUNK_SIZE_MB=5
+  CHUNK_SIZE_MB=50 # chunked_part_size_mb from the upload request
   CHUNK_SIZE=$((CHUNK_SIZE_MB * 1024 * 1024))
   API_KEY="your_api_key"
   PENDING_ID="your_pending_upload_id"
@@ -695,7 +699,9 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
           </Card>
         </Cards>
 
-        Note, for some build types where additional server side processing is required (for example iOS and Android builds), the verify endpoint will return the pending_processing boolean as true. In this case there will be a small delay before the build is available for download.
+        Note, for some build types where additional server side processing is required (for example iOS and Android builds), the verify endpoint will return the `pending_processing` boolean as true. In this case there will be a small delay before the build is available for download. To follow processing, poll [/upload/status](/api/endpoint/upload/get-upload-status) with your `pending_upload_id` until its `status` is `complete` (or `failed`).
+
+        It's safe to retry a verify request (for example after a network timeout) - if the upload was already verified, you'll get the same successful response again, without the build being processed twice.
       </Step>
     </Steps>
 
@@ -703,10 +709,10 @@ Alternatively, if your primary build file is larger than 5GB, you must upload as
 
   ### Best practices
 
-  1. **Retry Logic**: Implement retry logic for failed S3 file uploads
+  1. **Retry Logic**: Implement retry logic for failed S3 file uploads. Retrying `/upload/verify` is also safe.
   2. **Progress Tracking**: Track upload progress for each part of large files
   3. **Parallel Uploads**: Upload parts in parallel for better performance
-  4. **Cleanup**: Handle cleanup on upload failure
+  4. **Cleanup**: If an upload can't be completed, cancel it with [/upload/abort](/api/endpoint/upload/abort-upload). Uploads not verified within 48 hours are automatically marked as failed.
 
 ---
 

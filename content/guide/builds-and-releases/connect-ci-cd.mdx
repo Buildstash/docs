@@ -32,7 +32,7 @@ All of our integrations are open source, and can be found on [our GitHub](https:
   <Step title="Create API token">
     <strong>Create API token</strong>
 
-    In your application settings, navigate to the “Connections” tab, and select “New Token”.
+    In your application settings, navigate to the “Pipeline” tab, and select “Add API key”.
 
     ![Create application token](https://media.buildstash.com/docs/guide/connect-ci-cd/create_5e7bab07467281fee4846c2d031233d1.png)
 
@@ -55,3 +55,7 @@ All of our integrations are open source, and can be found on [our GitHub](https:
 In the "Pipeline" tab of your application settings, you'll also find a log of build events associated with the pipeline connections you have setup.
 
 This will list uploaded builds from the past week, where they came from, and the name of the associated API key.
+
+<Callout>
+  If you use [Unity Build Automation](/integrations/ci/unity-build-automation), you can configure automatic timeouts for queued or stalled builds from Buildstash. Timeout events also appear in the pipeline log. See the [Unity integration guide](/integrations/ci/unity-build-automation#timeout-unity-builds) for setup details.
+</Callout>

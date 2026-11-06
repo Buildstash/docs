@@ -1,0 +1,15 @@
+{
+  "title": "Distribution Groups",
+  "defaultOpen": false,
+  "pages": [
+    "list-distribution-groups",
+    "create-distribution-group",
+    "get-distribution-group",
+    "update-distribution-group",
+    "delete-distribution-group",
+    "list-distribution-group-members",
+    "list-distribution-group-releases",
+    "attach-distribution-group-releases",
+    "detach-distribution-group-releases"
+  ]
+}

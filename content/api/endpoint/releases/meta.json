@@ -3,6 +3,14 @@
   "defaultOpen": false,
   "pages": [
     "list-releases",
-    "get-release"
+    "create-release",
+    "get-release",
+    "update-release",
+    "delete-release",
+    "list-release-builds",
+    "attach-release-builds",
+    "detach-release-builds",
+    "attach-release-labels",
+    "detach-release-labels"
   ]
 }

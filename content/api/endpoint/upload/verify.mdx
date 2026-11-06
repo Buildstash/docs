@@ -17,4 +17,6 @@ The upload verification endpoint is the final step in the build upload process, 
 
 - For multipart uploads, all parts with ETags must be included in the `multipart_chunks` array
 - ETags must match exactly what was returned from the upload requests
-- Some builds may take a short delay to process, indicated by `pending_processing: true`
+- Some builds may take a short delay to process, indicated by `pending_processing: true`. Follow processing with [/upload/status](/api/endpoint/upload/get-upload-status)
+- Verifying is safe to retry - if the upload was already verified, the same successful response is returned, without redoing anything
+- Uploads that were cancelled, failed, or weren't verified within 48 hours of being requested can't be verified

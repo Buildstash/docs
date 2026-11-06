@@ -1,0 +1,12 @@
+{
+  "title": "Share Links",
+  "defaultOpen": false,
+  "pages": [
+    "list-build-share-links",
+    "create-build-share-link",
+    "delete-build-share-link",
+    "list-release-share-links",
+    "create-release-share-link",
+    "delete-release-share-link"
+  ]
+}

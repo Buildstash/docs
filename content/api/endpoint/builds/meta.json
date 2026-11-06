@@ -4,9 +4,18 @@
   "pages": [
     "list-builds",
     "get-build",
+    "update-build",
+    "delete-build",
     "download-build",
     "list-metadata-artifacts",
     "get-metadata-artifact",
-    "download-metadata-artifact"
+    "download-metadata-artifact",
+    "set-build-stream",
+    "set-build-labels",
+    "attach-build-labels",
+    "detach-build-labels",
+    "set-build-architectures",
+    "attach-build-architectures",
+    "detach-build-architectures"
   ]
 }
