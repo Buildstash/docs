@@ -5,7 +5,7 @@ icon: 'Devicons-GithubactionsOriginal'
 ---
 ## Create API token
 
-To upload builds using this CI integration you'll need to [create an application specific API token, via the standard steps](/builds-and-releases/connect-ci-cd).
+To upload builds using this CI integration you'll need to [create an API key with the `builds:create` scope, via the standard steps](/builds-and-releases/connect-ci-cd).
 
 ## Add Buildstash action
 
@@ -53,7 +53,7 @@ A breakdown of all required and optional inputs for the GitHub action.
 
 | Input Name                | Required? | Description                                                                                                                                             |
 | ------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| api_key                   | Yes       | Application specific API Key, should be stored and pass in as a secret                                                                                  |
+| api_key                   | Yes       | API key with `builds:create` scope for this application, should be stored and pass in as a secret                                                                                  |
 | structure                 | Yes       | Structure type. Either \`file\` (for single file build) or \`file\+expansion\` (for a primary build file with a single expansion file, i.e. apk \+ obb) |
 | primary_file_path         | Yes       | Path to the primary file to upload                                                                                                                      |
 | expansion_file_path       | No        | Path to an expansion file to be paired with primary (optional)                                                                                          |
@@ -69,16 +69,18 @@ A breakdown of all required and optional inputs for the GitHub action.
 | ci_run_id                 | No        | CI run ID                                                                                                                                               |
 | ci_run_url                | No        | CI run URL                                                                                                                                              |
 | ci_build_duration         | No        | CI build duration                                                                                                                                       |
-| vc_host_type              | No        | Version control host type                                                                                                                               |
-| vc_host                   | No        | Version control host                                                                                                                                    |
+| vc_host_type              | No        | Version control host type, see [SCM Host Types](/api/data/sources#scm-host-types)                                                                       |
+| vc_host                   | No        | Version control host, see [SCM Sources](/api/data/sources#scm-sources)                                                                                  |
 | vc_repo_name              | No        | Repository name                                                                                                                                         |
 | vc_repo_url               | No        | Repository URL                                                                                                                                          |
 | vc_branch                 | No        | Branch name                                                                                                                                             |
 | vc_commit_sha             | No        | Commit SHA                                                                                                                                              |
 | vc_commit_url             | No        | Commit URL                                                                                                                                              |
-| platform                  | Yes       | Platform slug (see list here for reference)                                                                                                             |
+| platform                  | Yes       | Platform identifier, see [Platforms](/api/data/platforms) for the full list                                                                             |
+| custom_target             | No        | Name or ID of a [custom target](/builds-and-releases/custom-targets) for the build (optional)                                                          |
 | stream                    | Yes       | Stream - the exact name of the stream on your app this build will be sent to                                                                            |
-| notes                     | No        | Build notes (optional)                                                                                                                                  |
+| notes                     | No        | Build notes (optional). Max 1,000 characters                                                                                                            |
+| metadata_artifacts        | No        | [Metadata artifacts](/builds-and-releases/metadata-artifacts) to attach to the build (optional). A JSON array of objects with a `path` and an optional `description`, e.g. `[{"path": "sbom.spdx", "description": "SBOM"}]` |
 
 ### Outputs
 

@@ -5,7 +5,7 @@ icon: 'Devicons-AzuredevopsPlain'
 ---
 ## Create API token
 
-To upload builds using this CI integration you'll need to [create an application specific API token, via the standard steps](/builds-and-releases/connect-ci-cd).
+To upload builds using this CI integration you'll need to [create an API key with the `builds:create` scope, via the standard steps](/builds-and-releases/connect-ci-cd).
 
 ## Install Buildstash extension to your organization
 
@@ -13,7 +13,7 @@ To upload builds using this CI integration you'll need to [create an application
   <Step>
     <strong>Find Buildstash extension in marketplace</strong>
 
-    Go to the Buildstash extension in the Visual Studio Marketplace for Azure Pipelines.
+    Go to the [Buildstash extension](https://marketplace.visualstudio.com/items?itemName=Buildstash.buildstash-tasks) in the Visual Studio Marketplace for Azure Pipelines.
 
     ![Buildstash extension in marketplace](https://media.buildstash.com/docs/integrations/azure-devops-pipelines/01_marketplace.png)
 
@@ -51,32 +51,52 @@ To upload builds using this CI integration you'll need to [create an application
 
     ```yaml
     - task: BuildstashUpload@1
-        displayName: Upload to Buildstash
-        inputs:
-          apiKey: $(BUILDSTASH_API_KEY)
-          structure: 'file'
-          primaryFilePath: 'example.exe'
-          versionComponent1Major: '1'
-          versionComponent2Minor: '0'
-          versionComponent3Patch: '1'
-          versionComponentExtra: 'beta'
-          versionComponentMeta: '2024.12.02'
-          customBuildNumber: '12345'
-          platform: 'windows'
-          stream: 'default'
+      displayName: Upload to Buildstash
+      inputs:
+        apiKey: $(BUILDSTASH_API_KEY)
+        structure: 'file'
+        primaryFilePath: 'example.exe'
+        versionComponent1Major: '1'
+        versionComponent2Minor: '0'
+        versionComponent3Patch: '1'
+        versionComponentExtra: 'beta'
+        versionComponentMeta: '2024.12.02'
+        customBuildNumber: '12345'
+        platform: 'windows'
+        stream: 'default'
 
-          # Optional CI info
-          ciBuildDuration: '15m30s'
+        # Optional custom target
+        customTarget: 'Galaxy Store'
 
-          # Optional VC info
-          vcHostType: 'git'
-          vcHost: 'github'
-          vcRepoName: $(Build.Repository.Name)
-          vcRepoUrl: $(Build.Repository.Uri)
-          vcBranch: $(Build.SourceBranchName)
-          vcCommitSha: $(Build.SourceVersion)
-          vcCommitUrl: $(Build.Repository.Uri)/commit/$(Build.SourceVersion)
+        # Optional build associations
+        labels: |
+          to-review
+          signed
+        architectures: |
+          x64
+          x86
+
+        # Optional CI info
+        ciBuildDuration: '15m30s'
+
+        # Optional VC info
+        vcHostType: 'git'
+        vcHost: 'github'
+        vcRepoName: $(Build.Repository.Name)
+        vcRepoUrl: $(Build.Repository.Uri)
+        vcBranch: $(Build.SourceBranchName)
+        vcCommitSha: $(Build.SourceVersion)
+        vcCommitUrl: $(Build.Repository.Uri)/commit/$(Build.SourceVersion)
+
+        # Optional metadata artifacts (SBOMs, build logs, etc)
+        metadataArtifacts: |
+          [
+            {"path": "$(Build.ArtifactStagingDirectory)/sbom.json", "description": "SBOM"},
+            {"path": "$(Build.ArtifactStagingDirectory)/build.log", "description": "Build log"}
+          ]
     ```
+
+    The task automatically captures your Azure Pipelines run name, run ID, and run URL — you do not need to pass these in manually.
 
   </Step>
 
@@ -102,7 +122,9 @@ To upload builds using this CI integration you'll need to [create an application
     This is done on the job as below:
 
     ```yaml
-    jobs:- job: TesttimeoutInMinutes: 60 # how long to run the job before automatically cancelling in minutes - increase if needed for large uploads
+    jobs:
+    - job: Test
+      timeoutInMinutes: 60 # how long to run the job before automatically cancelling - increase if needed for large uploads
     ```
 
     Refer to [Azure docs](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml#timeouts) for more detail.
@@ -129,29 +151,35 @@ A breakdown of all required and optional inputs for the Buildstash upload task.
 
 | Input Name                | Required? | Description                                                                                                                                             |
 | ------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| apiKey                    | Yes       | Application specific API Key, should be stored and pass in as a secret                                                                                  |
-| structure                 | Yes       | Structure type. Either file (for single file build) or file+expansion (for a primary build file with a single expansion file, i.e. apk + obb)          |
+| apiKey                    | Yes       | API key with `builds:create` scope for this application, should be stored and passed in as a secret                                                                                |
+| structure                 | Yes       | Structure type. Either `file` (for single file build) or `file+expansion` (for a primary build file with a single expansion file, i.e. apk + obb)       |
 | primaryFilePath           | Yes       | Path to the primary file to upload                                                                                                                      |
 | expansionFilePath         | No        | Path to an expansion file to be paired with primary (optional)                                                                                          |
 | versionComponent1Major    | Yes       | Major version component                                                                                                                                 |
 | versionComponent2Minor    | Yes       | Minor version component                                                                                                                                 |
 | versionComponent3Patch    | Yes       | Patch version component                                                                                                                                 |
 | versionComponentExtra     | No        | Extra version component (optional). Pre-release label like 'beta' or 'alpha'                                                                            |
-| versionComponentMeta       | No        | Meta version component (optional). Can be used to add additional metadata to your version, such as data 2025.01.01)                                     |
-| customBuildNumber         | No        | Allows a flexible format custom build number if you have one. (Optional)                                                                                |
-| labels                    | No        | Array of labels to attach to build (will be created if they do not already exist)                                                                      |
-| architectures             | No        | Array of architectures this build supports (must be supported by platform)                                                                            |
+| versionComponentMeta      | No        | Meta version component (optional). Can be used to add additional metadata to your version, such as date `2025.01.01`                                  |
+| customBuildNumber         | No        | Allows a flexible format custom build number if you have one                                                                                            |
+| labels                    | No        | Labels to attach to the build, one per line (will be created if they do not already exist)                                                            |
+| architectures             | No        | Architectures this build supports, one per line (must be supported by platform)                                                                         |
+| customTarget              | No        | [Custom target](/builds-and-releases/custom-targets) name. Must exactly match a target defined on your application                                    |
+| metadataArtifacts         | No        | [Metadata artifacts](/builds-and-releases/metadata-artifacts) to attach alongside the build. JSON array of objects with `path` and optional `description`. Max 10 files, 5MB each |
 | ciBuildDuration           | No        | CI build duration                                                                                                                                       |
-| vcHostType                | No        | Version control host type                                                                                                                               |
-| vcHost                    | No        | Version control host                                                                                                                                    |
+| vcHostType                | No        | Version control host type (e.g. `git`)                                                                                                                  |
+| vcHost                    | No        | Version control host (e.g. `github` or `azure-repos`)                                                                                                   |
 | vcRepoName                | No        | Repository name                                                                                                                                         |
 | vcRepoUrl                 | No        | Repository URL                                                                                                                                          |
 | vcBranch                  | No        | Branch name                                                                                                                                             |
 | vcCommitSha               | No        | Commit SHA                                                                                                                                              |
 | vcCommitUrl               | No        | Commit URL                                                                                                                                              |
-| platform                  | Yes       | Platform slug (see list here for reference)                                                                                                             |
-| stream                    | Yes       | Stream - the exact name of the stream on your app this build will be sent to                                                                            |
-| notes                     | No        | Build notes (optional)                                                                                                                                  |
+| platform                  | No        | Platform slug — must exactly match a platform attached to your application. See the [platforms reference](/api/data/platforms)                        |
+| stream                    | No        | Stream name — must exactly match a stream on your application                                                                                          |
+| notes                     | No        | Build notes (optional). Max 1,000 characters                                                                                                            |
+
+<Callout>
+  Pipeline name, run ID, and run URL are captured automatically from your Azure DevOps environment and sent to Buildstash as CI metadata.
+</Callout>
 
 ## Outputs
 
