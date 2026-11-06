@@ -125,10 +125,5 @@ export async function getLLMText(page: InferPageType<typeof guideDocs>) {
   return getPageLLMText(page);
 }
 
-// Generic version that works with combined source
-export async function getLLMTextFromPage(page: InferPageType<typeof source>) {
-  return getPageLLMText(page);
-}
-
 export type Page = InferPageType<typeof source>;
 export type Meta = InferMetaType<typeof source>;

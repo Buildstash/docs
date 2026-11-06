@@ -39,6 +39,7 @@ interface ParameterObject {
 }
 
 interface RequestBodyObject {
+  $ref?: string;
   description?: string;
   required?: boolean;
   content?: Record<
@@ -65,6 +66,7 @@ interface ResponseObject {
 interface SchemaObject {
   $ref?: string;
   type?: string;
+  description?: string;
   enum?: unknown[];
   default?: unknown;
   example?: unknown;
