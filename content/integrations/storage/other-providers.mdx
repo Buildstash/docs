@@ -34,3 +34,39 @@ If you haven't already created a storage bucket to use with Buildstash, it is st
 You will need to configure the bucket region if it has one specified. For non-AWS providers, this is often just 'auto'.
 
 Most importantly, you will have to enter the custom endpoint for the bucket - excluding the bucket name itself.
+
+## CORS policy
+
+Your browser uploads builds directly to your bucket, and fetches files from it directly when you download a build together with its [metadata files](/guide/builds-and-releases/metadata-artifacts) as one zip ("Download all" in the build view). For this to work, the bucket's CORS policy must allow Buildstash domains.
+
+How you set a CORS policy depends on your provider, but most S3-compatible providers accept the same JSON format as AWS:
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "PUT",
+            "POST",
+            "DELETE",
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "https://buildstash.com",
+            "https://*.buildstash.com",
+            "https://builds.download",
+            "https://*.builds.download",
+            "https://buildsta.sh",
+            "https://*.buildsta.sh"
+        ],
+        "ExposeHeaders": [
+            "ETag",
+            "Location"
+        ]
+    }
+]
+```
+
+`PUT`, `POST` and `DELETE` are used for uploads, and `GET` for downloads. The `ETag` header must be exposed for multipart uploads to complete.
